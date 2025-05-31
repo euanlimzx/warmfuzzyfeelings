@@ -78,38 +78,44 @@ export const Memories = () => {
         height: SECTION_HEIGHT,
       }}
     >
-      {testimonials.map((t, idx) => {
-        let position = 0;
+      <h2 className="text-center font-semibold text-2xl py-10 mt-10 mx-auto">
+        You&apos;ve shared countless of memories with everyone, but here are the
+        ones we&apos;ll remember forever
+      </h2>
+      <div className="relative h-[80%] w-full">
+        {testimonials.map((t, idx) => {
+          let position = 0;
 
-        if (testimonials.length % 2) {
-          position = idx - (testimonials.length + 1) / 2;
-        } else {
-          position = idx - testimonials.length / 2;
-        }
+          if (testimonials.length % 2) {
+            position = idx - (testimonials.length + 1) / 2;
+          } else {
+            position = idx - testimonials.length / 2;
+          }
 
-        return (
-          <TestimonialCard
-            key={t.tempId}
-            testimonial={t}
-            handleMove={handleMove}
-            position={position}
-            cardSize={cardSize}
-          />
-        );
-      })}
-      <div className="absolute bottom-4 left-1/2 hidden md:flex -translate-x-1/2 gap-8">
-        <button
-          onClick={() => handleMove(-1)}
-          className="grid h-14 w-14 place-content-center text-3xl transition-colors hover:bg-red-400 hover:text-white"
-        >
-          <GoArrowLeft />
-        </button>
-        <button
-          onClick={() => handleMove(1)}
-          className="grid h-14 w-14 place-content-center text-3xl transition-colors hover:bg-red-400 hover:text-white"
-        >
-          <GoArrowRight />
-        </button>
+          return (
+            <TestimonialCard
+              key={t.tempId}
+              testimonial={t}
+              handleMove={handleMove}
+              position={position}
+              cardSize={cardSize}
+            />
+          );
+        })}
+        <div className="absolute bottom-4 left-1/2 hidden md:flex -translate-x-1/2 gap-8">
+          <button
+            onClick={() => handleMove(-1)}
+            className="grid h-14 w-14 place-content-center text-3xl transition-colors hover:bg-red-400 hover:text-white"
+          >
+            <GoArrowLeft />
+          </button>
+          <button
+            onClick={() => handleMove(1)}
+            className="grid h-14 w-14 place-content-center text-3xl transition-colors hover:bg-red-400 hover:text-white"
+          >
+            <GoArrowRight />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -175,8 +181,10 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
           />
         </div>
         <div
-          className={`w-full mb-8 ${
-            isActive && isExpanded ? "" : "overflow-hidden"
+          className={`w-full ${
+            isActive && isExpanded
+              ? "h-[200px] overflow-y-auto"
+              : "overflow-hidden"
           }`}
         >
           <h3
@@ -212,7 +220,7 @@ const TESTIMONIAL_DATA = [
   {
     tempId: 0,
     testimonial:
-      "My favorite solution in the market. We work 5x faster with COMPANY.",
+      "My favorite solution in the market. We work 5x faster with COMPANYMy favorite solution in the market. We work 5x faster with COMPANYMy favorite solution in the market. We work 5x faster with COMPANYMy favorite solution in the market. We work 5x faster with COMPANYMy favorite solution in the market. We work 5x faster with COMPANYMy favorite solution in the market. We work 5x faster with COMPANYMy favorite solution in the market. We work 5x faster with COMPANY.",
     by: "Alex, CEO at COMPANY",
     imgSrc: "/imgs/head-shots/1.jpg",
   },
