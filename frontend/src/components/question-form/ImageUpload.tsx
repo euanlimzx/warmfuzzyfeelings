@@ -68,7 +68,7 @@ export default function ImageUploader() {
 
       try {
         // First, get the presigned URL from our backend
-        const response = await fetch("/make-a-wish/upload", {
+        const response = await fetch("/make-a-wish/upload-image", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
