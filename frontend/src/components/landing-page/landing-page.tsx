@@ -1,6 +1,7 @@
 import React from "react";
 import { FiArrowUpRight } from "react-icons/fi";
 import { motion } from "framer-motion";
+import WaitlistButton from "./waitlist-button";
 
 export const LandingPage = () => {
   return (
@@ -24,7 +25,7 @@ const Copy = () => {
           rel="nofollow"
           className="flex origin-top-left items-center rounded-full border border-zinc-900 bg-white p-0.5 text-sm transition-transform hover:-rotate-2"
         >
-          <span className="rounded-full bg-[#FF6154] px-2 py-0.5 text-md text-white">
+          <span className="rounded-full bg-red-500 px-2 py-0.5 text-md text-white">
             ALPHA VER.
           </span>
           <span className="ml-1.5 mr-1 inline-block">Give us feedback!</span>
@@ -38,9 +39,7 @@ const Copy = () => {
         Easily create fun, collaborative birthday cards in seconds - just share
         a link and watch the messages roll in.
       </p>
-      <button className="rounded-lg bg-red-600 p-3  uppercase text-white transition-colors hover:bg-red-700">
-        <span className="font-bold">JOIN THE WAITLIST</span>
-      </button>
+      <WaitlistButton />
     </>
   );
 };
