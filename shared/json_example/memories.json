@@ -1,0 +1,19 @@
+{
+  "memories": [
+    {
+      "name": "John Doe",
+      "imageUrl": "https://via.placeholder.com/150",
+      "memory": "I liked when we went to the park"
+    },
+    {
+      "name": "Jane Doe",
+      "imageUrl": "https://via.placeholder.com/150",
+      "memory": "I liked when we went to the park"
+    },
+    {
+      "name": "Jim Doe",
+      "imageUrl": "https://via.placeholder.com/150",
+      "memory": "I liked when we went to the park"
+    }
+  ]
+}
