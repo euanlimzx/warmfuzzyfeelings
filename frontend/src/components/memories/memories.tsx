@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { GoArrowLeft, GoArrowRight } from "react-icons/go";
+import { GoArrowLeft, GoArrowRight, GoChevronDown } from "react-icons/go";
 import Image from "next/image";
 
 const CARD_SIZE_LG = 300;
@@ -114,6 +114,7 @@ export const Memories = () => {
 
 const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
   const isActive = position === 0;
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <motion.div
@@ -129,7 +130,11 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
       }}
       animate={{
         width: isActive ? cardSize * 1.1 : cardSize,
-        height: isActive ? cardSize * 1.8 : cardSize * 1.6,
+        height: isActive
+          ? isExpanded
+            ? cardSize * 2
+            : cardSize * 1.6
+          : cardSize * 1.6,
         x: `calc(-50% + ${position * (cardSize / 1.1)}px)`,
         y: `calc(-50% + ${
           isActive ? CENTER_STAGGER : position % 2 ? STAGGER : -STAGGER
@@ -156,12 +161,34 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
             }}
           />
         </div>
-        <h3 className="text-base sm:text-xl text-black text-center">
-          "{testimonial.testimonial}"
-        </h3>
-        <p className="absolute bottom-0 text-sm italic text-black text-center w-full">
-          - {testimonial.by}
-        </p>
+        <div
+          className={`w-full mb-8 ${
+            isActive && isExpanded ? "" : "overflow-hidden"
+          }`}
+        >
+          <h3
+            className={`text-base sm:text-xl text-black text-center ${
+              isActive && !isExpanded ? "line-clamp-2" : ""
+            }`}
+          >
+            "{testimonial.testimonial}"
+          </h3>
+        </div>
+        {isActive && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsExpanded(!isExpanded);
+            }}
+            className="absolute bottom-2 left-1/2 -translate-x-1/2 p-1 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <GoChevronDown
+              className={`w-6 h-6 transition-transform ${
+                isExpanded ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+        )}
       </div>
     </motion.div>
   );
