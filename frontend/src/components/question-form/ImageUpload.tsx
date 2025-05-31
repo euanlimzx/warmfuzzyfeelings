@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import GlassContainer from "./GlassContainer";
-import { Image as ImagePlaceHolderIcon, X as XIcon } from "lucide-react";
+import { X as XIcon } from "lucide-react";
+import { CiImageOn } from "react-icons/ci";
 
 export default function ImageUploader() {
   // food for thought: how should the pasting interaction look like?
@@ -123,65 +123,61 @@ export default function ImageUploader() {
   };
 
   return (
-    <GlassContainer disableHover>
-      <div
-        className="relative flex h-128 flex-col items-center justify-center gap-4"
-        onDragEnter={handleDrag}
-        onDragLeave={handleDrag}
-        onDragOver={handleDrag}
-        onDrop={handleDrop}
-      >
-        {uploadedImageUrl ? (
+    <div
+      className="relative flex flex-col h-128 items-center justify-center gap-4"
+      onDragEnter={handleDrag}
+      onDragLeave={handleDrag}
+      onDragOver={handleDrag}
+      onDrop={handleDrop}
+    >
+      {uploadedImageUrl ? (
+        <button
+          className="absolute top-1 right-1 cursor-pointer rounded-md bg-red-400"
+          onClick={clearUpload}
+        >
+          <XIcon color="#ffffff" strokeWidth={1.25} />
+        </button>
+      ) : (
+        ""
+      )}
+
+      {/* TODO: round image, improve proportions on image rounding */}
+      <img
+        alt="uploadedMainImage"
+        id="uploaded-main-image-preview"
+        className={`${
+          uploadedImageUrl ? "" : "hidden"
+        } h-96 w-full rounded-md p-5`}
+        src={uploadedImageUrl || undefined}
+      ></img>
+
+      <CiImageOn
+        size={96}
+        color="rgba(255, 255, 255, 0.7)"
+        className={`${uploadedImageUrl ? "hidden" : ""}`}
+      />
+      {uploadedImageUrl ? (
+        ""
+      ) : (
+        <div className="m-2 flex flex-col gap-2">
           <button
-            className="absolute top-1 right-1 cursor-pointer rounded-md bg-red-400"
-            onClick={clearUpload}
+            className="cursor-pointer rounded-md bg-gray-400"
+            onClick={handleUploadButtonClick}
           >
-            <XIcon color="#ffffff" strokeWidth={1.25} />
+            Browse
           </button>
-        ) : (
-          ""
-        )}
+          <p>or drag and drop</p>
+        </div>
+      )}
 
-        {/* TODO: round image, improve proportions on image rounding */}
-        <img
-          alt="uploadedMainImage"
-          id="uploaded-main-image-preview"
-          className={`${
-            uploadedImageUrl ? "" : "hidden"
-          } h-96 w-full rounded-md p-5`}
-          src={uploadedImageUrl || undefined}
-        ></img>
-
-        <ImagePlaceHolderIcon
-          size={96}
-          color="#bfbec2"
-          strokeWidth={1.25}
-          className={`${uploadedImageUrl ? "hidden" : ""}`}
-        />
-        {uploadedImageUrl ? (
-          ""
-        ) : (
-          <div className="m-2 flex flex-col gap-2">
-            <button
-              className="cursor-pointer rounded-md bg-gray-400"
-              onClick={handleUploadButtonClick}
-            >
-              Browse
-            </button>
-            <p>or drag and drop</p>
-          </div>
-        )}
-
-        <input
-          type="file"
-          name="mainImageUpload"
-          accept="image/*"
-          id="main-image-upload"
-          className="hidden"
-          onChange={handleFileClickUpload}
-        />
-        <button onClick={uploadImageToS3}>Upload Image</button>
-      </div>
-    </GlassContainer>
+      <input
+        type="file"
+        name="mainImageUpload"
+        accept="image/*"
+        id="main-image-upload"
+        className="hidden"
+        onChange={handleFileClickUpload}
+      />
+    </div>
   );
 }

@@ -1,21 +1,20 @@
 import { Dispatch, SetStateAction } from "react";
 
-interface InputFieldProps {
+interface TextAreaFieldProps {
   placeholderText: string;
   inputValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
   bgColor: string;
 }
 
-const InputField = ({
+const TextAreaField = ({
   placeholderText,
   inputValue,
   setInputValue,
   bgColor,
-}: InputFieldProps) => {
+}: TextAreaFieldProps) => {
   return (
-    <input
-      type="text"
+    <textarea
       placeholder={placeholderText}
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
@@ -24,4 +23,4 @@ const InputField = ({
   );
 };
 
-export default InputField;
+export default TextAreaField;
