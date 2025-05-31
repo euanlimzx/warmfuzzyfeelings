@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from "react";
+// todo @ euan:
+// - figure out how many words max
+// - prevent text from squeezing images
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { GoArrowLeft, GoArrowRight, GoChevronDown } from "react-icons/go";
 import Image from "next/image";
@@ -115,6 +118,16 @@ export const Memories = () => {
 const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
   const isActive = position === 0;
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isTextTruncated, setIsTextTruncated] = useState(false);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    if (textRef.current) {
+      const isOverflowing =
+        textRef.current.scrollHeight > textRef.current.clientHeight;
+      setIsTextTruncated(isOverflowing);
+    }
+  }, [testimonial.testimonial]);
 
   return (
     <motion.div
@@ -167,20 +180,21 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
           }`}
         >
           <h3
-            className={`text-base sm:text-xl text-black text-center ${
-              isActive && !isExpanded ? "line-clamp-2" : ""
+            ref={textRef}
+            className={`text-base sm:text-xl text-black text-center line-clamp-2 ${
+              isActive && isExpanded ? "line-clamp-none" : ""
             }`}
           >
-            "{testimonial.testimonial}"
+            &ldquo;{testimonial.testimonial}&rdquo;
           </h3>
         </div>
-        {isActive && (
+        {isActive && isTextTruncated && !isExpanded && (
           <button
             onClick={(e) => {
               e.stopPropagation();
               setIsExpanded(!isExpanded);
             }}
-            className="absolute bottom-2 left-1/2 -translate-x-1/2 p-1 hover:bg-gray-100 rounded-full transition-colors"
+            className="absolute -bottom-1 left-1/2 -translate-x-1/2 p-1 hover:bg-gray-100 rounded-full transition-colors"
           >
             <GoChevronDown
               className={`w-6 h-6 transition-transform ${
