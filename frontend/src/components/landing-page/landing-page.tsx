@@ -5,7 +5,8 @@ import WaitlistButton from "./waitlist-button";
 
 export const LandingPage = () => {
   return (
-    <section className="overflow-hidden bg-white h-screen flex flex-col justify-between">
+    // <section className="overflow-hidden bg-white h-screen flex flex-col justify-between">
+    <section className="overflow-hidden bg-white h-screen flex flex-col justify-between bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] md:bg-none bg-[size:4rem_4rem]">
       <TickerTop />
       <div className="relative flex flex-col items-center justify-center px-12 pb-48 pt-12 md:pt-24">
         <Copy />
