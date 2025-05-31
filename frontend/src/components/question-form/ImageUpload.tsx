@@ -12,6 +12,7 @@ export default function ImageUploader() {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<
     null | string | Blob
   >(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   // const [dragActive, setDragActive] = useState(false);
   // const deviceTypeRef = useRef(false);
 
@@ -31,6 +32,8 @@ export default function ImageUploader() {
 
     if (imageDisplayField instanceof HTMLImageElement) {
       setUploadedImageUrl(URL.createObjectURL(image));
+      setImageFile(image);
+      console.log(URL.createObjectURL(image));
     }
   };
 
@@ -58,64 +61,63 @@ export default function ImageUploader() {
     fileUploadElement.click();
   };
 
-  const handleFileClickUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileClickUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("I have been clicked");
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
-      const image = e.target.files[0];
-
-      try {
-        // First, get the presigned URL from our backend
-        const response = await fetch("/make-a-wish/upload-image", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fileName: image.name,
-            fileType: image.type,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to get upload URL");
-        }
-
-        const { uploadUrl } = await response.json();
-
-        // Upload the file directly to S3 using the presigned URL
-        const uploadResponse = await fetch(uploadUrl, {
-          method: "PUT",
-          body: image,
-          headers: {
-            "Content-Type": image.type,
-          },
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error("Failed to upload image");
-        }
-
-        // The URL where the image will be accessible (typically the S3 URL without the query parameters)
-        const imageUrl = uploadUrl.split("?")[0];
-
-        // Set the uploaded image URL and display preview
-        setUploadedImageUrl(imageUrl);
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        // You might want to show an error message to the user here
-      }
+      displayUploadedImage(e.target.files[0]);
     }
   };
 
   const clearUpload = () => {
     setUploadedImageUrl(null);
+    setImageFile(null);
   };
 
   // TODO @Shawn: check the device type. if it is a mac, use command + v. if it is windows use ctrl + v
   useEffect(() => {});
+
+  const uploadImageToS3 = async () => {
+    if (!imageFile) {
+      console.error("No image file selected");
+      return;
+    }
+
+    try {
+      // First, get the presigned URL from our backend
+      const response = await fetch("/make-a-wish/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fileName: imageFile.name,
+          fileType: imageFile.type,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get upload URL");
+      }
+
+      const { uploadUrl } = await response.json();
+
+      // Upload the file directly to S3 using the presigned URL
+      const uploadResponse = await fetch(uploadUrl, {
+        method: "PUT",
+        body: imageFile,
+        headers: {
+          "Content-Type": imageFile.type,
+        },
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
 
   return (
     <GlassContainer disableHover>
@@ -175,6 +177,7 @@ export default function ImageUploader() {
           className="hidden"
           onChange={handleFileClickUpload}
         />
+        <button onClick={uploadImageToS3}>Upload Image</button>
       </div>
     </GlassContainer>
   );
