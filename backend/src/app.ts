@@ -13,10 +13,20 @@ app.get("/", async (req, res) => {
 
 app.post("/make-a-wish/upload-image", async (req, res) => {
   const { fileName } = req.body;
-  console.log("The file name is", fileName);
 
-  const signedUrl = await getAWSSignedUrl();
-  res.status(200).send(signedUrl);
+  if (!fileName) {
+    res.send(400).send({
+      ok: false,
+      message: "Missing File Name",
+    });
+  }
+
+  const signedUrlData = await getAWSSignedUrl(fileName);
+  if (signedUrlData.ok) {
+    res.status(200).send(signedUrlData);
+  } else {
+    res.status(404).send(signedUrlData);
+  }
 });
 
 export default app;
