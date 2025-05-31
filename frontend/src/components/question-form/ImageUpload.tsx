@@ -103,10 +103,10 @@ export default function ImageUploader() {
         throw new Error("Failed to get upload URL");
       }
 
-      const { uploadUrl } = await response.json();
+      const { url } = await response.json();
 
       // Upload the file directly to S3 using the presigned URL
-      const uploadResponse = await fetch(uploadUrl, {
+      const uploadResponse = await fetch(url, {
         method: "PUT",
         body: imageFile,
         headers: {
