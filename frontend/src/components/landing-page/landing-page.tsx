@@ -34,7 +34,7 @@ import {
 
 export const LandingPage = () => {
   return (
-    <section className="overflow-hidden bg-white">
+    <section className="overflow-hidden bg-white ">
       <div className="relative flex flex-col items-center justify-center px-12 pb-48 pt-12 md:pt-24">
         <Copy />
       </div>
@@ -56,19 +56,19 @@ const Copy = () => {
           <span className="rounded-full bg-[#FF6154] px-2 py-0.5 font-medium text-white">
             ALPHA VER.
           </span>
-          <span className="ml-1.5 mr-1 inline-block">Please be kind :)</span>
+          <span className="ml-1.5 mr-1 inline-block">Give us feedback!</span>
           <FiArrowUpRight className="mr-2 inline-block" />
         </a>
       </div>
       <h1 className="max-w-4xl text-center text-4xl font-black leading-[1.15] md:text-6xl md:leading-[1.15]">
-        Launch your product with a cool landing page
+        GROUP BIRTHDAY CARDS MADE SIMPLE.
       </h1>
       <p className="mx-auto my-4 max-w-3xl text-center text-base leading-relaxed md:my-6 md:text-xl md:leading-relaxed">
-        Your 1-2 sentence elevator pitch for what your product does and why goes
-        here. Be concise, get to the point, don't use jargon.
+        Easily create fun, collaborative birthday cards for those who you love
+        the most.
       </p>
       <button className="rounded-lg bg-indigo-600 p-3 uppercase text-white transition-colors hover:bg-indigo-700">
-        <span className="font-bold">Get started - </span> no CC required
+        <span className="font-bold">JOIN THE WAITLIST</span>
       </button>
     </>
   );
