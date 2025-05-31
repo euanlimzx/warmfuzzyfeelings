@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
+import Image from "next/image";
 
-const CARD_SIZE_LG = 365;
-const CARD_SIZE_SM = 290;
+const CARD_SIZE_LG = 300;
+const CARD_SIZE_SM = 250;
 
 const BORDER_SIZE = 2;
 
@@ -119,7 +120,7 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
       initial={false}
       onClick={() => handleMove(position)}
       className={`
-      absolute left-1/2 top-1/2 cursor-pointer border-black bg-white p-8 text-black transition-colors duration-500 bg ${
+      absolute left-1/2 top-1/2 cursor-pointer border-black bg-white p-4 text-black transition-colors duration-500 bg flex flex-col items-center ${
         isActive ? "z-10" : "z-0"
       }
       `}
@@ -128,7 +129,7 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
       }}
       animate={{
         width: isActive ? cardSize * 1.1 : cardSize,
-        height: isActive ? cardSize * 1.1 : cardSize,
+        height: isActive ? cardSize * 1.8 : cardSize * 1.6,
         x: `calc(-50% + ${position * (cardSize / 1.1)}px)`,
         y: `calc(-50% + ${
           isActive ? CENTER_STAGGER : position % 2 ? STAGGER : -STAGGER
@@ -143,22 +144,25 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
         damping: 50,
       }}
     >
-      <img
-        src={testimonial.imgSrc}
-        alt={`Testimonial image for ${testimonial.by}`}
-        className="mb-4 h-14 w-12 bg-neutral-600 object-cover object-top"
-        style={{
-          boxShadow: "3px 3px 0px white",
-        }}
-      />
-      <h3 className={`text-base sm:text-xl text-black`}>
-        "{testimonial.testimonial}"
-      </h3>
-      <p
-        className={`absolute bottom-8 left-8 right-8 mt-2 text-sm italic text-black`}
-      >
-        - {testimonial.by}
-      </p>
+      <div className="flex flex-col items-center h-full w-full relative">
+        <div className="relative w-full h-72 mb-2">
+          <Image
+            src={"https://picsum.photos/500/800"}
+            alt={`Testimonial image for ${testimonial.by}`}
+            fill
+            className="object-cover border-[2px] border-black"
+            style={{
+              boxShadow: "2px 2px 0px white",
+            }}
+          />
+        </div>
+        <h3 className="text-base sm:text-xl text-black text-center">
+          "{testimonial.testimonial}"
+        </h3>
+        <p className="absolute bottom-0 text-sm italic text-black text-center w-full">
+          - {testimonial.by}
+        </p>
+      </div>
     </motion.div>
   );
 };
