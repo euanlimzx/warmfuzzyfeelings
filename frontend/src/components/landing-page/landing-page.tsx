@@ -17,28 +17,28 @@ export const LandingPage = () => {
 const Copy = () => {
   return (
     <>
-      <div className="mb-1.5 rounded-full bg-zinc-600">
+      <div className="mb-7 rounded-full bg-zinc-600">
         <a
           href="#"
           target="_blank"
           rel="nofollow"
           className="flex origin-top-left items-center rounded-full border border-zinc-900 bg-white p-0.5 text-sm transition-transform hover:-rotate-2"
         >
-          <span className="rounded-full bg-[#FF6154] px-2 py-0.5 font-medium text-white">
+          <span className="rounded-full bg-[#FF6154] px-2 py-0.5 text-md text-white">
             ALPHA VER.
           </span>
           <span className="ml-1.5 mr-1 inline-block">Give us feedback!</span>
           <FiArrowUpRight className="mr-2 inline-block" />
         </a>
       </div>
-      <h1 className="max-w-4xl text-center text-4xl font-black leading-[1.15] md:text-6xl md:leading-[1.15]">
+      <h1 className="max-w-4xl text-center font-black leading-[1.15] text-5xl md:text-7xl md:leading-[1.15]">
         GROUP HUGS, NOW AS A CARD.
       </h1>
-      <p className="mx-auto my-4 max-w-3xl text-center text-base leading-relaxed md:my-6 md:text-xl md:leading-relaxed">
+      <p className="mx-auto my-4 max-w-3xl text-center text-base leading-relaxed md:my-6 md:text-2xl md:leading-relaxed">
         Easily create fun, collaborative birthday cards in seconds - just share
         a link and watch the messages roll in.
       </p>
-      <button className="rounded-lg bg-red-600 p-3 uppercase text-white transition-colors hover:bg-red-700">
+      <button className="rounded-lg bg-red-600 p-3  uppercase text-white transition-colors hover:bg-red-700">
         <span className="font-bold">JOIN THE WAITLIST</span>
       </button>
     </>
