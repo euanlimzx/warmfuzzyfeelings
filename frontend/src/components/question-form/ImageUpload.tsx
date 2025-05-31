@@ -85,16 +85,19 @@ export default function ImageUploader() {
 
     try {
       // First, get the presigned URL from our backend
-      const response = await fetch("/make-a-wish/upload", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fileName: imageFile.name,
-          fileType: imageFile.type,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/upload-image`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fileName: imageFile.name,
+            fileType: imageFile.type,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to get upload URL");
