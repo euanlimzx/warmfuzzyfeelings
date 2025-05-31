@@ -6,15 +6,11 @@ const CARD_SIZE_LG = 365;
 const CARD_SIZE_SM = 290;
 
 const BORDER_SIZE = 2;
-const CORNER_CLIP = 50;
-const CORNER_LINE_LEN = Math.sqrt(
-  CORNER_CLIP * CORNER_CLIP + CORNER_CLIP * CORNER_CLIP
-);
 
 const ROTATE_DEG = 2.5;
 
 const STAGGER = 15;
-const CENTER_STAGGER = -65;
+const CENTER_STAGGER = -55;
 
 const SECTION_HEIGHT = "100vh";
 
@@ -129,17 +125,16 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
       `}
       style={{
         borderWidth: BORDER_SIZE,
-        clipPath: `polygon(${CORNER_CLIP}px 0%, calc(100% - ${CORNER_CLIP}px) 0%, 100% ${CORNER_CLIP}px, 100% 100%, calc(100% - ${CORNER_CLIP}px) 100%, ${CORNER_CLIP}px 100%, 0 100%, 0 0)`,
       }}
       animate={{
-        width: cardSize,
-        height: cardSize,
-        x: `calc(-50% + ${position * (cardSize / 1.5)}px)`,
+        width: isActive ? cardSize * 1.1 : cardSize,
+        height: isActive ? cardSize * 1.1 : cardSize,
+        x: `calc(-50% + ${position * (cardSize / 1.1)}px)`,
         y: `calc(-50% + ${
           isActive ? CENTER_STAGGER : position % 2 ? STAGGER : -STAGGER
         }px)`,
         rotate: isActive ? 0 : position % 2 ? ROTATE_DEG : -ROTATE_DEG,
-        boxShadow: isActive ? "0px 8px 0px 4px black" : "0px 0px 0px 0px black",
+        boxShadow: "0px 0px 0px 0px black",
       }}
       transition={{
         type: "spring",
@@ -148,15 +143,6 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
         damping: 50,
       }}
     >
-      <span
-        className="absolute block origin-top-right rotate-45 bg-black object-cover"
-        style={{
-          right: -BORDER_SIZE,
-          top: CORNER_CLIP - BORDER_SIZE,
-          width: CORNER_LINE_LEN,
-          height: BORDER_SIZE,
-        }}
-      />
       <img
         src={testimonial.imgSrc}
         alt={`Testimonial image for ${testimonial.by}`}
