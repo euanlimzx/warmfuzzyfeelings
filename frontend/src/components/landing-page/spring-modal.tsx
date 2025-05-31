@@ -22,7 +22,7 @@ const SpringModal = ({ isOpen, setIsOpen }) => {
           >
             <div className="relative z-10">
               <h3 className="text-3xl font-bold text-center mb-2">
-                We'll let you know when we launch!
+                We&apos;ll let you know when we launch!
               </h3>
               <div className="flex gap-2">
                 <input
