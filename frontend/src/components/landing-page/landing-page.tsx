@@ -1,44 +1,17 @@
 import React from "react";
 import { FiArrowUpRight } from "react-icons/fi";
-import {
-  FiBell,
-  FiCheck,
-  FiChevronDown,
-  FiList,
-  FiMessageCircle,
-  FiUser,
-} from "react-icons/fi";
 import { motion } from "framer-motion";
-import {
-  SiNike,
-  Si3M,
-  SiAbstract,
-  SiAdobe,
-  SiAirtable,
-  SiAmazon,
-  SiBox,
-  SiBytedance,
-  SiChase,
-  SiCloudbees,
-  SiBurton,
-  SiBmw,
-  SiHeroku,
-  SiBuildkite,
-  SiCouchbase,
-  SiDailymotion,
-  SiDeliveroo,
-  SiEpicgames,
-  SiGenius,
-  SiGodaddy,
-} from "react-icons/si";
+import WaitlistButton from "./waitlist-button";
 
 export const LandingPage = () => {
   return (
-    <section className="overflow-hidden bg-white">
+    // <section className="overflow-hidden bg-white h-screen flex flex-col justify-between">
+    <section className="overflow-hidden bg-white h-screen flex flex-col justify-between bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] md:bg-none bg-[size:4rem_4rem]">
+      <TickerTop />
       <div className="relative flex flex-col items-center justify-center px-12 pb-48 pt-12 md:pt-24">
         <Copy />
       </div>
-      <Logos />
+      <TickerBottom />
     </section>
   );
 };
@@ -46,80 +19,65 @@ export const LandingPage = () => {
 const Copy = () => {
   return (
     <>
-      <div className="mb-1.5 rounded-full bg-zinc-600">
+      <div className="mb-7 rounded-full bg-zinc-600">
         <a
           href="#"
           target="_blank"
           rel="nofollow"
           className="flex origin-top-left items-center rounded-full border border-zinc-900 bg-white p-0.5 text-sm transition-transform hover:-rotate-2"
         >
-          <span className="rounded-full bg-[#FF6154] px-2 py-0.5 font-medium text-white">
+          <span className="rounded-full bg-red-500 px-2 py-0.5 text-md text-white">
             ALPHA VER.
           </span>
-          <span className="ml-1.5 mr-1 inline-block">Please be kind :)</span>
+          <span className="ml-1.5 mr-1 inline-block">Give us feedback!</span>
           <FiArrowUpRight className="mr-2 inline-block" />
         </a>
       </div>
-      <h1 className="max-w-4xl text-center text-4xl font-black leading-[1.15] md:text-6xl md:leading-[1.15]">
-        Launch your product with a cool landing page
+      <h1 className="max-w-4xl text-center font-black leading-[1.15] text-5xl md:text-7xl md:leading-[1.15]">
+        GROUP HUGS, NOW AS A CARD.
       </h1>
-      <p className="mx-auto my-4 max-w-3xl text-center text-base leading-relaxed md:my-6 md:text-xl md:leading-relaxed">
-        Your 1-2 sentence elevator pitch for what your product does and why goes
-        here. Be concise, get to the point, don't use jargon.
+      <p className="mx-auto my-4 max-w-3xl text-center text-base leading-relaxed md:my-6 md:text-2xl md:leading-relaxed">
+        Easily create fun, collaborative birthday cards in seconds - just share
+        a link and watch the messages roll in.
       </p>
-      <button className="rounded-lg bg-indigo-600 p-3 uppercase text-white transition-colors hover:bg-indigo-700">
-        <span className="font-bold">Get started - </span> no CC required
-      </button>
+      <WaitlistButton />
     </>
   );
 };
 
-const Logo = () => {
-  // Temp logo from https://logoipsum.com/
+const TickerTop = () => {
   return (
-    <svg
-      width="32"
-      height="auto"
-      viewBox="0 0 50 39"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-fit fill-zinc-950"
-    >
-      <path
-        d="M16.4992 2H37.5808L22.0816 24.9729H1L16.4992 2Z"
-        stopColor="#09090B"
-      ></path>
-      <path
-        d="M17.4224 27.102L11.4192 36H33.5008L49 13.0271H32.7024L23.2064 27.102H17.4224Z"
-        stopColor="#09090B"
-      ></path>
-    </svg>
+    <div className="relative scale-[1.01] border-y-4 border-red-600 bg-white">
+      <div className="relative z-0 flex overflow-hidden">
+        <TranslateWrapper>
+          <TickerItemsCopy />
+        </TranslateWrapper>
+        <TranslateWrapper>
+          <TickerItemsCopy />
+        </TranslateWrapper>
+        <TranslateWrapper>
+          <TickerItemsCopy />
+        </TranslateWrapper>
+      </div>
+
+      <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-32 bg-gradient-to-r from-white to-white/0" />
+      <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-32 bg-gradient-to-l from-white to-white/0" />
+    </div>
   );
 };
 
-const Logos = () => {
+const TickerBottom = () => {
   return (
-    <div className="relative -mt-2 -rotate-1 scale-[1.01] border-y-2 border-zinc-900 bg-white">
-      <div className="relative z-0 flex overflow-hidden border-b-2 border-zinc-900">
-        <TranslateWrapper>
-          <LogoItemsTop />
-        </TranslateWrapper>
-        <TranslateWrapper>
-          <LogoItemsTop />
-        </TranslateWrapper>
-        <TranslateWrapper>
-          <LogoItemsTop />
-        </TranslateWrapper>
-      </div>
+    <div className="relative -mt-2 scale-[1.01] border-y-4 border-red-600 bg-white">
       <div className="relative z-0 flex overflow-hidden">
         <TranslateWrapper reverse>
-          <LogoItemsBottom />
+          <TickerItemsCopy />
         </TranslateWrapper>
         <TranslateWrapper reverse>
-          <LogoItemsBottom />
+          <TickerItemsCopy />
         </TranslateWrapper>
         <TranslateWrapper reverse>
-          <LogoItemsBottom />
+          <TickerItemsCopy />
         </TranslateWrapper>
       </div>
 
@@ -142,43 +100,29 @@ const TranslateWrapper = ({ children, reverse }) => {
   );
 };
 
-const LogoItem = ({ Icon, name }) => {
+const TickerItem = ({ name }: { name: string }) => {
   return (
     <span className="flex items-center justify-center gap-4 px-4 py-2 md:py-4">
-      <Icon className="text-2xl text-indigo-600 md:text-3xl" />
-      <span className="whitespace-nowrap text-xl font-semibold uppercase md:text-2xl">
+      <span className="whitespace-nowrap text-xl font-semibold uppercase md:text-2xl text-red-600">
         {name}
       </span>
     </span>
   );
 };
 
-const LogoItemsTop = () => (
+const TickerItemsCopy = () => (
   <>
-    <LogoItem Icon={SiNike} name="Nike" />
-    <LogoItem Icon={Si3M} name="3M" />
-    <LogoItem Icon={SiAbstract} name="Abstract" />
-    <LogoItem Icon={SiAdobe} name="Adobe" />
-    <LogoItem Icon={SiAirtable} name="Airtable" />
-    <LogoItem Icon={SiAmazon} name="Amazon" />
-    <LogoItem Icon={SiBox} name="Box" />
-    <LogoItem Icon={SiBytedance} name="Bytedance" />
-    <LogoItem Icon={SiChase} name="Chase" />
-    <LogoItem Icon={SiCloudbees} name="Cloudebees" />
-  </>
-);
-
-const LogoItemsBottom = () => (
-  <>
-    <LogoItem Icon={SiBmw} name="BMW" />
-    <LogoItem Icon={SiBurton} name="Burton" />
-    <LogoItem Icon={SiBuildkite} name="Buildkite" />
-    <LogoItem Icon={SiCouchbase} name="Couchbase" />
-    <LogoItem Icon={SiDailymotion} name="Dailymotion" />
-    <LogoItem Icon={SiDeliveroo} name="deliveroo" />
-    <LogoItem Icon={SiEpicgames} name="Epic Games" />
-    <LogoItem Icon={SiGenius} name="Genius" />
-    <LogoItem Icon={SiGodaddy} name="GoDaddy" />
-    <LogoItem Icon={SiHeroku} name="Heroku" />
+    <TickerItem name="Everyone deserves to know how valued they are" />
+    <TickerItem name="|" />
+    <TickerItem name="Tell that special someone how much they mean to you" />
+    <TickerItem name="|" />
+    <TickerItem name="The happiest birthdays all start with a personal touch" />
+    <TickerItem name="|" />
+    <TickerItem name="Memories mean more when shared" />
+    <TickerItem name="|" />
+    <TickerItem name="Because appreciation shouldn't be left unsaid" />
+    <TickerItem name="|" />
+    <TickerItem name="Less awkward than a group Zoom call, more fun than a solo text" />
+    <TickerItem name="|" />
   </>
 );

@@ -1,0 +1,13 @@
+{
+  "summary": [
+    {
+      "word": "word",
+      "sources": [
+        {
+          "author": "author",
+          "message": "message"
+        }
+      ]
+    }
+  ]
+}

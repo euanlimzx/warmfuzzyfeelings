@@ -1,0 +1,19 @@
+{
+  "wishes": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "message": "I wish for a new car"
+    },
+    {
+      "id": 2,
+      "name": "Jane Doe",
+      "message": "I wish for a new house"
+    },
+    {
+      "id": 3,
+      "name": "Jim Doe",
+      "message": "I wish for a new car"
+    }
+  ]
+}
