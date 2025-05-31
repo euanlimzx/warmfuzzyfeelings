@@ -112,10 +112,16 @@ const TickerItem = ({ name }: { name: string }) => {
 const TickerItemsCopy = () => (
   <>
     <TickerItem name="Everyone deserves to know how valued they are" />
+    <TickerItem name="|" />
     <TickerItem name="Tell that special someone how much they mean to you" />
+    <TickerItem name="|" />
     <TickerItem name="The happiest birthdays all start with a personal touch" />
+    <TickerItem name="|" />
     <TickerItem name="Memories mean more when shared" />
+    <TickerItem name="|" />
     <TickerItem name="Because appreciation shouldn't be left unsaid" />
-    <TickerItem name="Less awkward than a group Zoom call, more fun than a solo text." />
+    <TickerItem name="|" />
+    <TickerItem name="Less awkward than a group Zoom call, more fun than a solo text" />
+    <TickerItem name="|" />
   </>
 );
