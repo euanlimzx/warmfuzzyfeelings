@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import { getAWSSignedUrl } from "./utils/mediaHandler";
 import { createStructuredCharacterSummary } from "./utils/characterSummary";
+import { validateInputData } from "./middleware";
+import { CardFormResponseSchema } from "./routerTypes";
+import { createCardFormResponse } from "./db/db";
 
 const app = express();
 
@@ -65,6 +68,7 @@ app.get("/", async (req, res) => {
     "James",
     characterDesc,
   );
+  console.log(response);
   res.status(200).send(response);
 });
 
@@ -90,8 +94,20 @@ app.post("/make-a-wish/upload-image", async (req, res) => {
 });
 
 // @shawn: add zod validation
-app.post("/make-a-wish/upload-card-response", async (req, res) => {
-  const { responseUUID, imageUrl, questionAndResponse } = req.body;
-});
+app.post(
+  "/make-a-wish/upload-card-response",
+  validateInputData(CardFormResponseSchema),
+  async (req, res) => {
+    const cardCreationResponse = await createCardFormResponse(req.body);
+
+    if (cardCreationResponse.ok) {
+      res.status(201).send(cardCreationResponse);
+      return;
+    } else {
+      res.status(500).send(cardCreationResponse);
+      return;
+    }
+  },
+);
 
 export default app;

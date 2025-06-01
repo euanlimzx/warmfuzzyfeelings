@@ -1,23 +1,43 @@
+import {
+  CardFormResponse,
+  FunctionResponse,
+  FunctionErrorResponse,
+} from "../routerTypes";
 import supabaseClient from "./client";
+import { Tables } from "./dbTypes";
 
-export const createCardFormResponse = async (
+type CardFormResponseRow = Tables<"Card_Form_Response">;
+interface CardFormFunctionResponse extends FunctionResponse {
+  createdCard: CardFormResponseRow;
+}
+
+export const createCardFormResponse = async ({
   responseUUID,
   imageUrl,
   questionAndResponse,
-) => {
+  cardUUID,
+}: CardFormResponse): Promise<
+  CardFormFunctionResponse | FunctionErrorResponse
+> => {
   try {
-    const createdCard = await supabaseClient
+    const { data, error } = await supabaseClient
       .from("Card_Form_Response")
       .insert({
-        card_id: "123",
+        card_id: cardUUID,
         id: responseUUID,
         image_url: imageUrl,
         question_and_response: questionAndResponse,
       })
-      .select();
+      .select()
+      .single();
 
-    return { ok: true, createdCard };
+    if (error || !data) {
+      return { ok: false, message: "No data returned from insert" };
+    }
+
+    return { ok: true, createdCard: data };
   } catch (err) {
     console.error(err);
+    return { ok: false, message: "There was an error creating the card" };
   }
 };
