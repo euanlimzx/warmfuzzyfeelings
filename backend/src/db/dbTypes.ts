@@ -53,18 +53,21 @@ export type Database = {
           id: string
           image_url: string | null
           question_and_response: Json
+          responder_name: string | null
         }
         Insert: {
           card_id?: string | null
           id: string
           image_url?: string | null
           question_and_response: Json
+          responder_name?: string | null
         }
         Update: {
           card_id?: string | null
           id?: string
           image_url?: string | null
           question_and_response?: Json
+          responder_name?: string | null
         }
         Relationships: [
           {

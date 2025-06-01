@@ -1,10 +1,11 @@
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
+import { Json } from "../db/dbTypes";
 
 interface birthdayPersonComments {
-  author: string;
-  description: string;
+  responderName: string;
+  questionAndResponse: Json;
 }
 
 const openai = new OpenAI();

@@ -89,3 +89,28 @@ export const getCardFromUUID = async ({ cardUUID }: { cardUUID: string }) => {
     };
   }
 };
+
+export const getAllCardResponsesForUUID = async ({
+  cardUUID,
+}: {
+  cardUUID: string;
+}) => {
+  try {
+    const { data, error } = await supabaseClient
+      .from("Card_Form_Response")
+      .select()
+      .eq("card_id", cardUUID);
+
+    if (error) {
+      return { ok: false, message: "Error retrieving card" };
+    }
+
+    return { ok: true, cards: data };
+  } catch (err) {
+    console.error(err);
+    return {
+      ok: false,
+      message: "There was an error fetching the associated card responses",
+    };
+  }
+};

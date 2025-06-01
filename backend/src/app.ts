@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import cors from "cors";
 import { getAWSSignedUrl } from "./utils/mediaHandler";
 import { createStructuredCharacterSummary } from "./utils/characterSummary";
@@ -11,6 +11,7 @@ import {
   createCardFormResponse,
   registerMakeAWishEmail,
   getCardFromUUID,
+  getAllCardResponsesForUUID,
 } from "./db/db";
 import { developmentLogger } from "./middleware/inputLoggerMiddleware";
 import toCamelCase from "./utils/toCamelCase";
@@ -74,12 +75,7 @@ app.get("/", async (req, res) => {
     },
   ];
 
-  const response = await createStructuredCharacterSummary(
-    "James",
-    characterDesc,
-  );
-  console.log(response);
-  res.status(200).send(response);
+  res.status(200).send("hi");
 });
 
 app.post("/make-a-wish/upload-image", async (req, res) => {
@@ -157,6 +153,46 @@ app.get("/get-card-from-uuid", async (req, res) => {
     res
       .status(400)
       .send({ ok: false, message: "please specify a valid cardUUID" });
+  }
+});
+
+app.get("/create-structured-summary", async (req, res) => {
+  const { password, cardUUID } = req.query;
+
+  if (password !== process.env.CHARACTER_SUMMARY_GENERATION_PASSWORD) {
+    res.status(403).send("Nice try bro");
+    return;
+  }
+
+  if (typeof cardUUID === "string") {
+    const responsesForCard = await getAllCardResponsesForUUID({ cardUUID });
+
+    if (!responsesForCard.ok || responsesForCard.cards?.length === 0) {
+      res.status(404).send("welp, we could not get the data you wanted");
+      return;
+    }
+
+    const aggregatedResponses = [];
+
+    if (!responsesForCard.cards) {
+      res.status(404).send("Could not find anything");
+      return;
+    }
+
+    for (const {
+      question_and_response,
+      responder_name,
+    } of responsesForCard.cards!) {
+      aggregatedResponses.push({
+        questionAndResponse: question_and_response,
+        responderName: responder_name!,
+      });
+    }
+
+    const structuredCharacterSummary = await createStructuredCharacterSummary(
+      cardUUID,
+      aggregatedResponses,
+    );
   }
 });
 
