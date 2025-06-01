@@ -29,12 +29,14 @@ export default function Home() {
   }, [birthdayCardUUID]);
 
   return (
-    <div className="text-black flex flex-col items-center justify-center w-full h-screen bg-white">
+    <div className="text-black flex flex-col items-center justify-center w-full min-h-screen bg-white p-4">
       {!isCardRetrievalError ? (
-        <BirthdayWishForm
-          cardUUID={birthdayCardUUID as string}
-          birthdayPerson={birthdayPerson}
-        />
+        <div className="w-full max-w-2xl">
+          <BirthdayWishForm
+            cardUUID={birthdayCardUUID as string}
+            birthdayPerson={birthdayPerson}
+          />
+        </div>
       ) : (
         <div>
           Hmm... we cant really seem to find the person you&apos;re looking for

@@ -166,7 +166,7 @@ const BirthdayWishForm = ({
 
   return (
     <div
-      className={`flex flex-col gap-${formGap} relative bg-white p-10 border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]`}
+      className={`flex flex-col gap-${formGap} relative bg-white p-4 sm:p-10 border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] w-full`}
     >
       {isServerError && (
         <FormSubmissionErrorNotification
@@ -198,10 +198,12 @@ const BirthdayWishForm = ({
       />
 
       {/* form title */}
-      <h1 className="text-4xl font-bold">Dear {birthdayPerson}...</h1>
+      <h1 className="text-2xl sm:text-4xl font-bold">
+        Dear {birthdayPerson}...
+      </h1>
 
       {/* form fields */}
-      <form>
+      <form className="w-full">
         <div className={`flex flex-col gap-${formGap}`}>
           <InputField
             inputValue={memoryResponse}
@@ -221,7 +223,7 @@ const BirthdayWishForm = ({
       </form>
 
       {/* images that you can upload */}
-      <div className={`${bgColor} rounded-md`}>
+      <div className={`${bgColor} rounded-md w-full`}>
         <ImageUploader
           setImageFile={setImageFile}
           uploadedImageUrl={uploadedImageUrl}
