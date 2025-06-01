@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { subDays, addDays, format } from "date-fns";
+import confetti from "canvas-confetti";
 
 const BIRTHDAY_OFFSET = 4;
 export const Countdown = () => {
@@ -15,6 +16,34 @@ export const Countdown = () => {
 const FlipCalendar = ({ birthdayWithOffset }) => {
   const [index, setIndex] = useState(0);
   const [date, setDate] = useState(birthdayWithOffset);
+  const triggerConfetti = () => {
+    const duration = 5 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    const randomInRange = (min: number, max: number) =>
+      Math.random() * (max - min) + min;
+
+    const interval = window.setInterval(() => {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+      });
+    }, 250);
+  };
 
   useEffect(() => {
     let currentCount = 0;
@@ -23,6 +52,7 @@ const FlipCalendar = ({ birthdayWithOffset }) => {
         incrementDate();
         currentCount++;
       } else {
+        triggerConfetti();
         clearInterval(interval);
       }
     }, 1000);
@@ -44,7 +74,7 @@ const FlipCalendar = ({ birthdayWithOffset }) => {
 
 const CalendarDisplay = ({ index, date }) => {
   return (
-    <div className="w-fit overflow-hidden rounded-xl border-4 border-indigo-500 bg-indigo-500">
+    <div className="w-fit overflow-hidden rounded-xl border-4 border-red-600 bg-red-600">
       <div className="flex items-center justify-between px-3 py-1">
         <span className="text-center uppercase text-white text-2xl">
           {format(date, "LLLL")}
@@ -100,20 +130,3 @@ const CalendarDisplay = ({ index, date }) => {
     </div>
   );
 };
-
-const MONTH_NAMES = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-const WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
