@@ -76,6 +76,32 @@ export type Database = {
           },
         ]
       }
+      Friends_To_Notify: {
+        Row: {
+          card_id: string
+          email: string | null
+          id: string
+        }
+        Insert: {
+          card_id?: string
+          email?: string | null
+          id?: string
+        }
+        Update: {
+          card_id?: string
+          email?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Friends_To_Notify_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "Card"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Good_Friend: {
         Row: {
           id: string
@@ -88,6 +114,24 @@ export type Database = {
         Update: {
           id?: string
           name?: string
+        }
+        Relationships: []
+      }
+      Waitlist: {
+        Row: {
+          email: string
+          id: number
+          submitted_at: string
+        }
+        Insert: {
+          email: string
+          id?: number
+          submitted_at?: string
+        }
+        Update: {
+          email?: string
+          id?: number
+          submitted_at?: string
         }
         Relationships: []
       }
