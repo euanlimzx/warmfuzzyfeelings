@@ -120,7 +120,7 @@ app.post(
 );
 
 app.post(
-  "/make-a-wish/reigster-email",
+  "/make-a-wish/register-email",
   validateInputData(RegisterMakeAWishEmailSchema),
   async (req, res) => {
     const registerMakeAWishEmailResponse = await registerMakeAWishEmail(
