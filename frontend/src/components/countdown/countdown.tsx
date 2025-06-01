@@ -3,10 +3,17 @@ import { AnimatePresence, motion } from "framer-motion";
 import { subDays, addDays, format } from "date-fns";
 import confetti from "canvas-confetti";
 import { Notifications } from "./notifications";
+import { SpinningText } from "../magicui/spinning-text";
 
 const BIRTHDAY_OFFSET = 4;
 export const Countdown = () => {
   const date = new Date();
+  const [showBottomText, setShowBottomText] = useState(false);
+
+  const showText = () => {
+    setShowBottomText(true);
+  };
+
   return (
     <div className="grid place-content-center h-screen gradient-background">
       <style jsx>{`
@@ -28,13 +35,30 @@ export const Countdown = () => {
           }
         }
       `}</style>
-      {/* <Notifications /> */}
-      <FlipCalendar birthdayWithOffset={subDays(date, BIRTHDAY_OFFSET)} />
+      <FlipCalendar
+        birthdayWithOffset={subDays(date, BIRTHDAY_OFFSET)}
+        onComplete={showText}
+      />
+
+      <AnimatePresence>
+        {showBottomText && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-30 left-1/2 -translate-x-1/2 text-lg font-semibold text-white"
+          >
+            <SpinningText fontSize={0.2}>
+              We&apos;ve got something special for you
+            </SpinningText>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-const FlipCalendar = ({ birthdayWithOffset }) => {
+const FlipCalendar = ({ birthdayWithOffset, onComplete }) => {
   const [index, setIndex] = useState(0);
   const [date, setDate] = useState(birthdayWithOffset);
   const triggerConfetti = () => {
@@ -64,6 +88,8 @@ const FlipCalendar = ({ birthdayWithOffset }) => {
         origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
       });
     }, 250);
+
+    onComplete?.();
   };
 
   useEffect(() => {
