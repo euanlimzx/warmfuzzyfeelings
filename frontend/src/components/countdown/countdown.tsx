@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { subDays, addDays, format } from "date-fns";
 import confetti from "canvas-confetti";
+import { Notifications } from "./notifications";
 
 const BIRTHDAY_OFFSET = 4;
 export const Countdown = () => {
@@ -27,6 +28,7 @@ export const Countdown = () => {
           }
         }
       `}</style>
+      {/* <Notifications /> */}
       <FlipCalendar birthdayWithOffset={subDays(date, BIRTHDAY_OFFSET)} />
     </div>
   );
