@@ -1,12 +1,26 @@
-import express from "express";
+import express, { response } from "express";
 import cors from "cors";
 import { getAWSSignedUrl } from "./utils/mediaHandler";
 import { createStructuredCharacterSummary } from "./utils/characterSummary";
+import { validateInputData } from "./middleware/inputValidationMiddleware";
+import {
+  CardFormResponseSchema,
+  RegisterMakeAWishEmailSchema,
+} from "./routerTypes";
+import {
+  createCardFormResponse,
+  registerMakeAWishEmail,
+  getCardFromUUID,
+  getAllCardResponsesForUUID,
+} from "./db/db";
+import { developmentLogger } from "./middleware/inputLoggerMiddleware";
+import toCamelCase from "./utils/toCamelCase";
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(developmentLogger);
 
 app.get("/", async (req, res) => {
   const characterDesc = [
@@ -61,16 +75,11 @@ app.get("/", async (req, res) => {
     },
   ];
 
-  const response = await createStructuredCharacterSummary(
-    "James",
-    characterDesc,
-  );
-  console.log(response);
-  res.status(200).send(response);
+  res.status(200).send("hi");
 });
 
 app.post("/make-a-wish/upload-image", async (req, res) => {
-  const { fileName } = req.body;
+  const { fileName, fileSize, fileType } = req.body;
 
   if (!fileName) {
     res.status(400).send({
@@ -80,19 +89,112 @@ app.post("/make-a-wish/upload-image", async (req, res) => {
     return;
   }
 
-  const signedUrlData = await getAWSSignedUrl(fileName);
+  const signedUrlData = await getAWSSignedUrl(fileName, fileSize, fileType);
   if (signedUrlData.ok) {
     res.status(200).send(signedUrlData);
     return;
+  } else if (signedUrlData.fileValidationError) {
+    res.status(403).send(signedUrlData);
   } else {
     res.status(404).send(signedUrlData);
+    return;
     return;
   }
 });
 
 // @shawn: add zod validation
-app.post("/make-a-wish/upload-card-response", async (req, res) => {
-  const { responseUUID, imageUrl, questionAndResponse } = req.body;
+app.post(
+  "/make-a-wish/upload-card-response",
+  validateInputData(CardFormResponseSchema),
+  async (req, res) => {
+    const cardCreationResponse = await createCardFormResponse(req.body);
+
+    if (cardCreationResponse.ok) {
+      res.status(201).send(cardCreationResponse);
+      return;
+    } else {
+      res.status(500).send(cardCreationResponse);
+      return;
+    }
+  },
+);
+
+app.post(
+  "/make-a-wish/reigster-email",
+  validateInputData(RegisterMakeAWishEmailSchema),
+  async (req, res) => {
+    const registerMakeAWishEmailResponse = await registerMakeAWishEmail(
+      req.body,
+    );
+
+    if (registerMakeAWishEmailResponse.ok) {
+      res.status(201).send(registerMakeAWishEmailResponse);
+      return;
+    } else {
+      res.status(500).send(registerMakeAWishEmailResponse);
+      return;
+    }
+  },
+);
+
+app.get("/get-card-from-uuid", async (req, res) => {
+  const cardUUID = req.query.cardUUID;
+
+  if (typeof cardUUID === "string") {
+    const card = await getCardFromUUID({ cardUUID });
+
+    if (card.ok) {
+      res.status(200).send(toCamelCase(card));
+      return;
+    } else {
+      res.status(500).send(card);
+      return;
+    }
+  } else {
+    res
+      .status(400)
+      .send({ ok: false, message: "please specify a valid cardUUID" });
+  }
+});
+
+app.get("/create-structured-summary", async (req, res) => {
+  const { password, cardUUID } = req.query;
+
+  if (password !== process.env.CHARACTER_SUMMARY_GENERATION_PASSWORD) {
+    res.status(403).send("Nice try bro");
+    return;
+  }
+
+  if (typeof cardUUID === "string") {
+    const responsesForCard = await getAllCardResponsesForUUID({ cardUUID });
+
+    if (!responsesForCard.ok || responsesForCard.cards?.length === 0) {
+      res.status(404).send("welp, we could not get the data you wanted");
+      return;
+    }
+
+    const aggregatedResponses = [];
+
+    if (!responsesForCard.cards) {
+      res.status(404).send("Could not find anything");
+      return;
+    }
+
+    for (const {
+      question_and_response,
+      responder_name,
+    } of responsesForCard.cards!) {
+      aggregatedResponses.push({
+        questionAndResponse: question_and_response,
+        responderName: responder_name!,
+      });
+    }
+
+    const structuredCharacterSummary = await createStructuredCharacterSummary(
+      cardUUID,
+      aggregatedResponses,
+    );
+  }
 });
 
 export default app;

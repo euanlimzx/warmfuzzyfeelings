@@ -5,6 +5,7 @@ interface TextAreaFieldProps {
   inputValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
   bgColor: string;
+  isValid?: boolean;
 }
 
 const TextAreaField = ({
@@ -12,13 +13,16 @@ const TextAreaField = ({
   inputValue,
   setInputValue,
   bgColor,
+  isValid = true,
 }: TextAreaFieldProps) => {
   return (
     <textarea
       placeholder={placeholderText}
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
-      className={`!outline-none ${bgColor} transition-colors duration-[750ms] placeholder-white/70 p-2 rounded-md w-full text-lg`}
+      className={`!outline-none ${bgColor} transition-colors duration-[750ms] placeholder-white/70 p-2 rounded-md w-full text-lg ${
+        !isValid ? "ring-2 ring-red-500" : ""
+      }`}
     />
   );
 };
