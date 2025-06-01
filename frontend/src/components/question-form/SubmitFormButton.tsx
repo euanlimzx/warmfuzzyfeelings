@@ -6,6 +6,7 @@ import {
   useSpring,
 } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
+import LoadingAnimation from "./LoadingAnimation";
 
 const SPRING_OPTIONS = {
   mass: 1.5,
@@ -16,9 +17,14 @@ const SPRING_OPTIONS = {
 interface SubmitFormButtonProps {
   submitForm: () => void;
   bgColor: string;
+  isLoading: boolean;
 }
 
-const SubmitFormButton = ({ submitForm, bgColor }: SubmitFormButtonProps) => {
+const SubmitFormButton = ({
+  submitForm,
+  bgColor,
+  isLoading,
+}: SubmitFormButtonProps) => {
   const ref = useRef(null);
 
   const x = useMotionValue(0);
@@ -30,7 +36,7 @@ const SubmitFormButton = ({ submitForm, bgColor }: SubmitFormButtonProps) => {
   const transform = useMotionTemplate`translateX(${xSpring}px) translateY(${ySpring}px)`;
 
   const handleMove = (e) => {
-    if (!ref.current) return;
+    if (!ref.current || isLoading) return;
 
     const { height, width } = ref.current.getBoundingClientRect();
     const { offsetX, offsetY } = e.nativeEvent;
@@ -50,23 +56,43 @@ const SubmitFormButton = ({ submitForm, bgColor }: SubmitFormButtonProps) => {
     y.set(0);
   };
 
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isLoading) {
+      e.preventDefault();
+      submitForm();
+    }
+  };
+
   return (
     <div
-      className="mx-auto h-15 w-full  bg-black hover:cursor-pointer"
-      onClick={() => submitForm()}
+      className={`mx-auto h-15 w-full bg-black ${
+        isLoading ? "cursor-not-allowed" : "hover:cursor-pointer"
+      }`}
+      onClick={handleClick}
     >
       <motion.button
         ref={ref}
+        disabled={isLoading}
         style={{
           transform,
         }}
         onMouseMove={handleMove}
         onMouseLeave={handleReset}
         onMouseDown={handleReset}
-        className={`group flex h-full w-full items-center justify-between border-2 border-black text-white ${bgColor} px-8 text-xl font-semibold`}
+        className={`group flex h-full w-full items-center justify-between border-2 border-black text-white ${bgColor} px-8 text-xl font-semibold ${
+          isLoading ? "opacity-75 cursor-not-allowed" : ""
+        }`}
       >
-        <Copy>SEND YOUR WISHES!</Copy>
-        <Arrow />
+        {isLoading ? (
+          <div className="flex items-center justify-center w-full">
+            <LoadingAnimation isLoading={isLoading} />
+          </div>
+        ) : (
+          <>
+            <Copy>SEND YOUR WISHES!</Copy>
+            <Arrow />
+          </>
+        )}
       </motion.button>
     </div>
   );

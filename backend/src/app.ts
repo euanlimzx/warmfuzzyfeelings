@@ -75,7 +75,7 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/make-a-wish/upload-image", async (req, res) => {
-  const { fileName } = req.body;
+  const { fileName, fileSize, fileType } = req.body;
 
   if (!fileName) {
     res.status(400).send({
@@ -85,10 +85,12 @@ app.post("/make-a-wish/upload-image", async (req, res) => {
     return;
   }
 
-  const signedUrlData = await getAWSSignedUrl(fileName);
+  const signedUrlData = await getAWSSignedUrl(fileName, fileSize, fileType);
   if (signedUrlData.ok) {
     res.status(200).send(signedUrlData);
     return;
+  } else if (signedUrlData.fileValidationError) {
+    res.status(403).send(signedUrlData);
   } else {
     res.status(404).send(signedUrlData);
     return;

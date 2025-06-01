@@ -30,6 +30,7 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
   const [imageSizeAndTypeValid, setImageSizeAndTypeValid] = useState(true);
   const [showImageSizeAndTypeError, setShowImageSizeAndTypeError] =
     useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const formGap = 4;
   const bgColor = "bg-blue-700";
@@ -104,6 +105,8 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
   };
 
   const submitForm = async () => {
+    setIsLoading(true);
+
     // check that all fields, including the image, have been filled up
     const isMemoryValid = !!memoryResponse;
     const isDescriptionValid = !!descriptionResponse;
@@ -115,6 +118,7 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
 
     if (!memoryResponse || !descriptionResponse || !imageFile) {
       setIsFormIncomplete(true);
+      setIsLoading(false);
       return;
     }
 
@@ -127,6 +131,8 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
 
     if (!imageUploadResponse?.ok) {
       console.log("Error uploading image");
+      setIsLoading(false);
+
       return;
     }
 
@@ -148,6 +154,8 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
 
     if (formSubmissionResponse.status != 201) {
       console.log("error writing to the DB");
+      setIsLoading(false);
+
       return;
     }
 
@@ -156,6 +164,7 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
     setDescriptionResponse("");
     setImageFile(null);
     setUploadedImageUrl(null);
+    setIsLoading(false);
   };
 
   return (
@@ -215,8 +224,12 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
       </div>
 
       {/* submit button */}
-      <div className="flex w-full items-center justify-center">
-        <SubmitFormButton submitForm={submitForm} bgColor={bgColor} />
+      <div className="flex w-full items-center justify-center mt-4">
+        <SubmitFormButton
+          submitForm={submitForm}
+          bgColor={bgColor}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );
