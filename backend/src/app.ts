@@ -5,6 +5,7 @@ import { createStructuredCharacterSummary } from "./utils/characterSummary";
 import { validateInputData } from "./middleware/inputValidationMiddleware";
 import {
   CardFormResponseSchema,
+  FunctionErrorResponse,
   RegisterMakeAWishEmailSchema,
 } from "./routerTypes";
 import {
@@ -12,9 +13,11 @@ import {
   registerMakeAWishEmail,
   getCardFromUUID,
   getAllCardResponsesForUUID,
+  insertCharacterSummary,
 } from "./db/db";
 import { developmentLogger } from "./middleware/inputLoggerMiddleware";
 import toCamelCase from "./utils/toCamelCase";
+import { CharacterSummaryResponse } from "./utils/characterSummary";
 
 const app = express();
 
@@ -195,7 +198,29 @@ app.get("/create-structured-summary", async (req, res) => {
       aggregatedResponses,
     );
 
-    res.status(200).send(structuredCharacterSummary);
+    if (!structuredCharacterSummary.ok) {
+      console.error(structuredCharacterSummary);
+      res.status(500).send(structuredCharacterSummary);
+      return;
+    }
+
+    const insertCharacterSummaryResponse = await insertCharacterSummary({
+      sourcedSummary: structuredCharacterSummary.summary,
+      descriptiveTitle: structuredCharacterSummary.descriptiveTitle,
+      summaryOfTraits: structuredCharacterSummary.summaryOfTraits,
+      singleWordTraits: structuredCharacterSummary.singleWordTraits,
+      cardUUID: cardUUID,
+    });
+
+    if (!insertCharacterSummaryResponse.ok) {
+      res
+        .status(500)
+        .send("There were issues inserting the new summary into the DB");
+      return;
+    }
+
+    res.status(200).send(insertCharacterSummaryResponse);
+    return;
   }
 });
 

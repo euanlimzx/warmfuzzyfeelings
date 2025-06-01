@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 import { Json } from "../db/dbTypes";
+import { FunctionErrorResponse } from "../routerTypes";
 
 interface birthdayPersonComments {
   responderName: string;
@@ -32,15 +33,10 @@ const CharacterTraits = z.object({
 });
 type ParsedCharacterTrait = z.infer<typeof CharacterTraits>;
 
-interface CharacterSummaryResponse
+export interface CharacterSummaryResponse
   extends ParsedSummarySources,
     ParsedCharacterTrait {
-  ok: boolean;
-}
-
-interface CharacterSummaryErrorResponse {
-  ok: boolean;
-  message: string;
+  ok: true;
 }
 
 const determineCharacterTraits = async (comments: string) => {
@@ -116,7 +112,7 @@ const determineCharacterTraits = async (comments: string) => {
 export const createStructuredCharacterSummary = async (
   birthdayPerson: string,
   comments: birthdayPersonComments[],
-): Promise<CharacterSummaryResponse | CharacterSummaryErrorResponse> => {
+): Promise<CharacterSummaryResponse | FunctionErrorResponse> => {
   const stringifiedCharacterSummary = JSON.stringify(comments);
   const generatedSummary = await determineCharacterTraits(
     stringifiedCharacterSummary,

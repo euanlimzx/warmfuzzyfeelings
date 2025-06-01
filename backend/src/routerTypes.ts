@@ -20,6 +20,7 @@ export interface FunctionResponse {
 }
 
 export interface FunctionErrorResponse extends FunctionResponse {
+  ok: false;
   message: string;
 }
 

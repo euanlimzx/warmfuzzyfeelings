@@ -5,10 +5,11 @@ import {
   RegisterMakeAWishEmail,
 } from "../routerTypes";
 import supabaseClient from "./client";
-import { Tables } from "./dbTypes";
+import { Json, Tables } from "./dbTypes";
 
 type CardFormResponseRow = Tables<"Card_Form_Response">;
 interface CardFormFunctionResponse extends FunctionResponse {
+  ok: true;
   createdCard: CardFormResponseRow;
 }
 
@@ -111,6 +112,47 @@ export const getAllCardResponsesForUUID = async ({
     return {
       ok: false,
       message: "There was an error fetching the associated card responses",
+    };
+  }
+};
+
+interface CharacterSummaryDetails {
+  sourcedSummary: Json;
+  descriptiveTitle: string;
+  summaryOfTraits: string;
+  singleWordTraits: string[];
+  cardUUID: string;
+}
+export const insertCharacterSummary = async ({
+  sourcedSummary,
+  descriptiveTitle,
+  summaryOfTraits,
+  singleWordTraits,
+  cardUUID,
+}: CharacterSummaryDetails) => {
+  try {
+    const { data, error } = await supabaseClient
+      .from("Card")
+      .update({
+        descriptive_title: descriptiveTitle,
+        text_summary: summaryOfTraits,
+        single_word_traits: singleWordTraits,
+        sourced_summary: sourcedSummary,
+      })
+      .eq("id", cardUUID)
+      .select()
+      .single();
+
+    if (error) {
+      return { ok: false, message: "Error updating character summary" };
+    }
+
+    return { ok: true, updatedCard: data };
+  } catch (err) {
+    console.error(err);
+    return {
+      ok: false,
+      message: "There was an error updating the character summary",
     };
   }
 };
