@@ -10,7 +10,7 @@ interface RippleProps extends ComponentPropsWithoutRef<"div"> {
 
 export const Ripple = React.memo(function Ripple({
   mainCircleSize = 210,
-  mainCircleOpacity = 0.24,
+  mainCircleOpacity = 0.6,
   numCircles = 8,
   className,
   ...props
@@ -25,14 +25,14 @@ export const Ripple = React.memo(function Ripple({
     >
       {Array.from({ length: numCircles }, (_, i) => {
         const size = mainCircleSize + i * 70;
-        const opacity = mainCircleOpacity - i * 0.03;
+        const opacity = mainCircleOpacity - i * 0.05;
         const animationDelay = `${i * 0.06}s`;
         const borderStyle = "solid";
 
         return (
           <div
             key={i}
-            className={`absolute rounded-full border bg-foreground/25 shadow-xl`}
+            className={`absolute rounded-full border bg-white/40 shadow-xl`}
             style={
               {
                 "--i": i,
@@ -41,8 +41,8 @@ export const Ripple = React.memo(function Ripple({
                 opacity,
                 animationDelay,
                 borderStyle,
-                borderWidth: "1px",
-                borderColor: `var(--foreground)`,
+                borderWidth: "1.5px",
+                borderColor: "white",
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%) scale(1)",
