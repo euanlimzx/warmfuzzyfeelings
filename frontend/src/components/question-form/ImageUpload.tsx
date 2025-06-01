@@ -6,16 +6,19 @@ import { CiImageOn } from "react-icons/ci";
 
 interface ImageUploaderProps {
   setImageFile: Dispatch<SetStateAction<File | null>>;
+  uploadedImageUrl: null | string | Blob;
+  setUploadedImageUrl: Dispatch<SetStateAction<null | string | Blob>>;
 }
 
-export default function ImageUploader({ setImageFile }: ImageUploaderProps) {
+export default function ImageUploader({
+  setImageFile,
+  uploadedImageUrl,
+  setUploadedImageUrl,
+}: ImageUploaderProps) {
   // food for thought: how should the pasting interaction look like?
   // should it be that any paste would upload an image, or should it be that you
   // have to be focussed on the field first, and copy and pasting after that would
   // upload the copied image
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<
-    null | string | Blob
-  >(null);
 
   const displayUploadedImage = (image: File) => {
     const imageDisplayField = document.getElementById(

@@ -9,12 +9,27 @@ import SubmitFormButton from "./SubmitFormButton";
 import { UUIDTypes, v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
-const BirthdayWishForm = () => {
-  const [placeholderOne, setPlaceholderOne] = useState("");
+interface BirthdayWishFormProps {
+  cardUUID: string;
+}
+
+const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
+  const [memoryResponse, setMemoryResponse] = useState("");
+  const [descriptionResponse, setDescriptionResponse] = useState("");
+  const [birthdayPerson, setBirthdayPerson] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<
+    null | string | Blob
+  >(null);
 
   const formGap = 4;
   const bgColor = "bg-blue-700";
+
+  // @shawn conditionally load these + birthday person too
+  const memoryQuestion = `What was your favourite memory with ${birthdayPerson}`;
+  const descriptionQuestion = `Use a few words to describe ${birthdayPerson}`;
+
+  console.log(cardUUID);
 
   const uploadImageToS3 = async (uuid: UUIDTypes) => {
     if (!imageFile) {
@@ -38,11 +53,13 @@ const BirthdayWishForm = () => {
       );
 
       if (!response.data.ok) {
-        throw new Error("Failed to get upload URL");
+        return {
+          ok: false,
+          message: "There were some errors getting the signed URL",
+        };
       }
 
       const { url } = response.data;
-      console.log(url);
 
       // Upload the file directly to S3 using the presigned URL
       const uploadResponse = await axios.put(url, imageFile, {
@@ -52,12 +69,13 @@ const BirthdayWishForm = () => {
       });
 
       if (uploadResponse.status !== 200) {
-        throw new Error("Failed to upload image");
+        return {
+          ok: false,
+          message: "Failed to upload image",
+        };
       }
 
-      console.log(uploadResponse);
-
-      return uploadResponse.data;
+      return { ok: true };
     } catch (error) {
       console.error("Error uploading image:", error);
       throw error; // Re-throw the error to handle it in the calling function
@@ -69,20 +87,42 @@ const BirthdayWishForm = () => {
 
     // if so, first create a random key that we will put as a cookie to mark that this user has already submitted something before
     const responseUUID = uuidv4();
-    const submitReceipt = responseUUID + "__form UUID";
-    localStorage.setItem("submitReceipt", submitReceipt);
+    const submitReceipt = `${cardUUID}__${responseUUID}`;
 
     // add image to bucket, name of the image will be the uuid of the of the card + uuid of the response
-    const s3ImageUrl = await uploadImageToS3(submitReceipt);
+    const imageUploadResponse = await uploadImageToS3(submitReceipt);
+
+    if (!imageUploadResponse?.ok) {
+      console.log("Error uploading image");
+      return;
+    }
 
     // create a DB entry for the form contents
     const formResponseDetails = {
+      cardUUID,
       responseUUID,
-      imageUrl: `${process.env.AWS_CLOUDFRONT_URL}/${submitReceipt}`,
-      questionAndResponse: {
-        question1: placeholderOne,
-      },
+      imageUrl: `${submitReceipt}`,
+      questionAndResponse: [
+        { question: memoryQuestion, response: memoryResponse },
+        { question: descriptionQuestion, response: descriptionResponse },
+      ],
     };
+
+    const formSubmissionResponse = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/upload-card-response`,
+      formResponseDetails
+    );
+
+    if (formSubmissionResponse.status != 201) {
+      console.log("error writing to the DB");
+      return;
+    }
+
+    localStorage.setItem("submitReceipt", submitReceipt);
+    setMemoryResponse("");
+    setDescriptionResponse("");
+    setImageFile(null);
+    setUploadedImageUrl(null);
   };
 
   return (
@@ -94,15 +134,15 @@ const BirthdayWishForm = () => {
       <form>
         <div className={`flex flex-col gap-${formGap}`}>
           <InputField
-            inputValue={placeholderOne}
-            setInputValue={setPlaceholderOne}
-            placeholderText={"Here's the word I think best describes you"}
+            inputValue={memoryResponse}
+            setInputValue={setMemoryResponse}
+            placeholderText={memoryQuestion}
             bgColor={bgColor}
           />
           <TextAreaField
-            inputValue={placeholderOne}
-            setInputValue={setPlaceholderOne}
-            placeholderText={"Here's the word I think best describes you"}
+            inputValue={descriptionResponse}
+            setInputValue={setDescriptionResponse}
+            placeholderText={descriptionQuestion}
             bgColor={bgColor}
           />
         </div>
@@ -110,7 +150,11 @@ const BirthdayWishForm = () => {
 
       {/* images that you can upload */}
       <div className={`${bgColor} rounded-md`}>
-        <ImageUploader setImageFile={setImageFile} />
+        <ImageUploader
+          setImageFile={setImageFile}
+          uploadedImageUrl={uploadedImageUrl}
+          setUploadedImageUrl={setUploadedImageUrl}
+        />
       </div>
 
       {/* submit button */}
