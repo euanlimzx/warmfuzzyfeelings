@@ -6,6 +6,7 @@ interface InputFieldProps {
   setInputValue: Dispatch<SetStateAction<string>>;
   bgColor: string;
   isValid?: boolean;
+  label?: string;
 }
 
 const InputField = ({
@@ -14,19 +15,22 @@ const InputField = ({
   setInputValue,
   bgColor,
   isValid = true,
+  label,
 }: InputFieldProps) => {
   return (
-    <input
-      type="text"
-      placeholder={placeholderText}
-      value={inputValue}
-      onChange={(e) => setInputValue(e.target.value)}
-      className={`
+    <>
+      {label && <label className="text-md font-medium">{label}</label>}
+      <input
+        type="text"
+        placeholder={placeholderText}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        className={`
         !outline-none 
         ${bgColor} 
         transition-colors 
         duration-[750ms] 
-        placeholder-white/70 
+        placeholder-white/70
         p-2 
         w-full 
         text-lg
@@ -34,7 +38,8 @@ const InputField = ({
         border-black
         ${!isValid ? "ring-2 ring-red-500" : ""}
       `}
-    />
+      ></input>
+    </>
   );
 };
 

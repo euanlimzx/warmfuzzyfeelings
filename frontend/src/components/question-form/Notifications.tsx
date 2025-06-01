@@ -31,7 +31,7 @@ const Notification = ({ children, removeNotif }: NotificationProps) => {
       animate={{ y: 0, scale: 1 }}
       exit={{ x: "100%", opacity: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="p-4 flex items-center rounded gap-2 text-sm font-medium shadow-lg text-white bg-red-500 pointer-events-auto fixed top-4 w-128"
+      className="p-4 flex items-center border-2 border-black gap-2 text-sm font-medium shadow-lg text-white bg-red-500 pointer-events-auto fixed top-4 w-128"
     >
       {children}
       <button

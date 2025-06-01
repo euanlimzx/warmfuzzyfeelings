@@ -43,8 +43,8 @@ const BirthdayWishForm = ({
   const bgColor = "bg-yellow-200";
 
   // @shawn conditionally load these + birthday person too
-  const memoryQuestion = `What was your favourite memory with ${birthdayPerson}`;
-  const descriptionQuestion = `Use a few words to describe ${birthdayPerson}`;
+  const memoryQuestion = ``;
+  const descriptionQuestion = ``;
 
   const uploadImageToS3 = async (uuid: UUIDTypes) => {
     if (!imageFile) {
@@ -198,27 +198,38 @@ const BirthdayWishForm = ({
       />
 
       {/* form title */}
-      <h1 className="text-2xl sm:text-4xl font-bold">
-        Dear {birthdayPerson}...
+      <h1 className="text-2xl sm:text-4xl font-semibold">
+        Help make a card for {birthdayPerson}&apos;s Birthday!
       </h1>
+      <h2>
+        Answer a few quick questions and we&apos;ll help collate them into a
+        pretty card ❤️
+      </h2>
+      <div className="w-full h-0.5 bg-black"></div>
 
       {/* form fields */}
       <form className="w-full">
         <div className={`flex flex-col gap-${formGap} text-black`}>
-          <InputField
-            inputValue={memoryResponse}
-            setInputValue={setMemoryResponse}
-            placeholderText={memoryQuestion}
-            bgColor={bgColor}
-            isValid={memoryResponseValid}
-          />
-          <TextAreaField
-            inputValue={descriptionResponse}
-            setInputValue={setDescriptionResponse}
-            placeholderText={descriptionQuestion}
-            bgColor={bgColor}
-            isValid={descriptionResponseValid}
-          />
+          <div className="flex flex-col gap-1 pt-2">
+            <InputField
+              inputValue={descriptionResponse}
+              setInputValue={setDescriptionResponse}
+              placeholderText={descriptionQuestion}
+              bgColor={bgColor}
+              isValid={descriptionResponseValid}
+              label={`What are some words or phrases that best describe ${birthdayPerson}?`}
+            />
+          </div>
+          <div className="flex flex-col gap-1 pt-2">
+            <TextAreaField
+              inputValue={memoryResponse}
+              setInputValue={setMemoryResponse}
+              placeholderText={memoryQuestion}
+              bgColor={bgColor}
+              isValid={memoryResponseValid}
+              label={`Tell us about your favorite memory with ${birthdayPerson}!`}
+            />
+          </div>
         </div>
       </form>
 
