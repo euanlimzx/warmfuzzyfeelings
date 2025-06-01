@@ -35,25 +35,26 @@ export const Countdown = () => {
           }
         }
       `}</style>
-      <FlipCalendar
-        birthdayWithOffset={subDays(date, BIRTHDAY_OFFSET)}
-        onComplete={showText}
-      />
-
-      <AnimatePresence>
-        {showBottomText && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-30 left-1/2 -translate-x-1/2 text-lg font-semibold text-white"
-          >
-            <SpinningText fontSize={0.2}>
-              We&apos;ve got something special for you
-            </SpinningText>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="relative flex flex-col items-center">
+        <FlipCalendar
+          birthdayWithOffset={subDays(date, BIRTHDAY_OFFSET)}
+          onComplete={showText}
+        />
+        <AnimatePresence>
+          {showBottomText && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="mt-48 text-lg font-semibold text-white"
+            >
+              <SpinningText fontSize={0.2}>
+                We&apos;ve got something special for you
+              </SpinningText>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
