@@ -1,12 +1,27 @@
 import axios from "axios";
 import { motion } from "framer-motion";
-
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
-const SpringModal = ({ isOpen, setIsOpen }) => {
+interface SpringModalProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+const SpringModal = ({ isOpen, setIsOpen }: SpringModalProps) => {
   const [email, setEmail] = useState("");
+  const [isValidEmail, setIsValidEmail] = useState(true);
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
   const handleSubmit = async () => {
+    if (!validateEmail(email)) {
+      setIsValidEmail(false);
+      return;
+    }
+
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/join-waitlist`,
       {
@@ -16,6 +31,12 @@ const SpringModal = ({ isOpen, setIsOpen }) => {
     console.log(response);
     setIsOpen(false);
   };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    setIsValidEmail(true); // Reset validation on change
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -38,13 +59,22 @@ const SpringModal = ({ isOpen, setIsOpen }) => {
                 We&apos;ll let you know when we launch!
               </h3>
               <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full p-2 bg-white border-3 border-black rounded-none focus:outline-none focus:ring-0 focus:border-black text-black caret-black"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                <div className="w-full">
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className={`w-full p-2 bg-white border-3 border-black rounded-none focus:outline-none focus:ring-0 focus:border-black text-black caret-black ${
+                      !isValidEmail ? "border-red-500" : ""
+                    }`}
+                    value={email}
+                    onChange={handleEmailChange}
+                  />
+                  {!isValidEmail && (
+                    <p className="text-white text-sm mt-1">
+                      Invalid email address
+                    </p>
+                  )}
+                </div>
                 <button
                   onClick={handleSubmit}
                   className="w-full sm:w-fit px-6 py-2 font-medium border-2 border-black bg-white text-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
