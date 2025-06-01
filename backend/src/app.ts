@@ -7,8 +7,13 @@ import {
   CardFormResponseSchema,
   RegisterMakeAWishEmailSchema,
 } from "./routerTypes";
-import { createCardFormResponse, registerMakeAWishEmail } from "./db/db";
+import {
+  createCardFormResponse,
+  registerMakeAWishEmail,
+  getCardFromUUID,
+} from "./db/db";
 import { developmentLogger } from "./middleware/inputLoggerMiddleware";
+import toCamelCase from "./utils/toCamelCase";
 
 const app = express();
 
@@ -134,5 +139,25 @@ app.post(
     }
   },
 );
+
+app.get("/get-card-from-uuid", async (req, res) => {
+  const cardUUID = req.query.cardUUID;
+
+  if (typeof cardUUID === "string") {
+    const card = await getCardFromUUID({ cardUUID });
+
+    if (card.ok) {
+      res.status(200).send(toCamelCase(card));
+      return;
+    } else {
+      res.status(500).send(card);
+      return;
+    }
+  } else {
+    res
+      .status(400)
+      .send({ ok: false, message: "please specify a valid cardUUID" });
+  }
+});
 
 export default app;

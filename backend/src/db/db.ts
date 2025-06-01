@@ -65,3 +65,27 @@ export const registerMakeAWishEmail = async ({
     return { ok: false, message: "There was an error registering the email" };
   }
 };
+
+export const getCardFromUUID = async ({ cardUUID }: { cardUUID: string }) => {
+  try {
+    const { data, error } = await supabaseClient
+      .from("Card")
+      .select()
+      .eq("id", cardUUID)
+      .single();
+
+    console.log(data);
+
+    if (error || !data) {
+      return { ok: false, message: "Could not find the desired card" };
+    }
+
+    return { ok: true, card: data };
+  } catch (err) {
+    console.error(err);
+    return {
+      ok: false,
+      message: "There was an issue finding the desired card",
+    };
+  }
+};

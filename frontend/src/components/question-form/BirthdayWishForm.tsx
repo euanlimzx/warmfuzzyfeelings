@@ -196,7 +196,7 @@ const BirthdayWishForm = ({
       />
 
       {/* form title */}
-      <h1>Dear {birthdayPerson}</h1>
+      <h1 className="text-4xl font-bold">Dear {birthdayPerson}...</h1>
 
       {/* form fields */}
       <form>
