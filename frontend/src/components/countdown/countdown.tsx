@@ -1,20 +1,97 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { subDays, addDays, format } from "date-fns";
+import confetti from "canvas-confetti";
+import { Notifications } from "./notifications";
+import { SpinningText } from "../magicui/spinning-text";
 
 const BIRTHDAY_OFFSET = 4;
 export const Countdown = () => {
   const date = new Date();
+  const [showBottomText, setShowBottomText] = useState(false);
+
+  const showText = () => {
+    setShowBottomText(true);
+  };
+
   return (
-    <div className="grid place-content-center bg-white h-screen px-4 py-24 md:flex-row">
-      <FlipCalendar birthdayWithOffset={subDays(date, BIRTHDAY_OFFSET)} />
+    <div className="grid place-content-center h-screen gradient-background">
+      <style jsx>{`
+        .gradient-background {
+          background: linear-gradient(300deg, #ffcee6, #e7d6ff, #ffd6f3);
+          background-size: 180% 180%;
+          animation: gradient-animation 4s ease infinite;
+        }
+
+        @keyframes gradient-animation {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
+      <div className="relative flex flex-col items-center">
+        <FlipCalendar
+          birthdayWithOffset={subDays(date, BIRTHDAY_OFFSET)}
+          onComplete={showText}
+        />
+        <AnimatePresence>
+          {showBottomText && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="mt-48 text-lg font-semibold text-white"
+            >
+              <SpinningText fontSize={0.2}>
+                We&apos;ve got something special for you
+              </SpinningText>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
 
-const FlipCalendar = ({ birthdayWithOffset }) => {
+const FlipCalendar = ({ birthdayWithOffset, onComplete }) => {
   const [index, setIndex] = useState(0);
   const [date, setDate] = useState(birthdayWithOffset);
+  const triggerConfetti = () => {
+    const duration = 5 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    const randomInRange = (min: number, max: number) =>
+      Math.random() * (max - min) + min;
+
+    const interval = window.setInterval(() => {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+      });
+    }, 250);
+
+    onComplete?.();
+  };
 
   useEffect(() => {
     let currentCount = 0;
@@ -23,6 +100,7 @@ const FlipCalendar = ({ birthdayWithOffset }) => {
         incrementDate();
         currentCount++;
       } else {
+        triggerConfetti();
         clearInterval(interval);
       }
     }, 1000);
@@ -44,13 +122,13 @@ const FlipCalendar = ({ birthdayWithOffset }) => {
 
 const CalendarDisplay = ({ index, date }) => {
   return (
-    <div className="w-fit overflow-hidden rounded-xl border-4 border-indigo-500 bg-indigo-500">
-      <div className="flex items-center justify-between px-3 py-1">
-        <span className="text-center uppercase text-white text-2xl">
+    <div className="w-fit overflow-hidden rounded-xl border-2 md:border-4 border-red-300 bg-red-300">
+      <div className="flex items-center justify-between px-2 md:px-3 py-0.5 md:py-1">
+        <span className="text-center uppercase text-white text-xl md:text-2xl">
           {format(date, "LLLL")}
         </span>
       </div>
-      <div className="relative z-0 h-72 w-104 shrink-0">
+      <div className="relative z-0 h-48 md:h-72 w-72 md:w-104 shrink-0">
         <AnimatePresence mode="sync">
           <motion.div
             style={{
@@ -68,7 +146,7 @@ const CalendarDisplay = ({ index, date }) => {
             exit={{ rotateX: "-180deg" }}
             className="absolute inset-0"
           >
-            <div className="grid h-full w-full place-content-center rounded-lg bg-white text-8xl">
+            <div className="grid h-full w-full place-content-center rounded-lg bg-white text-6xl md:text-8xl">
               {format(date, "do")}
             </div>
           </motion.div>
@@ -88,9 +166,9 @@ const CalendarDisplay = ({ index, date }) => {
             }}
             className="absolute inset-0"
           >
-            <div className="relative grid h-full w-full place-content-center rounded-lg bg-white text-8xl">
+            <div className="relative grid h-full w-full place-content-center rounded-lg bg-white text-6xl md:text-8xl">
               {format(date, "do")}
-              <span className="absolute bottom-4 left-1/2 -translate-x-1/2 text-base">
+              <span className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 text-sm md:text-base">
                 {format(date, "yyyy")}
               </span>
             </div>
@@ -100,20 +178,3 @@ const CalendarDisplay = ({ index, date }) => {
     </div>
   );
 };
-
-const MONTH_NAMES = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-const WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
