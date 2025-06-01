@@ -29,7 +29,7 @@ export default function Home() {
   }, [birthdayCardUUID]);
 
   return (
-    <div className="text-white flex flex-col items-center justify-center w-full">
+    <div className="text-black flex flex-col items-center justify-center w-full h-screen bg-white">
       {!isCardRetrievalError ? (
         <BirthdayWishForm
           cardUUID={birthdayCardUUID as string}
