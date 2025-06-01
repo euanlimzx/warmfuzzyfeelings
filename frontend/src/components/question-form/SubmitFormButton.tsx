@@ -79,12 +79,12 @@ const SubmitFormButton = ({
         onMouseMove={handleMove}
         onMouseLeave={handleReset}
         onMouseDown={handleReset}
-        className={`group flex h-full w-full items-center justify-between border-2 border-black text-white ${bgColor} px-8 text-xl font-semibold ${
+        className={`group flex h-full w-full items-center justify-between border-2 border-black text-white bg-purple-400 px-8 text-xl font-semibold ${
           isLoading ? "opacity-75 cursor-not-allowed" : ""
         }`}
       >
         {isLoading ? (
-          <div className="flex items-center justify-center w-full">
+          <div className="flex items-center justify-center w-full ">
             <LoadingAnimation isLoading={isLoading} />
           </div>
         ) : (

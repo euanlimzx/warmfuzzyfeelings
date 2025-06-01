@@ -40,7 +40,7 @@ const BirthdayWishForm = ({
   const [showFormCompleteModal, setShowFormCompleteModal] = useState(false);
 
   const formGap = 4;
-  const bgColor = "bg-blue-700";
+  const bgColor = "bg-yellow-200";
 
   // @shawn conditionally load these + birthday person too
   const memoryQuestion = `What was your favourite memory with ${birthdayPerson}`;
@@ -204,7 +204,7 @@ const BirthdayWishForm = ({
 
       {/* form fields */}
       <form className="w-full">
-        <div className={`flex flex-col gap-${formGap}`}>
+        <div className={`flex flex-col gap-${formGap} text-black`}>
           <InputField
             inputValue={memoryResponse}
             setInputValue={setMemoryResponse}

@@ -28,9 +28,10 @@ const InputField = ({
         duration-[750ms] 
         placeholder-white/70 
         p-2 
-        rounded-md 
         w-full 
         text-lg
+        border-2
+        border-black
         ${!isValid ? "ring-2 ring-red-500" : ""}
       `}
     />

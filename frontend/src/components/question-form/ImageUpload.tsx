@@ -85,7 +85,7 @@ export default function ImageUploader({
 
   return (
     <div
-      className={`relative flex flex-col h-1/2 items-center justify-center gap-4 rounded-md ${
+      className={`relative flex flex-col h-1/2 items-center justify-center gap-4 border-2 border-black ${
         !isValid ? "ring-2 ring-red-500" : ""
       }`}
       onDragEnter={handleDrag}
