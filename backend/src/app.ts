@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express from "express";
 import cors from "cors";
 import { getAWSSignedUrl } from "./utils/mediaHandler";
 import { createStructuredCharacterSummary } from "./utils/characterSummary";
@@ -194,6 +194,8 @@ app.get("/create-structured-summary", async (req, res) => {
       cardUUID,
       aggregatedResponses,
     );
+
+    res.status(200).send(structuredCharacterSummary);
   }
 });
 
