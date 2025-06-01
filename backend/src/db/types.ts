@@ -13,27 +13,27 @@ export type Database = {
         Row: {
           birthday_person: string
           descriptive_title: string | null
-          id: number
-          one_good_friend_id: number
-          single_word_traits: string[]
+          id: string
+          one_good_friend_id: string
+          single_word_traits: string[] | null
           sourced_summary: Json | null
           text_summary: string | null
         }
         Insert: {
           birthday_person: string
           descriptive_title?: string | null
-          id?: number
-          one_good_friend_id: number
-          single_word_traits?: string[]
+          id?: string
+          one_good_friend_id?: string
+          single_word_traits?: string[] | null
           sourced_summary?: Json | null
           text_summary?: string | null
         }
         Update: {
           birthday_person?: string
           descriptive_title?: string | null
-          id?: number
-          one_good_friend_id?: number
-          single_word_traits?: string[]
+          id?: string
+          one_good_friend_id?: string
+          single_word_traits?: string[] | null
           sourced_summary?: Json | null
           text_summary?: string | null
         }
@@ -47,28 +47,28 @@ export type Database = {
           },
         ]
       }
-      CardFormResponse: {
+      Card_Form_Response: {
         Row: {
-          card_id: number
-          id: number
+          card_id: string | null
+          id: string
           image_url: string | null
-          question_and_responses: Json
+          question_and_response: Json
         }
         Insert: {
-          card_id: number
-          id?: number
+          card_id?: string | null
+          id: string
           image_url?: string | null
-          question_and_responses: Json
+          question_and_response: Json
         }
         Update: {
-          card_id?: number
-          id?: number
+          card_id?: string | null
+          id?: string
           image_url?: string | null
-          question_and_responses?: Json
+          question_and_response?: Json
         }
         Relationships: [
           {
-            foreignKeyName: "CardFormResponse_card_id_fkey"
+            foreignKeyName: "Card_Form_Response_card_id_fkey"
             columns: ["card_id"]
             isOneToOne: false
             referencedRelation: "Card"
@@ -78,15 +78,15 @@ export type Database = {
       }
       Good_Friend: {
         Row: {
-          id: number
+          id: string
           name: string
         }
         Insert: {
-          id?: number
+          id?: string
           name: string
         }
         Update: {
-          id?: number
+          id?: string
           name?: string
         }
         Relationships: []

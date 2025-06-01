@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { X as XIcon } from "lucide-react";
 import { CiImageOn } from "react-icons/ci";
 
-export default function ImageUploader() {
+interface ImageUploaderProps {
+  setImageFile: Dispatch<SetStateAction<File | null>>;
+}
+
+export default function ImageUploader({ setImageFile }: ImageUploaderProps) {
   // food for thought: how should the pasting interaction look like?
   // should it be that any paste would upload an image, or should it be that you
   // have to be focussed on the field first, and copy and pasting after that would
@@ -12,9 +16,6 @@ export default function ImageUploader() {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<
     null | string | Blob
   >(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  // const [dragActive, setDragActive] = useState(false);
-  // const deviceTypeRef = useRef(false);
 
   const displayUploadedImage = (image: File) => {
     const imageDisplayField = document.getElementById(
@@ -77,54 +78,9 @@ export default function ImageUploader() {
   // TODO @Shawn: check the device type. if it is a mac, use command + v. if it is windows use ctrl + v
   useEffect(() => {});
 
-  const uploadImageToS3 = async () => {
-    if (!imageFile) {
-      console.error("No image file selected");
-      return;
-    }
-
-    try {
-      // First, get the presigned URL from our backend
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/upload-image`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fileName: imageFile.name,
-            fileType: imageFile.type,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to get upload URL");
-      }
-
-      const { url } = await response.json();
-
-      // Upload the file directly to S3 using the presigned URL
-      const uploadResponse = await fetch(url, {
-        method: "PUT",
-        body: imageFile,
-        headers: {
-          "Content-Type": imageFile.type,
-        },
-      });
-
-      if (!uploadResponse.ok) {
-        throw new Error("Failed to upload image");
-      }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  };
-
   return (
     <div
-      className="relative flex flex-col h-128 items-center justify-center gap-4"
+      className="relative flex flex-col h-1/2 items-center justify-center gap-4"
       onDragEnter={handleDrag}
       onDragLeave={handleDrag}
       onDragOver={handleDrag}

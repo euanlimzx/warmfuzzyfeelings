@@ -5,195 +5,85 @@ import { useState } from "react";
 import InputField from "./InputField";
 import TextAreaField from "./TextAreaField";
 import ImageUploader from "./ImageUpload";
-
-// const ShiftingContactForm = () => {
-//   const [selected, setSelected] = useState("individual");
-//   return (
-//     <section className="p-4 bg-slate-100">
-//       <div className="w-full max-w-6xl mx-auto shadow-lg flex flex-col-reverse lg:flex-row rounded-lg overflow-hidden">
-//         <Form selected={selected} setSelected={setSelected} />
-//         <Images selected={selected} />
-//       </div>
-//     </section>
-//   );
-// };
-
-// const Form = ({ selected, setSelected }) => {
-//   return (
-//     <form
-//       onSubmit={(e) => e.preventDefault()}
-//       className={`p-8 w-full text-white transition-colors duration-[750ms] ${
-//         selected === "company" ? "bg-indigo-600" : "bg-violet-600"
-//       }`}
-//     >
-//       <h3 className="text-4xl font-bold mb-6">Contact us</h3>
-
-//       {/* Name input */}
-//       <div className="mb-6">
-//         <p className="text-2xl mb-2">Hi 👋! My name is...</p>
-//         <input
-//           type="text"
-//           placeholder="Your name..."
-//           className={`${
-//             selected === "company" ? "bg-indigo-700" : "bg-violet-700"
-//           } transition-colors duration-[750ms] placeholder-white/70 p-2 rounded-md w-full focus:outline-0`}
-//         />
-//       </div>
-
-//       {/* Company/individual toggle */}
-//       <div className="mb-6">
-//         <p className="text-2xl mb-2">and I represent...</p>
-//         <FormSelect selected={selected} setSelected={setSelected} />
-//       </div>
-
-//       {/* Company name */}
-//       <AnimatePresence>
-//         {selected === "company" && (
-//           <motion.div
-//             initial={{
-//               // 104 === height of element + margin
-//               // Alternatively can use mode='popLayout' on AnimatePresence
-//               // and add the "layout" prop to relevant elements to reduce
-//               // distortion
-//               marginTop: -104,
-//               opacity: 0,
-//             }}
-//             animate={{
-//               marginTop: 0,
-//               opacity: 1,
-//             }}
-//             exit={{
-//               marginTop: -104,
-//               opacity: 0,
-//             }}
-//             transition={BASE_TRANSITION}
-//             className="mb-6"
-//           >
-//             <p className="text-2xl mb-2">by the name of...</p>
-//             <input
-//               type="text"
-//               placeholder="Your company name..."
-//               className={`${
-//                 selected === "company" ? "bg-indigo-700" : "bg-violet-700"
-//               } transition-colors duration-[750ms] placeholder-white/70 p-2 rounded-md w-full focus:outline-0`}
-//             />
-//           </motion.div>
-//         )}
-//       </AnimatePresence>
-
-//       {/* Info */}
-//       <div className="mb-6">
-//         <p className="text-2xl mb-2">I'd love to ask about...</p>
-//         <textarea
-//           placeholder="Whatever your heart desires :)"
-//           className={`${
-//             selected === "company" ? "bg-indigo-700" : "bg-violet-700"
-//           } transition-colors duration-[750ms] min-h-[150px] resize-none placeholder-white/70 p-2 rounded-md w-full focus:outline-0`}
-//         />
-//       </div>
-
-//       {/* Submit */}
-//       <motion.button
-//         whileHover={{
-//           scale: 1.01,
-//         }}
-//         whileTap={{
-//           scale: 0.99,
-//         }}
-//         type="submit"
-//         className={`${
-//           selected === "company"
-//             ? "bg-white text-indigo-600"
-//             : "bg-white text-violet-600"
-//         } transition-colors duration-[750ms] text-lg text-center rounded-lg w-full py-3 font-semibold`}
-//       >
-//         Submit
-//       </motion.button>
-//     </form>
-//   );
-// };
-
-// const FormSelect = ({ selected, setSelected }) => {
-//   return (
-//     <div className="border-[1px] rounded border-white overflow-hidden font-medium w-fit">
-//       <button
-//         className={`${
-//           selected === "individual" ? "text-violet-600" : "text-white"
-//         } text-sm px-3 py-1.5 transition-colors duration-[750ms] relative`}
-//         onClick={() => setSelected("individual")}
-//       >
-//         <span className="relative z-10">An individual</span>
-//         {selected === "individual" && (
-//           <motion.div
-//             transition={BASE_TRANSITION}
-//             layoutId="form-tab"
-//             className="absolute inset-0 bg-white z-0"
-//           />
-//         )}
-//       </button>
-//       <button
-//         className={`${
-//           selected === "company" ? "text-indigo-600" : "text-white"
-//         } text-sm px-3 py-1.5 transition-colors duration-[750ms] relative`}
-//         onClick={() => setSelected("company")}
-//       >
-//         <span className="relative z-10">A company</span>
-//         {selected === "company" && (
-//           <motion.div
-//             transition={BASE_TRANSITION}
-//             layoutId="form-tab"
-//             className="absolute inset-0 bg-white z-0"
-//           />
-//         )}
-//       </button>
-//     </div>
-//   );
-// };
-
-// const Images = ({ selected }) => {
-//   return (
-//     <div className="bg-white relative overflow-hidden w-full min-h-[100px]">
-//       <motion.div
-//         initial={false}
-//         animate={{
-//           x: selected === "individual" ? "0%" : "100%",
-//         }}
-//         transition={BASE_TRANSITION}
-//         className="absolute inset-0 bg-slate-200"
-//         style={{
-//           backgroundImage:
-//             "url(https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80)",
-//           backgroundSize: "cover",
-//           backgroundPosition: "center",
-//         }}
-//       />
-//       <motion.div
-//         initial={false}
-//         animate={{
-//           x: selected === "company" ? "0%" : "-100%",
-//         }}
-//         transition={BASE_TRANSITION}
-//         className="absolute inset-0 bg-slate-200"
-//         style={{
-//           backgroundImage:
-//             "url(https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1932&q=80)",
-//           backgroundSize: "cover",
-//           backgroundPosition: "center",
-//         }}
-//       />
-//     </div>
-//   );
-// };
-
-// export default ShiftingContactForm;
-
-// const BASE_TRANSITION = { ease: "anticipate", duration: 0.75 };
+import SubmitFormButton from "./SubmitFormButton";
+import { UUIDTypes, v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 const BirthdayWishForm = () => {
   const [placeholderOne, setPlaceholderOne] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const formGap = 4;
   const bgColor = "bg-blue-700";
+
+  const uploadImageToS3 = async (uuid: UUIDTypes) => {
+    if (!imageFile) {
+      console.error("No image file selected");
+      return;
+    }
+
+    try {
+      // First, get the presigned URL from our backend
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/upload-image`,
+        {
+          fileName: uuid,
+          fileType: imageFile.type,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.data.ok) {
+        throw new Error("Failed to get upload URL");
+      }
+
+      const { url } = response.data;
+      console.log(url);
+
+      // Upload the file directly to S3 using the presigned URL
+      const uploadResponse = await axios.put(url, imageFile, {
+        headers: {
+          "Content-Type": imageFile.type,
+        },
+      });
+
+      if (uploadResponse.status !== 200) {
+        throw new Error("Failed to upload image");
+      }
+
+      console.log(uploadResponse);
+
+      return uploadResponse.data;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error; // Re-throw the error to handle it in the calling function
+    }
+  };
+
+  const submitForm = async () => {
+    // check that all fields, including the image, have been filled up
+
+    // if so, first create a random key that we will put as a cookie to mark that this user has already submitted something before
+    const responseUUID = uuidv4();
+    const submitReceipt = responseUUID + "__form UUID";
+    localStorage.setItem("submitReceipt", submitReceipt);
+
+    // add image to bucket, name of the image will be the uuid of the of the card + uuid of the response
+    const s3ImageUrl = await uploadImageToS3(submitReceipt);
+
+    // create a DB entry for the form contents
+    const formResponseDetails = {
+      responseUUID,
+      imageUrl: `${process.env.AWS_CLOUDFRONT_URL}/${submitReceipt}`,
+      questionAndResponse: {
+        question1: placeholderOne,
+      },
+    };
+  };
 
   return (
     <div className={`flex w-128 flex-col gap-${formGap}`}>
@@ -220,11 +110,13 @@ const BirthdayWishForm = () => {
 
       {/* images that you can upload */}
       <div className={`${bgColor} rounded-md`}>
-        <ImageUploader />
+        <ImageUploader setImageFile={setImageFile} />
       </div>
 
       {/* submit button */}
-      <div className="flex w-full items-center justify-center"></div>
+      <div className="flex w-full items-center justify-center">
+        <SubmitFormButton submitForm={submitForm} bgColor={bgColor} />
+      </div>
     </div>
   );
 };

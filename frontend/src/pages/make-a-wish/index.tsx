@@ -1,3 +1,5 @@
+"use client";
+
 import BirthdayWishForm from "@/components/question-form/BirthdayWishForm";
 
 export default function Home() {

@@ -13,7 +13,10 @@ const s3ClientConfig: S3ClientConfig = {
 };
 export const s3Client = new S3Client(s3ClientConfig);
 
-export const getAWSSignedUrl = async (imageName: string = "lmaooo") => {
+export const getAWSSignedUrl = async (imageName: string) => {
+  if (!imageName) {
+    return { ok: false, message: "Invalid image name provided" };
+  }
   try {
     const putObjectCommand = new PutObjectCommand({
       Bucket: process.env.AWS_BUCKET_NAME,
