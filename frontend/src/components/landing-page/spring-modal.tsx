@@ -1,8 +1,21 @@
+import axios from "axios";
 import { motion } from "framer-motion";
 
 import { AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 const SpringModal = ({ isOpen, setIsOpen }) => {
+  const [email, setEmail] = useState("");
+  const handleSubmit = async () => {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/join-waitlist`,
+      {
+        email: email,
+      }
+    );
+    console.log(response);
+    setIsOpen(false);
+  };
   return (
     <AnimatePresence>
       {isOpen && (
@@ -29,9 +42,11 @@ const SpringModal = ({ isOpen, setIsOpen }) => {
                   type="email"
                   placeholder="Enter your email"
                   className="w-full p-2 bg-white border-3 border-black rounded-none focus:outline-none focus:ring-0 focus:border-black text-black caret-black"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={handleSubmit}
                   className="w-full sm:w-fit px-6 py-2 font-medium border-2 border-black bg-white text-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
                 >
                   Submit

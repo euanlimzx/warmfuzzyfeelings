@@ -12,6 +12,24 @@ interface CardFormFunctionResponse extends FunctionResponse {
   createdCard: CardFormResponseRow;
 }
 
+export const joinWaitlist = async (email: string) => {
+  try {
+    const { data, error } = await supabaseClient
+      .from("Waitlist")
+      .insert({ email: email });
+
+    if (error) {
+      console.log(error);
+      return { ok: false, message: "Could not join waitlist" };
+    }
+
+    return { ok: true, message: "Joined waitlist" };
+  } catch (err) {
+    console.error(err);
+    return { ok: false, message: "There was an error joining the waitlist" };
+  }
+};
+
 export const createCardFormResponse = async ({
   responseUUID,
   imageUrl,
