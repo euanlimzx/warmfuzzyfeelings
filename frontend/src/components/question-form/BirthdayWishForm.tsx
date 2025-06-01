@@ -234,12 +234,13 @@ const BirthdayWishForm = ({
       </form>
 
       {/* images that you can upload */}
-      <div className={`${bgColor} rounded-md w-full`}>
+      <div className="w-full">
         <ImageUploader
           setImageFile={setImageFile}
           uploadedImageUrl={uploadedImageUrl}
           setUploadedImageUrl={setUploadedImageUrl}
           isValid={imageValid && imageSizeAndTypeValid}
+          label={`Upload an image of your favorite memory with ${birthdayPerson}!`}
         />
       </div>
 

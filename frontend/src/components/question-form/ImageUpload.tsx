@@ -9,6 +9,7 @@ interface ImageUploaderProps {
   uploadedImageUrl: null | string | Blob;
   setUploadedImageUrl: Dispatch<SetStateAction<null | string | Blob>>;
   isValid?: boolean;
+  label?: string;
 }
 
 export default function ImageUploader({
@@ -16,6 +17,7 @@ export default function ImageUploader({
   uploadedImageUrl,
   setUploadedImageUrl,
   isValid = true,
+  label,
 }: ImageUploaderProps) {
   // food for thought: how should the pasting interaction look like?
   // should it be that any paste would upload an image, or should it be that you
@@ -84,63 +86,66 @@ export default function ImageUploader({
   useEffect(() => {});
 
   return (
-    <div
-      className={`relative flex flex-col h-1/2 items-center justify-center gap-4 border-2 border-black ${
-        !isValid ? "ring-2 ring-red-500" : ""
-      }`}
-      onDragEnter={handleDrag}
-      onDragLeave={handleDrag}
-      onDragOver={handleDrag}
-      onDrop={handleDrop}
-    >
-      {uploadedImageUrl ? (
-        <button
-          className="absolute top-1 right-1 cursor-pointer rounded-md bg-red-400"
-          onClick={clearUpload}
-        >
-          <XIcon color="#ffffff" strokeWidth={1.25} />
-        </button>
-      ) : (
-        ""
-      )}
-
-      {/* TODO: round image, improve proportions on image rounding */}
-      <img
-        alt="uploadedMainImage"
-        id="uploaded-main-image-preview"
-        className={`${
-          uploadedImageUrl ? "" : "hidden"
-        } h-96 w-full rounded-md p-5`}
-        src={uploadedImageUrl || undefined}
-      ></img>
-
-      <CiImageOn
-        size={96}
-        color="rgba(255, 255, 255, 0.7)"
-        className={`${uploadedImageUrl ? "hidden" : ""}`}
-      />
-      {uploadedImageUrl ? (
-        ""
-      ) : (
-        <div className="m-2 flex flex-col gap-2">
+    <>
+      {label && <label className="text-md font-medium">{label}</label>}
+      <div
+        className={`flex flex-col items-center justify-center gap-4 border-2 border-black pt-2 ${
+          !isValid ? "ring-2 ring-red-500" : ""
+        }`}
+        onDragEnter={handleDrag}
+        onDragLeave={handleDrag}
+        onDragOver={handleDrag}
+        onDrop={handleDrop}
+      >
+        {uploadedImageUrl ? (
           <button
-            className="cursor-pointer rounded-md bg-gray-400"
-            onClick={handleUploadButtonClick}
+            className="absolute top-1 right-1 cursor-pointer rounded-md bg-red-400"
+            onClick={clearUpload}
           >
-            Browse
+            <XIcon color="#000000" strokeWidth={1.25} />
           </button>
-          <p>or drag and drop</p>
-        </div>
-      )}
+        ) : (
+          ""
+        )}
 
-      <input
-        type="file"
-        name="mainImageUpload"
-        accept=".jpg, .jpeg, .png, .webp"
-        id="main-image-upload"
-        className="hidden"
-        onChange={handleFileClickUpload}
-      />
-    </div>
+        {/* TODO: round image, improve proportions on image rounding */}
+        <img
+          alt="uploadedMainImage"
+          id="uploaded-main-image-preview"
+          className={`${
+            uploadedImageUrl ? "" : "hidden"
+          } h-96 w-full rounded-md p-5`}
+          src={uploadedImageUrl || undefined}
+        ></img>
+
+        <CiImageOn
+          size={96}
+          color="black"
+          className={`${uploadedImageUrl ? "hidden" : ""}`}
+        />
+        {uploadedImageUrl ? (
+          ""
+        ) : (
+          <div className="m-2 flex flex-col gap-2">
+            <button
+              className="cursor-pointer border-2 border-black"
+              onClick={handleUploadButtonClick}
+            >
+              Browse
+            </button>
+            <p>or drag and drop</p>
+          </div>
+        )}
+
+        <input
+          type="file"
+          name="mainImageUpload"
+          accept=".jpg, .jpeg, .png, .webp"
+          id="main-image-upload"
+          className="hidden"
+          onChange={handleFileClickUpload}
+        />
+      </div>
+    </>
   );
 }
