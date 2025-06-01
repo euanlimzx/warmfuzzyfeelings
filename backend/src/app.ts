@@ -2,14 +2,16 @@ import express from "express";
 import cors from "cors";
 import { getAWSSignedUrl } from "./utils/mediaHandler";
 import { createStructuredCharacterSummary } from "./utils/characterSummary";
-import { validateInputData } from "./middleware";
+import { validateInputData } from "./middleware/inputValidationMiddleware";
 import { CardFormResponseSchema } from "./routerTypes";
 import { createCardFormResponse } from "./db/db";
+import { developmentLogger } from "./middleware/inputLoggerMiddleware";
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(developmentLogger);
 
 app.get("/", async (req, res) => {
   const characterDesc = [

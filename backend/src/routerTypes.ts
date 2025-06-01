@@ -3,7 +3,7 @@ import { z } from "zod";
 export const CardFormResponseSchema = z.object({
   cardUUID: z.string().uuid(),
   responseUUID: z.string().uuid(),
-  imageUrl: z.string().url(),
+  imageUrl: z.string(),
   questionAndResponse: z
     .array(
       z.object({
