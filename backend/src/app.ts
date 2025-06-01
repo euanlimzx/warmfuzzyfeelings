@@ -65,6 +65,7 @@ app.get("/", async (req, res) => {
     "James",
     characterDesc,
   );
+  console.log(response);
   res.status(200).send(response);
 });
 
@@ -72,18 +73,26 @@ app.post("/make-a-wish/upload-image", async (req, res) => {
   const { fileName } = req.body;
 
   if (!fileName) {
-    res.send(400).send({
+    res.status(400).send({
       ok: false,
       message: "Missing File Name",
     });
+    return;
   }
 
   const signedUrlData = await getAWSSignedUrl(fileName);
   if (signedUrlData.ok) {
     res.status(200).send(signedUrlData);
+    return;
   } else {
     res.status(404).send(signedUrlData);
+    return;
   }
+});
+
+// @shawn: add zod validation
+app.post("/make-a-wish/upload-card-response", async (req, res) => {
+  const { responseUUID, imageUrl, questionAndResponse } = req.body;
 });
 
 export default app;
