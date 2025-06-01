@@ -31,14 +31,12 @@ export default function Home() {
 
   return (
     <div className="text-black flex flex-col items-center justify-center w-full min-h-screen bg-white p-4">
-      <WarpBackground>
+      <WarpBackground className="w-full max-w-2xl">
         {!isCardRetrievalError ? (
-          <div className="w-full max-w-2xl">
-            <BirthdayWishForm
-              cardUUID={birthdayCardUUID as string}
-              birthdayPerson={birthdayPerson}
-            />
-          </div>
+          <BirthdayWishForm
+            cardUUID={birthdayCardUUID as string}
+            birthdayPerson={birthdayPerson}
+          />
         ) : (
           <div>
             Hmm... we cant really seem to find the person you&apos;re looking

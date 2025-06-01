@@ -84,7 +84,7 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
   const leftBeams = useMemo(() => generateBeams(), [generateBeams]);
 
   return (
-    <div className={cn(className)} {...props}>
+    <div className={cn("", className)} {...props}>
       <div
         style={
           {
@@ -146,7 +146,7 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
           ))}
         </div>
       </div>
-      <div className="relative">{children}</div>
+      <div className="">{children}</div>
     </div>
   );
 };
