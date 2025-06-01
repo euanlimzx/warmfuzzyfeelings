@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Dispatch, SetStateAction } from "react";
+import { useEffect, Dispatch, SetStateAction } from "react";
 import { X as XIcon } from "lucide-react";
 import { CiImageOn } from "react-icons/ci";
 
@@ -89,12 +89,12 @@ export default function ImageUploader({
     <>
       {label && <label className="text-md font-medium">{label}</label>}
       <p className="text-sm font-medium text-gray-500">
-        Here's a preview of how your image will appear on the card itself - do
-        crop before uploading if it looks funny! (SORRY)
+        Here&apos;s a preview of how your image will appear on the card itself -
+        do crop before uploading if it looks funny! (SORRY)
       </p>
       <div className="p-1"></div>
       <div
-        className={`flex flex-col items-center justify-center gap-4 border-2 border-black pt-2 ${
+        className={`relative flex flex-col items-center justify-center gap-4 border-2 border-black pt-2 ${
           !isValid ? "ring-2 ring-red-500" : ""
         }`}
         onDragEnter={handleDrag}
@@ -102,17 +102,6 @@ export default function ImageUploader({
         onDragOver={handleDrag}
         onDrop={handleDrop}
       >
-        {uploadedImageUrl ? (
-          <button
-            className="absolute top-1 right-1 cursor-pointer rounded-md bg-red-400"
-            onClick={clearUpload}
-          >
-            <XIcon color="#000000" strokeWidth={1.25} />
-          </button>
-        ) : (
-          ""
-        )}
-
         {/* TODO: round image, improve proportions on image rounding */}
         <img
           alt="uploadedMainImage"
@@ -123,14 +112,21 @@ export default function ImageUploader({
           src={uploadedImageUrl || undefined}
         ></img>
 
+        {uploadedImageUrl && (
+          <button
+            className="absolute bottom-8 right-8 cursor-pointer rounded-full bg-red-500 p-2 hover:bg-red-600 transition-colors shadow-lg"
+            onClick={clearUpload}
+          >
+            <XIcon color="#ffffff" strokeWidth={1.25} />
+          </button>
+        )}
+
         <CiImageOn
           size={96}
           color="black"
           className={`${uploadedImageUrl ? "hidden" : ""}`}
         />
-        {uploadedImageUrl ? (
-          ""
-        ) : (
+        {!uploadedImageUrl && (
           <div className="m-2 flex flex-col gap-2">
             <button
               className="cursor-pointer border-2 border-black"
