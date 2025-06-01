@@ -1,6 +1,3 @@
-// import { AnimatePresence, motion } from "framer-motion";
-// import { useState } from "react";
-
 import { useState } from "react";
 import InputField from "./InputField";
 import TextAreaField from "./TextAreaField";
@@ -8,6 +5,7 @@ import ImageUploader from "./ImageUpload";
 import SubmitFormButton from "./SubmitFormButton";
 import { UUIDTypes, v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import { FormSubmissionErrorNotification } from "./Notifications";
 
 interface BirthdayWishFormProps {
   cardUUID: string;
@@ -21,6 +19,17 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<
     null | string | Blob
   >(null);
+  const [isServerError, setIsServerError] = useState(false);
+
+  // check input validity
+  const [isFormIncomplete, setIsFormIncomplete] = useState(false);
+  const [memoryResponseValid, setMemoryResponseValid] = useState(true);
+  const [descriptionResponseValid, setDescriptionResponseValid] =
+    useState(true);
+  const [imageValid, setImageValid] = useState(true);
+  const [imageSizeAndTypeValid, setImageSizeAndTypeValid] = useState(true);
+  const [showImageSizeAndTypeError, setShowImageSizeAndTypeError] =
+    useState(false);
 
   const formGap = 4;
   const bgColor = "bg-blue-700";
@@ -44,6 +53,7 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
         {
           fileName: uuid,
           fileType: imageFile.type,
+          fileSize: imageFile.size,
         },
         {
           headers: {
@@ -68,22 +78,45 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
         },
       });
 
-      if (uploadResponse.status !== 200) {
-        return {
-          ok: false,
-          message: "Failed to upload image",
-        };
-      }
+      // if (uploadResponse.status === 403) {
+      //   setImageSizeAndTypeValid(false);
+      //   return {
+      //     ok: false,
+      //     imageValidityIssue: true,
+      //   };
+      // } else if (uploadResponse.status !== 200) {
+      //   return {
+      //     ok: false,
+      //     message: "Failed to upload image",
+      //   };
+      // }
 
       return { ok: true };
     } catch (error) {
-      console.error("Error uploading image:", error);
-      throw error; // Re-throw the error to handle it in the calling function
+      console.error(error);
+      setImageSizeAndTypeValid(false);
+      setShowImageSizeAndTypeError(true);
+      return {
+        ok: false,
+        imageValidityIssue: true,
+      };
     }
   };
 
   const submitForm = async () => {
     // check that all fields, including the image, have been filled up
+    const isMemoryValid = !!memoryResponse;
+    const isDescriptionValid = !!descriptionResponse;
+    const isImageValid = !!imageFile;
+
+    setMemoryResponseValid(isMemoryValid);
+    setDescriptionResponseValid(isDescriptionValid);
+    setImageValid(isImageValid);
+
+    if (!memoryResponse || !descriptionResponse || !imageFile) {
+      setIsFormIncomplete(true);
+      return;
+    }
 
     // if so, first create a random key that we will put as a cookie to mark that this user has already submitted something before
     const responseUUID = uuidv4();
@@ -126,7 +159,28 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
   };
 
   return (
-    <div className={`flex w-128 flex-col gap-${formGap}`}>
+    <div className={`flex w-128 flex-col gap-${formGap} relative`}>
+      {isServerError && (
+        <FormSubmissionErrorNotification
+          errorMessage="Well, this is awkward... We couldn't handle what you threw at us."
+          removeNotif={() => setIsServerError(false)}
+        />
+      )}
+
+      {isFormIncomplete && (
+        <FormSubmissionErrorNotification
+          errorMessage="Almost there! A few fields are still waiting for some love"
+          removeNotif={() => setIsFormIncomplete(false)}
+        />
+      )}
+
+      {showImageSizeAndTypeError && (
+        <FormSubmissionErrorNotification
+          errorMessage="Whoa there! That image is chonkier than we can handle. Keep it under 10MB, yeah?"
+          removeNotif={() => setShowImageSizeAndTypeError(false)}
+        />
+      )}
+
       {/* form title */}
       <h1>Dear OPs</h1>
 
@@ -138,12 +192,14 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
             setInputValue={setMemoryResponse}
             placeholderText={memoryQuestion}
             bgColor={bgColor}
+            isValid={memoryResponseValid}
           />
           <TextAreaField
             inputValue={descriptionResponse}
             setInputValue={setDescriptionResponse}
             placeholderText={descriptionQuestion}
             bgColor={bgColor}
+            isValid={descriptionResponseValid}
           />
         </div>
       </form>
@@ -154,6 +210,7 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
           setImageFile={setImageFile}
           uploadedImageUrl={uploadedImageUrl}
           setUploadedImageUrl={setUploadedImageUrl}
+          isValid={imageValid && imageSizeAndTypeValid}
         />
       </div>
 

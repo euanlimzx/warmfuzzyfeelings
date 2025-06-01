@@ -8,12 +8,14 @@ interface ImageUploaderProps {
   setImageFile: Dispatch<SetStateAction<File | null>>;
   uploadedImageUrl: null | string | Blob;
   setUploadedImageUrl: Dispatch<SetStateAction<null | string | Blob>>;
+  isValid?: boolean;
 }
 
 export default function ImageUploader({
   setImageFile,
   uploadedImageUrl,
   setUploadedImageUrl,
+  isValid = true,
 }: ImageUploaderProps) {
   // food for thought: how should the pasting interaction look like?
   // should it be that any paste would upload an image, or should it be that you
@@ -83,7 +85,9 @@ export default function ImageUploader({
 
   return (
     <div
-      className="relative flex flex-col h-1/2 items-center justify-center gap-4"
+      className={`relative flex flex-col h-1/2 items-center justify-center gap-4 rounded-md ${
+        !isValid ? "ring-2 ring-red-500" : ""
+      }`}
       onDragEnter={handleDrag}
       onDragLeave={handleDrag}
       onDragOver={handleDrag}
@@ -132,7 +136,7 @@ export default function ImageUploader({
       <input
         type="file"
         name="mainImageUpload"
-        accept="image/*"
+        accept=".jpg, .jpeg, .png, .webp"
         id="main-image-upload"
         className="hidden"
         onChange={handleFileClickUpload}
