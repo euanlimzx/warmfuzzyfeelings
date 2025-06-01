@@ -2,6 +2,7 @@ import {
   CardFormResponse,
   FunctionResponse,
   FunctionErrorResponse,
+  RegisterMakeAWishEmail,
 } from "../routerTypes";
 import supabaseClient from "./client";
 import { Tables } from "./dbTypes";
@@ -39,5 +40,28 @@ export const createCardFormResponse = async ({
   } catch (err) {
     console.error(err);
     return { ok: false, message: "There was an error creating the card" };
+  }
+};
+
+export const registerMakeAWishEmail = async ({
+  cardUUID,
+  email,
+}: RegisterMakeAWishEmail) => {
+  try {
+    const { data, error } = await supabaseClient
+      .from("Friends_To_Notify")
+      .insert({
+        card_id: cardUUID,
+        email,
+      });
+
+    if (error) {
+      return { ok: false, message: "Could not register email" };
+    }
+
+    return { ok: true, message: "Email registered" };
+  } catch (err) {
+    console.error(err);
+    return { ok: false, message: "There was an error registering the email" };
   }
 };

@@ -6,15 +6,20 @@ import SubmitFormButton from "./SubmitFormButton";
 import { UUIDTypes, v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { FormSubmissionErrorNotification } from "./Notifications";
+import FormCompleteModal from "./FormCompleteModal";
 
 interface BirthdayWishFormProps {
   cardUUID: string;
+  birthdayPerson: string;
 }
 
-const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
+// TODO: mobile styling does not really work
+const BirthdayWishForm = ({
+  cardUUID,
+  birthdayPerson,
+}: BirthdayWishFormProps) => {
   const [memoryResponse, setMemoryResponse] = useState("");
   const [descriptionResponse, setDescriptionResponse] = useState("");
-  const [birthdayPerson, setBirthdayPerson] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<
     null | string | Blob
@@ -32,14 +37,14 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
     useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [showFormCompleteModal, setShowFormCompleteModal] = useState(false);
+
   const formGap = 4;
   const bgColor = "bg-blue-700";
 
   // @shawn conditionally load these + birthday person too
   const memoryQuestion = `What was your favourite memory with ${birthdayPerson}`;
   const descriptionQuestion = `Use a few words to describe ${birthdayPerson}`;
-
-  console.log(cardUUID);
 
   const uploadImageToS3 = async (uuid: UUIDTypes) => {
     if (!imageFile) {
@@ -73,24 +78,11 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
       const { url } = response.data;
 
       // Upload the file directly to S3 using the presigned URL
-      const uploadResponse = await axios.put(url, imageFile, {
+      await axios.put(url, imageFile, {
         headers: {
           "Content-Type": imageFile.type,
         },
       });
-
-      // if (uploadResponse.status === 403) {
-      //   setImageSizeAndTypeValid(false);
-      //   return {
-      //     ok: false,
-      //     imageValidityIssue: true,
-      //   };
-      // } else if (uploadResponse.status !== 200) {
-      //   return {
-      //     ok: false,
-      //     message: "Failed to upload image",
-      //   };
-      // }
 
       return { ok: true };
     } catch (error) {
@@ -165,6 +157,11 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
     setImageFile(null);
     setUploadedImageUrl(null);
     setIsLoading(false);
+    setMemoryResponseValid(true);
+    setDescriptionResponseValid(true);
+    setImageValid(true);
+    setImageSizeAndTypeValid(true);
+    setShowFormCompleteModal(true);
   };
 
   return (
@@ -190,8 +187,16 @@ const BirthdayWishForm = ({ cardUUID }: BirthdayWishFormProps) => {
         />
       )}
 
+      <FormCompleteModal
+        isOpen={showFormCompleteModal}
+        setIsOpen={setShowFormCompleteModal}
+        birthdayPerson={birthdayPerson}
+        bgColor={bgColor}
+        cardUUID={cardUUID}
+      />
+
       {/* form title */}
-      <h1>Dear OPs</h1>
+      <h1>Dear {birthdayPerson}</h1>
 
       {/* form fields */}
       <form>

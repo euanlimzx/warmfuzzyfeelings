@@ -3,8 +3,11 @@ import cors from "cors";
 import { getAWSSignedUrl } from "./utils/mediaHandler";
 import { createStructuredCharacterSummary } from "./utils/characterSummary";
 import { validateInputData } from "./middleware/inputValidationMiddleware";
-import { CardFormResponseSchema } from "./routerTypes";
-import { createCardFormResponse } from "./db/db";
+import {
+  CardFormResponseSchema,
+  RegisterMakeAWishEmailSchema,
+} from "./routerTypes";
+import { createCardFormResponse, registerMakeAWishEmail } from "./db/db";
 import { developmentLogger } from "./middleware/inputLoggerMiddleware";
 
 const app = express();
@@ -109,6 +112,24 @@ app.post(
       return;
     } else {
       res.status(500).send(cardCreationResponse);
+      return;
+    }
+  },
+);
+
+app.post(
+  "/make-a-wish/reigster-email",
+  validateInputData(RegisterMakeAWishEmailSchema),
+  async (req, res) => {
+    const registerMakeAWishEmailResponse = await registerMakeAWishEmail(
+      req.body,
+    );
+
+    if (registerMakeAWishEmailResponse.ok) {
+      res.status(201).send(registerMakeAWishEmailResponse);
+      return;
+    } else {
+      res.status(500).send(registerMakeAWishEmailResponse);
       return;
     }
   },
