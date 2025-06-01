@@ -27,7 +27,7 @@ const FormCompleteModal = ({
   const handleSubmission = async () => {
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/reigster-email`,
+        `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/register-email`,
         {
           email,
           cardUUID,

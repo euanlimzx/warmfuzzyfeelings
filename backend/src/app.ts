@@ -14,6 +14,7 @@ import {
   getCardFromUUID,
   getAllCardResponsesForUUID,
   insertCharacterSummary,
+  joinWaitlist,
 } from "./db/db";
 import { developmentLogger } from "./middleware/inputLoggerMiddleware";
 import toCamelCase from "./utils/toCamelCase";
@@ -123,7 +124,7 @@ app.post(
 );
 
 app.post(
-  "/make-a-wish/reigster-email",
+  "/make-a-wish/register-email",
   validateInputData(RegisterMakeAWishEmailSchema),
   async (req, res) => {
     const registerMakeAWishEmailResponse = await registerMakeAWishEmail(
@@ -139,6 +140,12 @@ app.post(
     }
   },
 );
+
+app.post("/join-waitlist", async (req, res) => {
+  const { email } = req.body;
+  const waitlistResponse = await joinWaitlist(email);
+  res.status(200).send(waitlistResponse);
+});
 
 app.get("/get-card-from-uuid", async (req, res) => {
   const cardUUID = req.query.cardUUID;
