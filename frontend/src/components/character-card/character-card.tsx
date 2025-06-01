@@ -1,4 +1,6 @@
 import { Ripple } from "@/components/magicui/ripple";
+import React, { useState, ReactNode, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export function CharacterCard() {
   return (
@@ -28,16 +30,13 @@ export default function DictionaryCard() {
 
           {/* Definition */}
           <div className="font-mono text-base leading-relaxed tracking-wide">
-            <p className="mb-2">
-              <span className="font-bold">1.</span> an architectural style of
-              the mid-20th century characterized by massive, monolithic, and
-              blocky forms in raw concrete and bold, rugged design
-            </p>
-            <p className="mb-2">
-              <span className="font-bold">2.</span> a design aesthetic
-              characterized by intentional roughness, visible and unrefined
-              textures, and an emphasis on raw materials
-            </p>
+            <FlyoutLink FlyoutContent={PricingContent}>
+              architectural
+            </FlyoutLink>{" "}
+            style of the mid-20th century characterized by massive, monolithic,
+            and blocky forms in raw concrete and bold, rugged design a design
+            aesthetic characterized by intentional roughness, visible and
+            unrefined textures, and an emphasis on raw materials
           </div>
 
           {/* Neo-brutalist stamp */}
@@ -49,3 +48,80 @@ export default function DictionaryCard() {
     </div>
   );
 }
+
+interface FlyoutLinkProps {
+  children: ReactNode;
+  FlyoutContent: React.FC;
+}
+
+const FlyoutLink = ({ children, FlyoutContent }: FlyoutLinkProps) => {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = () => {
+      console.log("outside clicked");
+      setOpen(false);
+    };
+
+    if (open) {
+      document.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [open]);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpen(!open);
+  };
+
+  const showFlyout = open;
+
+  return (
+    <span
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onClick={handleClick}
+      className="relative inline-block cursor-pointer"
+    >
+      <span className="relative inline-flex items-center underline underline-offset-2 decoration-2">
+        {children}
+        <span
+          style={{
+            transform: showFlyout ? "scaleX(1)" : "scaleX(0)",
+          }}
+          className="absolute -bottom-1 -left-1 -right-1 h-1 origin-left scale-x-0 rounded-full bg-indigo-300 transition-transform duration-300 ease-out"
+        />
+      </span>
+      <AnimatePresence>
+        {showFlyout && (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 15 }}
+            style={{ translateX: "-50%" }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="absolute left-1/2 top-12 bg-white text-black"
+          >
+            <div className="absolute -top-6 left-0 right-0 h-6 bg-transparent" />
+            <div className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l-2 border-t-2 border-black bg-white" />
+            <FlyoutContent />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </span>
+  );
+};
+
+const PricingContent = () => {
+  return (
+    <div className="w-64 bg-white p-6 shadow-2xl border-2">
+      <div className="mb-3 space-y-3">
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dignissimos,
+        unde!
+      </div>
+    </div>
+  );
+};
