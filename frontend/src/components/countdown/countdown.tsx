@@ -7,7 +7,26 @@ const BIRTHDAY_OFFSET = 4;
 export const Countdown = () => {
   const date = new Date();
   return (
-    <div className="grid place-content-center bg-white h-screen px-4 py-24 md:flex-row">
+    <div className="grid place-content-center h-screen gradient-background">
+      <style jsx>{`
+        .gradient-background {
+          background: linear-gradient(300deg, #ffcee6, #e7d6ff, #ffd6f3);
+          background-size: 180% 180%;
+          animation: gradient-animation 4s ease infinite;
+        }
+
+        @keyframes gradient-animation {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
       <FlipCalendar birthdayWithOffset={subDays(date, BIRTHDAY_OFFSET)} />
     </div>
   );
@@ -74,7 +93,7 @@ const FlipCalendar = ({ birthdayWithOffset }) => {
 
 const CalendarDisplay = ({ index, date }) => {
   return (
-    <div className="w-fit overflow-hidden rounded-xl border-2 md:border-4 border-red-600 bg-red-600">
+    <div className="w-fit overflow-hidden rounded-xl border-2 md:border-4 border-red-300 bg-red-300">
       <div className="flex items-center justify-between px-2 md:px-3 py-0.5 md:py-1">
         <span className="text-center uppercase text-white text-xl md:text-2xl">
           {format(date, "LLLL")}
