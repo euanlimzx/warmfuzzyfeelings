@@ -74,13 +74,13 @@ const FlipCalendar = ({ birthdayWithOffset }) => {
 
 const CalendarDisplay = ({ index, date }) => {
   return (
-    <div className="w-fit overflow-hidden rounded-xl border-4 border-red-600 bg-red-600">
-      <div className="flex items-center justify-between px-3 py-1">
-        <span className="text-center uppercase text-white text-2xl">
+    <div className="w-fit overflow-hidden rounded-xl border-2 md:border-4 border-red-600 bg-red-600">
+      <div className="flex items-center justify-between px-2 md:px-3 py-0.5 md:py-1">
+        <span className="text-center uppercase text-white text-xl md:text-2xl">
           {format(date, "LLLL")}
         </span>
       </div>
-      <div className="relative z-0 h-72 w-104 shrink-0">
+      <div className="relative z-0 h-48 md:h-72 w-72 md:w-104 shrink-0">
         <AnimatePresence mode="sync">
           <motion.div
             style={{
@@ -98,7 +98,7 @@ const CalendarDisplay = ({ index, date }) => {
             exit={{ rotateX: "-180deg" }}
             className="absolute inset-0"
           >
-            <div className="grid h-full w-full place-content-center rounded-lg bg-white text-8xl">
+            <div className="grid h-full w-full place-content-center rounded-lg bg-white text-6xl md:text-8xl">
               {format(date, "do")}
             </div>
           </motion.div>
@@ -118,9 +118,9 @@ const CalendarDisplay = ({ index, date }) => {
             }}
             className="absolute inset-0"
           >
-            <div className="relative grid h-full w-full place-content-center rounded-lg bg-white text-8xl">
+            <div className="relative grid h-full w-full place-content-center rounded-lg bg-white text-6xl md:text-8xl">
               {format(date, "do")}
-              <span className="absolute bottom-4 left-1/2 -translate-x-1/2 text-base">
+              <span className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 text-sm md:text-base">
                 {format(date, "yyyy")}
               </span>
             </div>
