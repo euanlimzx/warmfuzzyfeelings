@@ -88,6 +88,11 @@ export default function ImageUploader({
   return (
     <>
       {label && <label className="text-md font-medium">{label}</label>}
+      <p className="text-sm font-medium text-gray-500">
+        Here's a preview of how your image will appear on the card itself - do
+        crop before uploading if it looks funny! (SORRY)
+      </p>
+      <div className="p-1"></div>
       <div
         className={`flex flex-col items-center justify-center gap-4 border-2 border-black pt-2 ${
           !isValid ? "ring-2 ring-red-500" : ""
