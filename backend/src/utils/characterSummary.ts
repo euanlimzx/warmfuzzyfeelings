@@ -31,6 +31,17 @@ const CharacterTraits = z.object({
 });
 type ParsedCharacterTrait = z.infer<typeof CharacterTraits>;
 
+interface CharacterSummaryResponse
+  extends ParsedSummarySources,
+    ParsedCharacterTrait {
+  ok: boolean;
+}
+
+interface CharacterSummaryErrorResponse {
+  ok: boolean;
+  message: string;
+}
+
 const determineCharacterTraits = async (comments: string) => {
   const response = await openai.responses.parse({
     model: "gpt-4o-2024-08-06",
@@ -103,23 +114,22 @@ const determineCharacterTraits = async (comments: string) => {
 export const createStructuredCharacterSummary = async (
   birthdayPerson: string,
   comments: birthdayPersonComments[],
-) => {
+): Promise<CharacterSummaryResponse | CharacterSummaryErrorResponse> => {
   const stringifiedCharacterSummary = JSON.stringify(comments);
   const generatedSummary = await determineCharacterTraits(
     stringifiedCharacterSummary,
   );
 
-  console.log(generatedSummary);
-
   let summaryOfTraits = null;
+  let parsedCharacterTraits = null;
   try {
-    const parsedCharacterTraits = JSON.parse(
+    parsedCharacterTraits = JSON.parse(
       generatedSummary,
     ) as ParsedCharacterTrait;
     summaryOfTraits = parsedCharacterTraits.summaryOfTraits;
   } catch (err) {
     console.error("Error creating a character summary", err);
-    return { ok: false, message: err };
+    return { ok: false, message: JSON.stringify(err) };
   }
 
   const response = await openai.responses.parse({
@@ -154,9 +164,9 @@ export const createStructuredCharacterSummary = async (
       sourcedSummary,
     ) as ParsedSummarySources;
 
-    return { ok: true, ...parsedSummarySources };
+    return { ok: true, ...parsedSummarySources, ...parsedCharacterTraits };
   } catch (err) {
-    console.error("Error creating a character summary", err);
-    return { ok: false, message: err };
+    console.error("Error creating summarizing character traits", err);
+    return { ok: false, message: JSON.stringify(err) };
   }
 };
