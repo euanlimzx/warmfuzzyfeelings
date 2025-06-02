@@ -69,11 +69,6 @@ const SpringModal = ({ isOpen, setIsOpen }: SpringModalProps) => {
                     value={email}
                     onChange={handleEmailChange}
                   />
-                  {!isValidEmail && (
-                    <p className="text-white text-sm mt-1">
-                      Invalid email address
-                    </p>
-                  )}
                 </div>
                 <button
                   onClick={handleSubmit}
@@ -82,6 +77,11 @@ const SpringModal = ({ isOpen, setIsOpen }: SpringModalProps) => {
                   Submit
                 </button>
               </div>
+              {!isValidEmail && (
+                <p className="text-white text-sm mt-1 font-medium">
+                  Invalid email address
+                </p>
+              )}
             </div>
           </motion.div>
         </motion.div>
