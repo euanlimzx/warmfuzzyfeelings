@@ -205,7 +205,7 @@ const BirthdayWishForm = ({
         Answer a few quick questions and we&apos;ll help collate them into a
         pretty card ❤️
       </h2>
-      <div className="w-full h-0.5 bg-black"></div>
+      <div className="border-t-2 border-black"></div>
 
       {/* form fields */}
       <form className="w-full">
