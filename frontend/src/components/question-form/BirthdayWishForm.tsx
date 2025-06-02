@@ -166,7 +166,7 @@ const BirthdayWishForm = ({
 
   return (
     <div
-      className={`flex flex-col gap-${formGap} relative bg-white p-4 sm:p-10 border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] w-full`}
+      className={`flex flex-col gap-${formGap} relative bg-white p-4 sm:p-10 border-2 max-h-[85vh] overflow-y-auto border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] w-full`}
     >
       {isServerError && (
         <FormSubmissionErrorNotification
@@ -199,7 +199,7 @@ const BirthdayWishForm = ({
 
       {/* form title */}
       <h1 className="text-2xl sm:text-4xl font-semibold">
-        Help make a card for {birthdayPerson}&apos;s Birthday!
+        Let&apos;s make a card for {birthdayPerson}&apos;s Birthday!
       </h1>
       <h2>
         Answer a few quick questions and we&apos;ll help collate them into a
