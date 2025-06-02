@@ -20,6 +20,7 @@ const BirthdayWishForm = ({
 }: BirthdayWishFormProps) => {
   const [memoryResponse, setMemoryResponse] = useState("");
   const [descriptionResponse, setDescriptionResponse] = useState("");
+  const [finalMessageResponse, setFinalMessageResponse] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<
     null | string | Blob
@@ -30,6 +31,8 @@ const BirthdayWishForm = ({
   const [isFormIncomplete, setIsFormIncomplete] = useState(false);
   const [memoryResponseValid, setMemoryResponseValid] = useState(true);
   const [descriptionResponseValid, setDescriptionResponseValid] =
+    useState(true);
+  const [finalMessageResponseValid, setFinalMessageResponseValid] =
     useState(true);
   const [imageValid, setImageValid] = useState(true);
   const [imageSizeAndTypeValid, setImageSizeAndTypeValid] = useState(true);
@@ -45,6 +48,7 @@ const BirthdayWishForm = ({
   // @shawn conditionally load these + birthday person too
   const memoryQuestion = ``;
   const descriptionQuestion = ``;
+  const finalMessageQuestion = ``;
 
   const uploadImageToS3 = async (uuid: UUIDTypes) => {
     if (!imageFile) {
@@ -103,12 +107,19 @@ const BirthdayWishForm = ({
     const isMemoryValid = !!memoryResponse;
     const isDescriptionValid = !!descriptionResponse;
     const isImageValid = !!imageFile;
+    const isFinalMessageValid = !!finalMessageResponse;
 
     setMemoryResponseValid(isMemoryValid);
     setDescriptionResponseValid(isDescriptionValid);
+    setFinalMessageResponseValid(isFinalMessageValid);
     setImageValid(isImageValid);
 
-    if (!memoryResponse || !descriptionResponse || !imageFile) {
+    if (
+      !memoryResponse ||
+      !descriptionResponse ||
+      !imageFile ||
+      !finalMessageResponse
+    ) {
       setIsFormIncomplete(true);
       setIsLoading(false);
       return;
@@ -129,6 +140,8 @@ const BirthdayWishForm = ({
     }
 
     // create a DB entry for the form contents
+
+    //todo @Shawn: this might need to change? cos our json is changing right
     const formResponseDetails = {
       cardUUID,
       responseUUID,
@@ -136,6 +149,7 @@ const BirthdayWishForm = ({
       questionAndResponse: [
         { question: memoryQuestion, response: memoryResponse },
         { question: descriptionQuestion, response: descriptionResponse },
+        { question: finalMessageQuestion, response: finalMessageResponse },
       ],
     };
 
@@ -154,11 +168,13 @@ const BirthdayWishForm = ({
     localStorage.setItem("submitReceipt", submitReceipt);
     setMemoryResponse("");
     setDescriptionResponse("");
+    setFinalMessageResponse("");
     setImageFile(null);
     setUploadedImageUrl(null);
     setIsLoading(false);
     setMemoryResponseValid(true);
     setDescriptionResponseValid(true);
+    setFinalMessageResponseValid(true);
     setImageValid(true);
     setImageSizeAndTypeValid(true);
     setShowFormCompleteModal(true);
@@ -241,6 +257,17 @@ const BirthdayWishForm = ({
           setUploadedImageUrl={setUploadedImageUrl}
           isValid={imageValid && imageSizeAndTypeValid}
           label={`Upload an image of your favorite memory with ${birthdayPerson}!`}
+        />
+      </div>
+
+      <div className="flex flex-col gap-1 pt-2">
+        <TextAreaField
+          inputValue={finalMessageResponse}
+          setInputValue={setFinalMessageResponse}
+          placeholderText={finalMessageQuestion}
+          bgColor={bgColor}
+          isValid={finalMessageResponseValid}
+          label={`Any final birthday messages for ${birthdayPerson}?`}
         />
       </div>
 
