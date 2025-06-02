@@ -50,23 +50,29 @@ export type Database = {
       Card_Form_Response: {
         Row: {
           card_id: string | null
+          description_response: string | null
+          final_message_response: string | null
           id: string
           image_url: string | null
-          question_and_response: Json
+          memory_response: string | null
           responder_name: string | null
         }
         Insert: {
           card_id?: string | null
+          description_response?: string | null
+          final_message_response?: string | null
           id: string
           image_url?: string | null
-          question_and_response: Json
+          memory_response?: string | null
           responder_name?: string | null
         }
         Update: {
           card_id?: string | null
+          description_response?: string | null
+          final_message_response?: string | null
           id?: string
           image_url?: string | null
-          question_and_response?: Json
+          memory_response?: string | null
           responder_name?: string | null
         }
         Relationships: [

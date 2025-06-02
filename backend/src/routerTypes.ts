@@ -4,14 +4,10 @@ export const CardFormResponseSchema = z.object({
   cardUUID: z.string().uuid(),
   responseUUID: z.string().uuid(),
   imageUrl: z.string(),
-  questionAndResponse: z
-    .array(
-      z.object({
-        question: z.string().min(1),
-        response: z.string().min(1),
-      }),
-    )
-    .min(1),
+  memoryResponse: z.string().min(1),
+  descriptionResponse: z.string().min(1),
+  finalMessageResponse: z.string().min(1),
+  name: z.string().min(1),
 });
 export type CardFormResponse = z.infer<typeof CardFormResponseSchema>;
 

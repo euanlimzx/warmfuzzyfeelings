@@ -191,11 +191,11 @@ app.get("/create-structured-summary", async (req, res) => {
     }
 
     for (const {
-      question_and_response,
+      description_response,
       responder_name,
     } of responsesForCard.cards!) {
       aggregatedResponses.push({
-        questionAndResponse: question_and_response,
+        descriptionResponse: description_response!,
         responderName: responder_name!,
       });
     }

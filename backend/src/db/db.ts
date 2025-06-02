@@ -34,8 +34,11 @@ export const joinWaitlist = async (email: string) => {
 export const createCardFormResponse = async ({
   responseUUID,
   imageUrl,
-  questionAndResponse,
+  memoryResponse,
+  descriptionResponse,
+  finalMessageResponse,
   cardUUID,
+  name,
 }: CardFormResponse): Promise<
   CardFormFunctionResponse | FunctionErrorResponse
 > => {
@@ -46,7 +49,10 @@ export const createCardFormResponse = async ({
         card_id: cardUUID,
         id: responseUUID,
         image_url: imageUrl,
-        question_and_response: questionAndResponse,
+        final_message_response: finalMessageResponse,
+        description_response: descriptionResponse,
+        memory_response: memoryResponse,
+        responder_name: name,
       })
       .select()
       .single();
