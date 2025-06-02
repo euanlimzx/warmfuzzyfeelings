@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { InteractiveGridPattern } from "../magicui/interactive-grid-pattern";
+import { MessageModalWrapper } from "./message-modal";
 
 interface Bubble {
   id: number;
@@ -90,20 +92,27 @@ export default function BouncingBubbles() {
       <div
         ref={containerRef}
         className="relative border border-gray-300 bg-gray-50"
-        style={{ width: 400, height: 300 }}
+        style={{ width: 500, height: 500 }}
       >
+        <InteractiveGridPattern squaresClassName="hover:fill-blue-500" />
         {Array.from({ length: 10 }, (_, i) => {
           const id = i + 1;
           return activeBubbles.includes(id) ? (
-            <div
-              key={id}
-              data-id={id}
-              className="absolute flex items-center justify-center bg-blue-500 text-white cursor-pointer"
-              style={{ width: 40, height: 40 }}
-              onClick={() => handleBubbleClick(id)}
-            >
-              {id}
-            </div>
+            <MessageModalWrapper key={id}>
+              <div
+                key={id}
+                data-id={id}
+                className="absolute flex items-center justify-center rounded-full overflow-hidden bg-white border-2 border-black cursor-pointer"
+                style={{ width: 60, height: 60 }}
+                // onClick={() => handleBubbleClick(id)}
+              >
+                <img
+                  src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${id}&shapeColor=ffffff&backgroundType=solid`}
+                  alt={`Avatar ${id}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </MessageModalWrapper>
           ) : null;
         })}
       </div>
