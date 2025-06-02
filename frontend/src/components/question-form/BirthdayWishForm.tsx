@@ -146,11 +146,9 @@ const BirthdayWishForm = ({
       cardUUID,
       responseUUID,
       imageUrl: `${submitReceipt}`,
-      questionAndResponse: [
-        { question: memoryQuestion, response: memoryResponse },
-        { question: descriptionQuestion, response: descriptionResponse },
-        { question: finalMessageQuestion, response: finalMessageResponse },
-      ],
+      memoryResponse,
+      finalMessageResponse,
+      descriptionResponse,
     };
 
     const formSubmissionResponse = await axios.post(
