@@ -2,7 +2,7 @@
 
 import { useState, Children, type ReactElement } from "react";
 import { motion, AnimatePresence, type PanInfo } from "framer-motion";
-import { IoMdArrowUp } from "react-icons/io";
+import { IoMdArrowDown, IoMdArrowUp } from "react-icons/io";
 
 interface SwipeableWrapperProps {
   children: ReactElement[];
@@ -97,21 +97,22 @@ export default function SwipeablePages({ children }: SwipeableWrapperProps) {
           {childrenArray[currentIndex]}
         </AnimatedChild>
       </AnimatePresence>
-
-      <button
-        onClick={handleSwipeDown}
-        disabled={currentIndex === 0}
-        className="bg-white backdrop-blur-sm text-black px-4 py-2 border-2 h-20 w-20 border-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] flex items-center justify-center"
-      >
-        <IoMdArrowUp size={25} />
-      </button>
-      <button
-        onClick={handleSwipeUp}
-        disabled={currentIndex === totalPages - 1}
-        className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        ↓ Down
-      </button>
+      <div className="fixed bottom-10 right-10">
+        <button
+          onClick={handleSwipeDown}
+          disabled={currentIndex === 0}
+          className="bg-white backdrop-blur-sm text-black px-4 py-2 border-2 h-15 w-15 border-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] flex items-center justify-center"
+        >
+          <IoMdArrowUp size={25} />
+        </button>
+        <button
+          onClick={handleSwipeUp}
+          disabled={currentIndex === totalPages - 1}
+          className="bg-white backdrop-blur-sm text-black px-4 py-2 border-2 h-15 w-15 border-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] flex items-center justify-center"
+        >
+          <IoMdArrowDown size={25} />
+        </button>
+      </div>
     </div>
   );
 }
