@@ -140,7 +140,7 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
       initial={false}
       onClick={() => handleMove(position)}
       className={`
-      absolute left-1/2 top-1/2 cursor-pointer border-black bg-white p-4 text-black transition-colors duration-500 bg flex flex-col items-center ${
+      absolute left-1/2 top-1/2 cursor-pointer border-black bg-white p-4 text-black transition-colors duration-500 flex flex-col items-center ${
         isActive ? "z-10" : "z-0"
       }
       `}
@@ -169,7 +169,11 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
       }}
     >
       <div className="flex flex-col items-center h-full w-full relative">
-        <div className="relative h-60 w-60 sm:h-75 sm:w-75 mb-2">
+        <div
+          className={`relative transition-all ${
+            isActive ? "h-60 w-60 sm:h-75 sm:w-75" : "h-50 w-50 sm:h-65 sm:w-65"
+          } mb-2`}
+        >
           <Image
             src={"https://picsum.photos/500/800"}
             alt={`Testimonial image for ${testimonial.by}`}
