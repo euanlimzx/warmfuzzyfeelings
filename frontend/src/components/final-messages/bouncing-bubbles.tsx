@@ -86,7 +86,7 @@ export default function BouncingBubbles() {
   };
 
   return (
-    <div className="p-4">
+    <div className=" border-2 border-black">
       <div
         ref={containerRef}
         className="relative border border-gray-300 bg-gray-50"
