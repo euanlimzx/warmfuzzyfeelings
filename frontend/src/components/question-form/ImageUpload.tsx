@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, Dispatch, SetStateAction } from "react";
-import { X as XIcon } from "lucide-react";
+import { FaTrashCan } from "react-icons/fa6";
 import { CiImageOn } from "react-icons/ci";
 import Image from "next/image";
 
@@ -71,7 +71,6 @@ export default function ImageUploader({
   };
 
   const handleFileClickUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("I have been clicked");
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
       displayUploadedImage(e.target.files[0]);
@@ -86,6 +85,10 @@ export default function ImageUploader({
   // TODO @Shawn: check the device type. if it is a mac, use command + v. if it is windows use ctrl + v
   useEffect(() => {});
 
+  useEffect(() => {
+    console.log(uploadedImageUrl);
+  }, [uploadedImageUrl]);
+
   return (
     <>
       {label && <label className="text-md font-medium">{label}</label>}
@@ -94,6 +97,33 @@ export default function ImageUploader({
         do crop before uploading if it looks funny! (SORRY)
       </p>
       <div className="p-1"></div>
+
+      <div className={`${uploadedImageUrl ? "" : "hidden"}`}>
+        <div className="flex flex-col items-center justify-center">
+          <div>
+            <div className="relative h-60 w-60 sm:h-75 sm:w-75 my-2">
+              <img
+                alt="uploadedMainImage"
+                id="uploaded-main-image-preview"
+                className="w-full h-full object-cover border-2 border-black"
+                src={uploadedImageUrl || undefined}
+              />
+            </div>
+            <div className="flex w-full justify-end py-4">
+              <button
+                className="cursor-pointer border-2 border-black bg-red-500 p-2 hover:bg-red-600 shadow-l transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
+                onClick={clearUpload}
+              >
+                <div className="flex flex-row gap-2 items-center text-white font-medium">
+                  <FaTrashCan color="#ffffff" strokeWidth={1.25} />
+                  Delete
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div
         className={`relative flex flex-col items-center justify-center gap-4 border-2 border-black pt-2 ${
           !isValid ? "ring-2 ring-red-500" : ""
@@ -104,34 +134,6 @@ export default function ImageUploader({
         onDrop={handleDrop}
       >
         {/* TODO: round image, improve proportions on image rounding */}
-        <div className="relative w-full h-72 mb-2">
-          <Image
-            src={"https://picsum.photos/500/800"}
-            alt={`Image preview for the user`}
-            fill
-            className="object-cover border-[2px] border-black"
-            style={{
-              boxShadow: "2px 2px 0px white",
-            }}
-          />
-        </div>
-        <img
-          alt="uploadedMainImage"
-          id="uploaded-main-image-preview"
-          className={`${
-            uploadedImageUrl ? "" : "hidden"
-          } h-96 w-full rounded-md p-5`}
-          src={uploadedImageUrl || undefined}
-        ></img>
-
-        {uploadedImageUrl && (
-          <button
-            className="absolute bottom-8 right-8 cursor-pointer rounded-full bg-red-500 p-2 hover:bg-red-600 transition-colors shadow-lg"
-            onClick={clearUpload}
-          >
-            <XIcon color="#ffffff" strokeWidth={1.25} />
-          </button>
-        )}
 
         <CiImageOn
           size={96}
