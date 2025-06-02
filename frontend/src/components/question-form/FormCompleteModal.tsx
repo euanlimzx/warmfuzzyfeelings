@@ -59,7 +59,7 @@ const FormCompleteModal = ({
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className={`${bgColor} text-white p-10  w-full max-w-lg shadow-xl cursor-default relative overflow-hidden`}
+            className={`${bgColor} text-black p-10  w-full max-w-lg shadow-xl cursor-default relative overflow-hidden`}
           >
             <div className="relative z-10">
               <h3 className="text-3xl font-bold text-center mb-2">
