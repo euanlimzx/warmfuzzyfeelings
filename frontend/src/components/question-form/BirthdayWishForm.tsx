@@ -18,6 +18,7 @@ const BirthdayWishForm = ({
   cardUUID,
   birthdayPerson,
 }: BirthdayWishFormProps) => {
+  const [name, setName] = useState("");
   const [memoryResponse, setMemoryResponse] = useState("");
   const [descriptionResponse, setDescriptionResponse] = useState("");
   const [finalMessageResponse, setFinalMessageResponse] = useState("");
@@ -28,6 +29,7 @@ const BirthdayWishForm = ({
   const [isServerError, setIsServerError] = useState(false);
 
   // check input validity
+  const [nameValid, setNameValid] = useState(true);
   const [isFormIncomplete, setIsFormIncomplete] = useState(false);
   const [memoryResponseValid, setMemoryResponseValid] = useState(true);
   const [descriptionResponseValid, setDescriptionResponseValid] =
@@ -108,17 +110,18 @@ const BirthdayWishForm = ({
     const isDescriptionValid = !!descriptionResponse;
     const isImageValid = !!imageFile;
     const isFinalMessageValid = !!finalMessageResponse;
-
+    const isNameValid = !!name;
     setMemoryResponseValid(isMemoryValid);
     setDescriptionResponseValid(isDescriptionValid);
     setFinalMessageResponseValid(isFinalMessageValid);
     setImageValid(isImageValid);
-
+    setNameValid(isNameValid);
     if (
       !memoryResponse ||
       !descriptionResponse ||
       !imageFile ||
-      !finalMessageResponse
+      !finalMessageResponse ||
+      !name
     ) {
       setIsFormIncomplete(true);
       setIsLoading(false);
@@ -149,6 +152,7 @@ const BirthdayWishForm = ({
       memoryResponse,
       finalMessageResponse,
       descriptionResponse,
+      name,
     };
 
     const formSubmissionResponse = await axios.post(
@@ -224,6 +228,16 @@ const BirthdayWishForm = ({
       {/* form fields */}
       <form className="w-full">
         <div className={`flex flex-col gap-${formGap} text-black`}>
+          <div className="flex flex-col gap-1 pt-2">
+            <InputField
+              placeholderText=""
+              inputValue={name}
+              setInputValue={setName}
+              bgColor={bgColor}
+              isValid={nameValid}
+              label={`What's your name?`}
+            />
+          </div>
           <div className="flex flex-col gap-1 pt-2">
             <InputField
               inputValue={descriptionResponse}
