@@ -65,7 +65,6 @@ export default function ImageUploader({
     if (!fileUploadElement) {
       return;
     }
-
     fileUploadElement.click();
   };
 
@@ -79,6 +78,13 @@ export default function ImageUploader({
   const clearUpload = () => {
     setUploadedImageUrl(null);
     setImageFile(null);
+    // Reset the file input value so the same file can be selected again
+    const fileUploadElement = document.getElementById(
+      "main-image-upload"
+    ) as HTMLInputElement;
+    if (fileUploadElement) {
+      fileUploadElement.value = "";
+    }
   };
 
   // TODO @Shawn: check the device type. if it is a mac, use command + v. if it is windows use ctrl + v
