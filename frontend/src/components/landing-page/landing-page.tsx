@@ -21,7 +21,7 @@ const Copy = () => {
     <>
       <div className="mb-7 rounded-full bg-zinc-600">
         <a
-          href="#"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSenDNaDWwJGaG1xa7BczwMKWnLGpxCcFCa1CG09EjvwWqmQUw/viewform?usp=header"
           target="_blank"
           rel="nofollow"
           className="flex origin-top-left items-center rounded-full border border-zinc-900 bg-white p-0.5 text-sm transition-transform hover:-rotate-2"
@@ -29,7 +29,9 @@ const Copy = () => {
           <span className="rounded-full bg-red-500 px-2 py-0.5 text-md text-white">
             ALPHA VER.
           </span>
-          <span className="ml-1.5 mr-1 inline-block">Give us feedback!</span>
+          <span className="ml-1.5 mr-1 inline-block">
+            Give Feedback / Contact Us!
+          </span>
           <FiArrowUpRight className="mr-2 inline-block" />
         </a>
       </div>

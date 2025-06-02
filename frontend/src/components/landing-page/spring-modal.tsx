@@ -2,6 +2,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
+import { FormSubmissionErrorNotification } from "../question-form/Notifications";
 
 interface SpringModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface SpringModalProps {
 const SpringModal = ({ isOpen, setIsOpen }: SpringModalProps) => {
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
+  const [showSuccessNotif, setShowSuccessNotif] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,7 +56,11 @@ const SpringModal = ({ isOpen, setIsOpen }: SpringModalProps) => {
       }
     );
     console.log(response);
-    setIsOpen(false);
+    setShowSuccessNotif(true);
+    setTimeout(() => {
+      setShowSuccessNotif(false);
+      setIsOpen(false);
+    }, 1000);
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,6 +79,12 @@ const SpringModal = ({ isOpen, setIsOpen }: SpringModalProps) => {
             exit={{ scale: 0, rotate: "0deg" }}
             className="bg-red-600 text-white p-10 w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
           >
+            {showSuccessNotif && (
+              <FormSubmissionErrorNotification
+                errorMessage="Thanks! We got your email 🎉"
+                removeNotif={() => setShowSuccessNotif(false)}
+              />
+            )}
             <div className="relative z-10">
               <h3 className="text-3xl font-bold text-center mb-2">
                 We&apos;ll let you know when we launch!
