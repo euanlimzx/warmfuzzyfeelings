@@ -1,7 +1,7 @@
 import axios from "axios";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface SpringModalProps {
   isOpen: boolean;
@@ -11,6 +11,31 @@ interface SpringModalProps {
 const SpringModal = ({ isOpen, setIsOpen }: SpringModalProps) => {
   const [email, setEmail] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    let timeoutId: NodeJS.Timeout;
+
+    if (isOpen) {
+      timeoutId = setTimeout(() => {
+        document.addEventListener("click", handleClickOutside);
+      }, 100);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOpen, setIsOpen]);
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -40,19 +65,13 @@ const SpringModal = ({ isOpen, setIsOpen }: SpringModalProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={() => setIsOpen(false)}
-          className="bg-slate-900/20 backdrop-blur p-8 fixed inset-0 z-50 grid place-items-center overflow-y-scroll cursor-pointer"
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <motion.div
+            ref={modalRef}
             initial={{ scale: 0, rotate: "12.5deg" }}
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
-            onClick={(e) => e.stopPropagation()}
-            className="bg-red-600 text-white p-10  w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
+            className="bg-red-600 text-white p-10 w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
           >
             <div className="relative z-10">
               <h3 className="text-3xl font-bold text-center mb-2">
@@ -84,7 +103,7 @@ const SpringModal = ({ isOpen, setIsOpen }: SpringModalProps) => {
               )}
             </div>
           </motion.div>
-        </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );
