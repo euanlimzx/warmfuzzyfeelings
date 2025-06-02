@@ -2,8 +2,7 @@
 
 import { useEffect, Dispatch, SetStateAction } from "react";
 import { FaTrashCan } from "react-icons/fa6";
-import { CiImageOn } from "react-icons/ci";
-import Image from "next/image";
+import { IoImagesSharp } from "react-icons/io5";
 
 interface ImageUploaderProps {
   setImageFile: Dispatch<SetStateAction<File | null>>;
@@ -92,7 +91,11 @@ export default function ImageUploader({
   return (
     <>
       {label && <label className="text-md font-medium">{label}</label>}
-      <p className="text-sm font-medium text-gray-500">
+      <p
+        className={`text-sm font-medium text-gray-500 ${
+          uploadedImageUrl ? "" : "hidden"
+        }`}
+      >
         Here&apos;s a preview of how your image will appear on the card itself -
         do crop before uploading if it looks funny! (SORRY)
       </p>
@@ -125,41 +128,34 @@ export default function ImageUploader({
       </div>
 
       <div
-        className={`relative flex flex-col items-center justify-center gap-4 border-2 border-black pt-2 ${
+        className={`${
+          uploadedImageUrl ? "hidden" : ""
+        } hover:cursor-pointer bg-yellow-200 flex flex-col items-center justify-center border-2 border-black h-[200px] px-10 w-full ${
           !isValid ? "ring-2 ring-red-500" : ""
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
+        onClick={handleUploadButtonClick}
       >
-        {/* TODO: round image, improve proportions on image rounding */}
+        <div className="flex flex-col items-center justify-center gap-4">
+          <IoImagesSharp size={46} color="black" />
+          {!uploadedImageUrl && (
+            <div className="text-center font-medium">
+              Click to select from your files or drag and drop an image here!
+            </div>
+          )}
 
-        <CiImageOn
-          size={96}
-          color="black"
-          className={`${uploadedImageUrl ? "hidden" : ""}`}
-        />
-        {!uploadedImageUrl && (
-          <div className="m-2 flex flex-col gap-2">
-            <button
-              className="cursor-pointer border-2 border-black"
-              onClick={handleUploadButtonClick}
-            >
-              Browse
-            </button>
-            <p>or drag and drop</p>
-          </div>
-        )}
-
-        <input
-          type="file"
-          name="mainImageUpload"
-          accept=".jpg, .jpeg, .png, .webp"
-          id="main-image-upload"
-          className="hidden"
-          onChange={handleFileClickUpload}
-        />
+          <input
+            type="file"
+            name="mainImageUpload"
+            accept=".jpg, .jpeg, .png, .webp"
+            id="main-image-upload"
+            className="hidden"
+            onChange={handleFileClickUpload}
+          />
+        </div>
       </div>
     </>
   );
