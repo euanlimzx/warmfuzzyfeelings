@@ -169,7 +169,7 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
       }}
     >
       <div className="flex flex-col items-center h-full w-full relative">
-        <div className="relative w-full h-72 mb-2">
+        <div className="relative h-60 w-60 sm:h-75 sm:w-75 mb-2">
           <Image
             src={"https://picsum.photos/500/800"}
             alt={`Testimonial image for ${testimonial.by}`}

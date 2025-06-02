@@ -3,6 +3,7 @@
 import { useEffect, Dispatch, SetStateAction } from "react";
 import { X as XIcon } from "lucide-react";
 import { CiImageOn } from "react-icons/ci";
+import Image from "next/image";
 
 interface ImageUploaderProps {
   setImageFile: Dispatch<SetStateAction<File | null>>;
@@ -103,6 +104,17 @@ export default function ImageUploader({
         onDrop={handleDrop}
       >
         {/* TODO: round image, improve proportions on image rounding */}
+        <div className="relative w-full h-72 mb-2">
+          <Image
+            src={"https://picsum.photos/500/800"}
+            alt={`Image preview for the user`}
+            fill
+            className="object-cover border-[2px] border-black"
+            style={{
+              boxShadow: "2px 2px 0px white",
+            }}
+          />
+        </div>
         <img
           alt="uploadedMainImage"
           id="uploaded-main-image-preview"
