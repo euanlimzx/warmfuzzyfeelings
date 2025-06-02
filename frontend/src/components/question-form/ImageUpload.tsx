@@ -112,7 +112,7 @@ export default function ImageUploader({
                 src={uploadedImageUrl || undefined}
               />
             </div>
-            <div className="flex w-full justify-end py-4">
+            <div className="flex w-full justify-end py-2">
               <button
                 className="cursor-pointer border-2 border-black bg-red-500 p-2 hover:bg-red-600 shadow-l transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
                 onClick={clearUpload}

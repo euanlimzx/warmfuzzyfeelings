@@ -199,7 +199,7 @@ const BirthdayWishForm = ({
 
       {/* form title */}
       <h1 className="text-2xl sm:text-4xl font-semibold">
-        Let&apos;s make a card for {birthdayPerson}&apos;s Birthday!
+        Let&apos;s make a card for {birthdayPerson}&apos;s Birthday{""}🥳🎉
       </h1>
       <h2>
         Answer a few quick questions and we&apos;ll help collate them into a

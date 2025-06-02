@@ -25,7 +25,7 @@ const TextAreaField = ({
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         rows={5}
-        className={`!outline-none ${bgColor} transition-colors duration-[750ms] placeholder-white/70 border-2 border-black w-full text-lg ${
+        className={`!outline-none ${bgColor} transition-colors duration-[750ms] placeholder-white/70 border-2 border-black w-full text-lg p-3 ${
           !isValid ? "ring-2 ring-red-500" : ""
         }`}
       />

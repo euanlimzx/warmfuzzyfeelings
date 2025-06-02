@@ -49,9 +49,13 @@ export const FormSubmissionErrorNotification = ({
   removeNotif,
 }: ErrorNotificationProps) => {
   return (
-    <Notification removeNotif={removeNotif}>
-      {/* TODO: Can add an icon here? */}
-      <span>{errorMessage}</span>
-    </Notification>
+    <div className="w-full flex justify-center">
+      <Notification removeNotif={removeNotif}>
+        {/* TODO: Can add an icon here? */}
+        <span className="text-white font-bold text-lg text-center">
+          {errorMessage}
+        </span>
+      </Notification>
+    </div>
   );
 };
