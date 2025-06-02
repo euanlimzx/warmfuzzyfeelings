@@ -73,12 +73,13 @@ export const Memories = () => {
 
   return (
     <div
-      className="relative w-full overflow-hidden min-h-full bg-red-500"
+      className="relative w-full overflow-hidden min-h-full bg-yellow-400"
       style={{
         height: SECTION_HEIGHT,
       }}
     >
-      <h2 className="text-center font-semibold text-2xl py-10 mt-10 mx-auto">
+      {/* todo: outline the text in the h2 component */}
+      <h2 className="text-center font-medium text-2xl text-black py-10 mt-10 mx-auto">
         You&apos;ve shared countless of memories with everyone, but here are the
         ones we&apos;ll remember forever
       </h2>
