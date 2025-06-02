@@ -233,4 +233,47 @@ app.get("/create-structured-summary", async (req, res) => {
   }
 });
 
+app.get("/retrieve-birthday-card", async (req, res) => {
+  const { cardUUID } = req.query;
+  if (typeof cardUUID === "string") {
+    const card = await getCardFromUUID({ cardUUID });
+
+    if (!card.ok) {
+      res.status(500).send(card);
+      return;
+    }
+    const returnObject = {
+      charcterDescription: card.card?.descriptive_title,
+      textSummary: card.card?.text_summary,
+      singleWordTraits: card.card?.single_word_traits,
+      summary: card.card?.sourced_summary,
+    };
+
+    const cardResponses = await getAllCardResponsesForUUID({ cardUUID });
+    if (!card.ok) {
+      res.status(500).send(cardResponses);
+      return;
+    }
+    const memories = cardResponses.cards?.map((cardResponse) => {
+      return {
+        name: cardResponse.responder_name,
+        imageUrl: cardResponse.image_url,
+        memory: cardResponse.memory_response,
+      };
+    });
+
+    const wishes = cardResponses.cards?.map((cardResponse) => {
+      return {
+        name: cardResponse.responder_name,
+        message: cardResponse.final_message_response,
+      };
+    });
+
+    res.status(200).send({ ...returnObject, memories, wishes, ok: true });
+    return;
+  }
+
+  res.status(400).send({ ok: false, message: "invalid input for card UUID" });
+});
+
 export default app;
