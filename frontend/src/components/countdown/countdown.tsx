@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { subDays, addDays, format } from "date-fns";
 import confetti from "canvas-confetti";
 import { Notifications } from "./notifications";
-import { SpinningText } from "../magicui/spinning-text";
+import { BiSolidChevronUp } from "react-icons/bi";
 
 const BIRTHDAY_OFFSET = 4;
 export const Countdown = () => {
@@ -46,11 +46,17 @@ export const Countdown = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
-              className="mt-48 text-lg font-semibold text-white"
+              className="mt-28 text-xl md:text-2xl  text-white"
             >
-              <SpinningText fontSize={0.2}>
-                We&apos;ve got something special for you
-              </SpinningText>
+              <div className="flex flex-col items-center justify-center animate-bounce">
+                <div className="flex items-center justify-center">
+                  <BiSolidChevronUp className="w-12 h-12 text-white" />
+                </div>
+                <p className="text-center max-w-1/2">
+                  Scroll up to see the next page! (or use the arrows at the
+                  bottom)
+                </p>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
