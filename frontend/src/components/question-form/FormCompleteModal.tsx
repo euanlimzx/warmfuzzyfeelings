@@ -21,10 +21,26 @@ const FormCompleteModal = ({
   cardUUID,
 }: FormCompleteModalProps) => {
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const router = useRouter();
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmission = async () => {
+    if (!email) {
+      setEmailError("Please enter an email address");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
+
     try {
       await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/register-email`,
@@ -33,12 +49,14 @@ const FormCompleteModal = ({
           cardUUID,
         }
       );
+      setEmail("");
+      setEmailError("");
+      setIsOpen(false);
+      router.push("/");
     } catch (err) {
       console.error(err);
+      setEmailError("Something went wrong. Please try again.");
     }
-
-    setEmail("");
-    router.push("/");
   };
 
   return (
@@ -72,19 +90,28 @@ const FormCompleteModal = ({
                 You could also use our site to create a card for your other
                 friends 😉
               </h3>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  type="email"
-                  placeholder="Enter your email!"
-                  className="w-full p-2 bg-white border-3 border-black rounded-none focus:outline-none focus:ring-0 focus:border-black text-black caret-black"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col w-full">
+                  <input
+                    type="email"
+                    placeholder="Enter your email!"
+                    className={`w-full p-2 bg-white border-3 border-black rounded-none focus:outline-none focus:ring-0 focus:border-black text-black caret-black ${
+                      emailError ? "border-red-500" : ""
+                    }`}
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setEmailError("");
+                    }}
+                  />
+                  {emailError && (
+                    <span className="text-red-500 text-sm mt-1">
+                      {emailError}
+                    </span>
+                  )}
+                </div>
                 <button
-                  onClick={() => {
-                    handleSubmission();
-                    setIsOpen(false);
-                  }}
+                  onClick={handleSubmission}
                   className="w-full sm:w-fit px-6 py-2 font-medium border-2 border-black bg-white text-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
                 >
                   Submit
