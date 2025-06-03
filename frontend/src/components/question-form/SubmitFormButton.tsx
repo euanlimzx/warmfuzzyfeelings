@@ -6,7 +6,7 @@ import {
   useSpring,
 } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
-import LoadingAnimation from "./LoadingAnimation";
+import { orbit } from "ldrs";
 
 const SPRING_OPTIONS = {
   mass: 1.5,
@@ -25,6 +25,7 @@ const SubmitFormButton = ({
   bgColor,
   isLoading,
 }: SubmitFormButtonProps) => {
+  orbit.register();
   const ref = useRef(null);
 
   const x = useMotionValue(0);
@@ -80,12 +81,12 @@ const SubmitFormButton = ({
         onMouseLeave={handleReset}
         onMouseDown={handleReset}
         className={`group flex h-full w-full items-center justify-between border-2 border-black text-white bg-purple-400 px-8 text-xl font-semibold ${
-          isLoading ? "opacity-75 cursor-not-allowed" : ""
+          isLoading ? "bg-purple-700 cursor-not-allowed" : ""
         }`}
       >
         {isLoading ? (
           <div className="flex items-center justify-center w-full ">
-            <LoadingAnimation isLoading={isLoading} />
+            <l-orbit size="47" speed="1" color="white"></l-orbit>
           </div>
         ) : (
           <>
