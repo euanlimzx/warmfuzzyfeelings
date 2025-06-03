@@ -110,12 +110,14 @@ const FormCompleteModal = ({
                     </span>
                   )}
                 </div>
-                <button
-                  onClick={handleSubmission}
-                  className="w-full sm:w-fit px-6 py-2 font-medium border-2 border-black bg-white text-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
-                >
-                  Submit
-                </button>
+                <div className="flex justify-end">
+                  <button
+                    onClick={handleSubmission}
+                    className="w-full sm:w-fit px-6 py-2 font-medium border-2 border-black bg-white text-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
+                  >
+                    Submit
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>
