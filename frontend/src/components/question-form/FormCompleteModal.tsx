@@ -40,7 +40,6 @@ const FormCompleteModal = ({
     setEmail("");
     router.push("/");
   };
-  isOpen = true;
 
   return (
     <AnimatePresence>
