@@ -40,6 +40,7 @@ const FormCompleteModal = ({
     setEmail("");
     router.push("/");
   };
+  isOpen = true;
 
   return (
     <AnimatePresence>
@@ -59,15 +60,18 @@ const FormCompleteModal = ({
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className={`${bgColor} text-black p-10  w-full max-w-lg shadow-xl cursor-default relative overflow-hidden`}
+            className={`${bgColor} text-black border-2 border-black p-10  w-full max-w-lg shadow-xl cursor-default relative overflow-hidden`}
           >
             <div className="relative z-10">
-              <h3 className="text-3xl font-bold text-center mb-2">
-                High five! Your submission was so good, we want to frame it.
+              <h3 className="text-2xl font-bold text-center mb-2">
+                Thanks! Your submission was so good, we&apos;ll probably frame
+                it.
               </h3>
-              <h3 className="text-3xl font-bold text-center mb-2">
-                Drop your email and we&apos;ll hit you up when {birthdayPerson}
-                &apos;s card arrives!
+              <h3 className="text-lg font-medium text-center mb-2">
+                If you&apos;d like to see how {birthdayPerson} responds to this
+                card, drop your email and we&apos;ll be sure to let you know.
+                You could also use our site to create a card for your other
+                friends 😉
               </h3>
               <div className="flex flex-col sm:flex-row gap-2">
                 <input
