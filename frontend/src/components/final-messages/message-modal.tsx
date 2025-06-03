@@ -1,6 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
-import { FiAlertCircle } from "react-icons/fi";
+import { useState, useRef, useEffect } from "react";
 
 export const MessageModalWrapper = ({
   children,
@@ -15,54 +14,91 @@ export const MessageModalWrapper = ({
     </div>
   );
 };
+
 const MessageModal = ({ isOpen, setIsOpen }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    let timeoutId: NodeJS.Timeout;
+
+    if (isOpen) {
+      timeoutId = setTimeout(() => {
+        document.addEventListener("click", handleClickOutside);
+      }, 100);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOpen, setIsOpen]);
+
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={() => setIsOpen(false)}
-          className="bg-slate-900/20 backdrop-blur p-8 fixed inset-0 z-50 grid place-items-center overflow-y-scroll cursor-pointer"
-        >
+        <div className="bg-slate-900/20 backdrop-blur p-8 fixed inset-0 z-50 grid place-items-center overflow-y-scroll">
           <motion.div
+            ref={modalRef}
             initial={{ scale: 0, rotate: "12.5deg" }}
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
-            onClick={(e) => e.stopPropagation()}
-            className="bg-gradient-to-br from-violet-600 to-indigo-600 text-white p-6 rounded-lg w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
+            className="bg-white text-black p-8 w-full max-w-lg shadow-xl cursor-default relative overflow-hidden border-[3px] h-3/4 border-black"
           >
-            <FiAlertCircle className="text-white/10 rotate-12 text-[250px] absolute z-0 -top-24 -left-24" />
-            <div className="relative z-10">
-              <div className="bg-white w-16 h-16 mb-2 rounded-full text-3xl text-indigo-600 grid place-items-center mx-auto">
-                <FiAlertCircle />
-              </div>
-              <h3 className="text-3xl font-bold text-center mb-2">
-                One more thing!
-              </h3>
-              <p className="text-center mb-6">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Id
-                aperiam vitae, sapiente ducimus eveniet in velit.
-              </p>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="bg-transparent hover:bg-white/10 transition-colors text-white font-semibold w-full py-2 rounded"
-                >
-                  Nah, go back
-                </button>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="bg-white hover:opacity-90 transition-opacity text-indigo-600 font-semibold w-full py-2 rounded"
-                >
-                  Understood!
-                </button>
+            {/* Envelope flap decoration */}
+            <div className="absolute -top-8 left-0 right-0 h-16 bg-pink-100 border-b-[3px] border-black transform -skew-y-3 origin-left"></div>
+
+            {/* Letter content */}
+            <div className="relative z-10 mt-4">
+              <div className="bg-white p-6 relative">
+                {/* Decorative stamp corner */}
+                <div className="absolute top-1 right-1 w-16 h-16 border-2 border-black/20 rounded-sm flex items-center justify-center bg-pink-50/50 rotate-6"></div>
               </div>
             </div>
+            <div className="text-black text-sm tracking-wide mt-10 h-9/12 overflow-y-scroll">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nobis
+              nesciunt quaerat nostrum? Pariatur tempore facere, fugit tenetur
+              magni sed consequatur! Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Quisquam, quos. Lorem, ipsum dolor sit amet
+              consectetur adipisicing elit. Nobis nesciunt quaerat nostrum?
+              Pariatur tempore facere, fugit tenetur magni sed consequatur!
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+              quos. Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+              Nobis nesciunt quaerat nostrum? Pariatur tempore facere, fugit
+              tenetur magni sed consequatur! Lorem ipsum dolor sit amet
+              consectetur adipisicing elit. Quisquam, quos. Lorem, ipsum dolor
+              sit amet consectetur adipisicing elit. Nobis nesciunt quaerat
+              nostrum? Pariatur tempore facere, fugit tenetur magni sed
+              consequatur! Lorem ipsum dolor sit amet consectetur adipisicing
+              elit. Quisquam, quos. Lorem, ipsum dolor sit amet consectetur
+              adipisicing elit. Nobis nesciunt quaerat nostrum? Pariatur tempore
+              facere, fugit tenetur magni sed consequatur! Lorem ipsum dolor sit
+              amet consectetur adipisicing elit. Quisquam, quos. Lorem, ipsum
+              dolor sit amet consectetur adipisicing elit. Nobis nesciunt
+              quaerat nostrum? Pariatur tempore facere, fugit tenetur magni sed
+              consequatur! Lorem ipsum dolor sit amet consectetur adipisicing
+              elit. Quisquam, quos. Lorem, ipsum dolor sit amet consectetur
+              adipisicing elit. Nobis nesciunt quaerat nostrum? Pariatur tempore
+              facere, fugit tenetur magni sed consequatur! Lorem ipsum dolor sit
+              amet consectetur adipisicing elit. Quisquam, quos.
+            </div>
+
+            {/* Decorative lines */}
+            <div className="absolute bottom-0 left-0 right-0 h-4 bg-pink-100/50"></div>
+            <div className="absolute bottom-6 left-0 right-0 h-4 bg-pink-100/30"></div>
           </motion.div>
-        </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );
 };
+
+export default MessageModal;

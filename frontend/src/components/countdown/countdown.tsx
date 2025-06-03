@@ -6,35 +6,21 @@ import { Notifications } from "./notifications";
 import { BiSolidChevronUp } from "react-icons/bi";
 
 const BIRTHDAY_OFFSET = 4;
-export const Countdown = () => {
+export const Countdown = ({
+  setShowButtons,
+}: {
+  setShowButtons: (show: boolean) => void;
+}) => {
   const date = new Date();
   const [showBottomText, setShowBottomText] = useState(false);
 
   const showText = () => {
     setShowBottomText(true);
+    setShowButtons(true);
   };
 
   return (
-    <div className="grid place-content-center h-screen gradient-background">
-      <style jsx>{`
-        .gradient-background {
-          background: linear-gradient(300deg, #ffcee6, #e7d6ff, #ffd6f3);
-          background-size: 180% 180%;
-          animation: gradient-animation 4s ease infinite;
-        }
-
-        @keyframes gradient-animation {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-      `}</style>
+    <div className="grid place-content-center h-screen bg-pink-200">
       <div className="relative flex flex-col items-center">
         <FlipCalendar
           birthdayWithOffset={subDays(date, BIRTHDAY_OFFSET)}
@@ -48,13 +34,13 @@ export const Countdown = () => {
               exit={{ opacity: 0, y: 50 }}
               className="mt-28 text-xl md:text-2xl  text-white"
             >
-              <div className="flex flex-col items-center justify-center animate-bounce">
-                <div className="flex items-center justify-center">
-                  <BiSolidChevronUp className="w-12 h-12 text-white" />
+              <div className="flex flex-col items-center justify-center animate-bounce text-white font-semibold">
+                <div className="flex items-center justify-center ">
+                  <BiSolidChevronUp className="w-12 h-12 " />
                 </div>
                 <p className="text-center max-w-1/2">
-                  Scroll up to see the next page! (or use the arrows at the
-                  bottom)
+                  HAPPY BIRTHDAY!! <br /> Scroll up to see the next page! (or
+                  use the arrows at the bottom)
                 </p>
               </div>
             </motion.div>

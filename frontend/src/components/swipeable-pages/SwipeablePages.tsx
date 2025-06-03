@@ -64,7 +64,10 @@ function AnimatedChild({
   );
 }
 
-export default function SwipeablePages({ children }: SwipeableWrapperProps) {
+export default function SwipeablePages({
+  children,
+  showButtons,
+}: SwipeableWrapperProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
 
@@ -97,22 +100,24 @@ export default function SwipeablePages({ children }: SwipeableWrapperProps) {
           {childrenArray[currentIndex]}
         </AnimatedChild>
       </AnimatePresence>
-      <div className="fixed bottom-10 right-10">
-        <button
-          onClick={handleSwipeDown}
-          disabled={currentIndex === 0}
-          className="bg-white backdrop-blur-sm text-black px-4 py-2 border-2 h-15 w-15 border-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] flex items-center justify-center"
-        >
-          <IoMdArrowUp size={25} />
-        </button>
-        <button
-          onClick={handleSwipeUp}
-          disabled={currentIndex === totalPages - 1}
-          className="bg-white backdrop-blur-sm text-black px-4 py-2 border-2 h-15 w-15 border-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] flex items-center justify-center"
-        >
-          <IoMdArrowDown size={25} />
-        </button>
-      </div>
+      {showButtons && (
+        <div className="fixed bottom-10 right-10">
+          <button
+            onClick={handleSwipeDown}
+            disabled={currentIndex === 0}
+            className="bg-white backdrop-blur-sm text-black px-4 py-2 border-2 h-15 w-15 border-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] flex items-center justify-center"
+          >
+            <IoMdArrowUp size={25} />
+          </button>
+          <button
+            onClick={handleSwipeUp}
+            disabled={currentIndex === totalPages - 1}
+            className="bg-white backdrop-blur-sm text-black px-4 py-2 border-2 h-15 w-15 border-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] flex items-center justify-center"
+          >
+            <IoMdArrowDown size={25} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
