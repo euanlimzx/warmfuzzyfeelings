@@ -6,7 +6,6 @@ import {
   useSpring,
 } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
-import LoadingAnimation from "./LoadingAnimation";
 
 const SPRING_OPTIONS = {
   mass: 1.5,
@@ -62,7 +61,7 @@ const SubmitFormButton = ({
       submitForm();
     }
   };
-
+  isLoading = true;
   return (
     <div
       className={`mx-auto h-15 w-full bg-black ${
@@ -80,12 +79,12 @@ const SubmitFormButton = ({
         onMouseLeave={handleReset}
         onMouseDown={handleReset}
         className={`group flex h-full w-full items-center justify-between border-2 border-black text-white bg-purple-400 px-8 text-xl font-semibold ${
-          isLoading ? "opacity-75 cursor-not-allowed" : ""
+          isLoading ? "opacity-95 cursor-not-allowed" : ""
         }`}
       >
         {isLoading ? (
           <div className="flex items-center justify-center w-full ">
-            <LoadingAnimation isLoading={isLoading} />
+            Sending ...
           </div>
         ) : (
           <>
