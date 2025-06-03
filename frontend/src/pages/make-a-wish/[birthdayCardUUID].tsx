@@ -4,6 +4,7 @@ import BirthdayWishForm from "@/components/question-form/BirthdayWishForm";
 import { WarpBackground } from "@/components/magicui/warp-background";
 import axios from "axios";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -30,20 +31,25 @@ export default function Home() {
   }, [birthdayCardUUID]);
 
   return (
-    <div className="text-black flex flex-col items-center justify-center w-full min-h-screen bg-white p-4">
-      <WarpBackground className="w-full max-w-2xl">
-        {!isCardRetrievalError ? (
-          <BirthdayWishForm
-            cardUUID={birthdayCardUUID as string}
-            birthdayPerson={birthdayPerson}
-          />
-        ) : (
-          <div>
-            Hmm... we cant really seem to find the person you&apos;re looking
-            for
-          </div>
-        )}
-      </WarpBackground>
-    </div>
+    <>
+      <Head>
+        <title>Make a Wish</title>
+      </Head>
+      <div className="text-black flex flex-col items-center justify-center w-full min-h-screen bg-white p-4">
+        <WarpBackground className="w-full max-w-2xl">
+          {!isCardRetrievalError ? (
+            <BirthdayWishForm
+              cardUUID={birthdayCardUUID as string}
+              birthdayPerson={birthdayPerson}
+            />
+          ) : (
+            <div>
+              Hmm... we cant really seem to find the person you&apos;re looking
+              for
+            </div>
+          )}
+        </WarpBackground>
+      </div>
+    </>
   );
 }

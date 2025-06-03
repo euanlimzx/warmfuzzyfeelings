@@ -81,7 +81,7 @@ const SpringModal = ({ isOpen, setIsOpen }: SpringModalProps) => {
           >
             {showSuccessNotif && (
               <FormSubmissionErrorNotification
-                errorMessage="Thanks! We got your email 🎉"
+                errorMessage="Sick! Thanks for the support 🎉"
                 removeNotif={() => setShowSuccessNotif(false)}
               />
             )}
