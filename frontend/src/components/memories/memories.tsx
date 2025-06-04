@@ -177,7 +177,7 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
           } mb-2`}
         >
           <Image
-            src={"https://picsum.photos/500/800"}
+            src={`${process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN}/${testimonial.imageUrl}`}
             alt={`Testimonial image for ${testimonial.by}`}
             fill
             className="object-cover border-[2px] border-black"
