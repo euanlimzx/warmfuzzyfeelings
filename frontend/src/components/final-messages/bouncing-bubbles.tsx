@@ -24,8 +24,8 @@ export default function BouncingBubbles({ wishes }: { wishes: Wishes[] }) {
     const container = containerRef.current;
     if (!container) return;
 
-    const containerWidth = 400;
-    const containerHeight = 300;
+    const containerWidth = 500;
+    const containerHeight = 500;
     const bubbleSize = 40;
 
     // Initialize bubbles with random positions and velocities
@@ -33,8 +33,8 @@ export default function BouncingBubbles({ wishes }: { wishes: Wishes[] }) {
       id: i + 1,
       x: Math.random() * (containerWidth - bubbleSize),
       y: Math.random() * (containerHeight - bubbleSize),
-      vx: (Math.random() - 0.5) * 4,
-      vy: (Math.random() - 0.5) * 4,
+      vx: (Math.random() - 0.5) * 10,
+      vy: (Math.random() - 0.5) * 10,
     }));
 
     const animate = () => {
