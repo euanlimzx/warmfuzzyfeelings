@@ -1,19 +1,28 @@
 import { Ripple } from "@/components/magicui/ripple";
 import React, { useState, ReactNode, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { WordWithSource } from "@/types/birthday-card";
 
-export function CharacterCard() {
+export function CharacterCard({
+  characterSummary,
+}: {
+  characterSummary: WordWithSource[];
+}) {
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-blue-300">
       <div className="z-10 whitespace-pre-wrap text-center text-5xl font-medium tracking-tighter text-white">
-        <DictionaryCard />
+        <DictionaryCard characterSummary={characterSummary} />
       </div>
       <Ripple />
     </div>
   );
 }
 
-export default function DictionaryCard() {
+export default function DictionaryCard({
+  characterSummary,
+}: {
+  characterSummary: WordWithSource[];
+}) {
   return (
     <div className="flex justify-center p-6 text-black">
       <div className="relative w-full max-w-md">
@@ -30,13 +39,28 @@ export default function DictionaryCard() {
 
           {/* Definition */}
           <div className="font-mono text-base leading-relaxed tracking-wide">
-            <FlyoutLink FlyoutContent={PricingContent}>
-              architectural
-            </FlyoutLink>{" "}
-            style of the mid-20th century characterized by massive, monolithic,
-            and blocky forms in raw concrete and bold, rugged design a design
-            aesthetic characterized by intentional roughness, visible and
-            unrefined textures, and an emphasis on raw materials
+            {characterSummary.map((word) => {
+              if (word.sources.length > 0) {
+                const FlyoutContent = () => {
+                  return (
+                    <FlyoutWrapper>
+                      {word.sources.map((source) => (
+                        <div key={source.author}>
+                          {source.author} said: {source.message}
+                        </div>
+                      ))}
+                    </FlyoutWrapper>
+                  );
+                };
+                return (
+                  <FlyoutLink key={word.word} FlyoutContent={FlyoutContent}>
+                    {word.word + " "}
+                  </FlyoutLink>
+                );
+              } else {
+                return word.word + " ";
+              }
+            })}
           </div>
 
           {/* Neo-brutalist stamp */}
@@ -103,10 +127,10 @@ const FlyoutLink = ({ children, FlyoutContent }: FlyoutLinkProps) => {
             exit={{ opacity: 0, y: 15 }}
             style={{ translateX: "-50%" }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="absolute left-1/2 top-12 bg-white text-black"
+            className="absolute left-1/2 top-12 bg-white text-black z-50"
           >
             <div className="absolute -top-6 left-0 right-0 h-6 bg-transparent" />
-            <div className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l-2 border-t-2 border-black bg-white" />
+            <div className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l-2 border-t-2 border-black bg-white z-10" />
             <FlyoutContent />
           </motion.div>
         )}
@@ -115,13 +139,10 @@ const FlyoutLink = ({ children, FlyoutContent }: FlyoutLinkProps) => {
   );
 };
 
-const PricingContent = () => {
+const FlyoutWrapper = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="w-64 bg-white p-6 shadow-2xl border-2">
-      <div className="mb-3 space-y-3">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dignissimos,
-        unde!
-      </div>
+    <div className="relative w-64 bg-white p-6 shadow-2xl border-2 border-black z-20">
+      <div className="mb-3 space-y-3 text-sm">{children}</div>
     </div>
   );
 };

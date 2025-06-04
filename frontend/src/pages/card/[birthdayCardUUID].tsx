@@ -9,10 +9,12 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { BirthdayCardResponse } from "@/types/birthday-card";
 
 export default function Card() {
   const [showButtons, setShowButtons] = useState(false);
-  const [birthdayCardResponse, setBirthdayCardResponse] = useState(null);
+  const [birthdayCardResponse, setBirthdayCardResponse] =
+    useState<BirthdayCardResponse | null>(null);
   const router = useRouter();
   const { birthdayCardUUID } = router.query;
 
@@ -44,17 +46,21 @@ export default function Card() {
     fetchBirthdayCard();
   }, [router.isReady, birthdayCardUUID, router.query]);
 
+  //todo: add loading state
   return (
     <>
       <Head>
         <title>HAPPY BIRTHDAY!</title>
       </Head>
-      <SwipeablePages showButtons={showButtons}>
-        <Countdown setShowButtons={setShowButtons} />
-        <CharacterCard />
-        <Memories />
-        <FinalMessages />
-      </SwipeablePages>
+      {!birthdayCardResponse && <div>Contact euan something went wrong...</div>}
+      {birthdayCardResponse && (
+        <SwipeablePages showButtons={showButtons}>
+          <Countdown setShowButtons={setShowButtons} />
+          <CharacterCard characterSummary={birthdayCardResponse?.summary} />
+          <Memories />
+          <FinalMessages />
+        </SwipeablePages>
+      )}
     </>
   );
 }
