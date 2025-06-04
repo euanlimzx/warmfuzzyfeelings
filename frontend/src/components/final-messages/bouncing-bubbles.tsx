@@ -24,8 +24,8 @@ export default function BouncingBubbles({ wishes }: { wishes: Wishes[] }) {
     const container = containerRef.current;
     if (!container) return;
 
-    const containerWidth = 500;
-    const containerHeight = 500;
+    const containerWidth = 400;
+    const containerHeight = 400;
     const bubbleSize = 40;
 
     // Initialize bubbles with random positions and velocities
@@ -92,7 +92,7 @@ export default function BouncingBubbles({ wishes }: { wishes: Wishes[] }) {
       <div
         ref={containerRef}
         className="relative border border-gray-300 bg-gray-50"
-        style={{ width: 500, height: 500 }}
+        style={{ width: 400, height: 400 }}
       >
         <InteractiveGridPattern squaresClassName="hover:fill-blue-500" />
         {wishes.map((wish, i) => {

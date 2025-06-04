@@ -179,6 +179,8 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
             src={`${process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN}/${testimonial.imageUrl}`}
             alt={`Testimonial image for ${testimonial.by}`}
             fill
+            priority={true}
+            loading="eager"
             className="object-cover border-[2px] border-black"
             style={{
               boxShadow: "2px 2px 0px white",
