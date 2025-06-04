@@ -96,7 +96,7 @@ export const Memories = ({ memories }: { memories: Memory[] }) => {
 
           return (
             <TestimonialCard
-              key={t.name}
+              key={t.tempId}
               testimonial={t}
               handleMove={handleMove}
               position={position}
@@ -135,14 +135,13 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
         textRef.current.scrollHeight > textRef.current.clientHeight;
       setIsTextTruncated(isOverflowing);
     }
-  }, [testimonial.testimonial]);
+  }, [testimonial.memory]);
 
   return (
     <motion.div
       initial={false}
       onClick={() => handleMove(position)}
-      className={`
-      absolute left-1/2 top-1/2 cursor-pointer border-black bg-white p-4 text-black transition-colors duration-500 flex flex-col items-center ${
+      className={`      absolute left-1/2 top-1/2 cursor-pointer border-black bg-white p-4 text-black transition-colors duration-500 flex flex-col items-center ${
         isActive ? "z-10" : "z-0"
       }
       `}

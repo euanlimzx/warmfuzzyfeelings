@@ -46,6 +46,10 @@ export default function Card() {
     fetchBirthdayCard();
   }, [router.isReady, birthdayCardUUID, router.query]);
 
+  const memories = birthdayCardResponse?.memories.map((memory, index) => ({
+    ...memory,
+    tempId: index,
+  }));
   //todo: add loading state
   return (
     <>
@@ -57,7 +61,7 @@ export default function Card() {
         <SwipeablePages showButtons={showButtons}>
           <Countdown setShowButtons={setShowButtons} />
           <CharacterCard characterSummary={birthdayCardResponse?.summary} />
-          <Memories memories={birthdayCardResponse?.memories} />
+          <Memories memories={memories} />
           <FinalMessages wishes={birthdayCardResponse?.wishes} />
         </SwipeablePages>
       )}
