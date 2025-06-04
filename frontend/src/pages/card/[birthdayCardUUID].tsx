@@ -57,7 +57,7 @@ export default function Card() {
         <SwipeablePages showButtons={showButtons}>
           <Countdown setShowButtons={setShowButtons} />
           <CharacterCard characterSummary={birthdayCardResponse?.summary} />
-          <Memories />
+          <Memories memories={birthdayCardResponse?.memories} />
           <FinalMessages />
         </SwipeablePages>
       )}

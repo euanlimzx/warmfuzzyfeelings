@@ -5,6 +5,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { GoArrowLeft, GoArrowRight, GoChevronDown } from "react-icons/go";
 import Image from "next/image";
+import { Memory } from "@/types/birthday-card";
 
 const CARD_SIZE_LG = 300;
 const CARD_SIZE_SM = 250;
@@ -18,10 +19,10 @@ const CENTER_STAGGER = -55;
 
 const SECTION_HEIGHT = "100vh";
 
-export const Memories = () => {
+export const Memories = ({ memories }: { memories: Memory[] }) => {
   const [cardSize, setCardSize] = useState(CARD_SIZE_LG);
 
-  const [testimonials, setTestimonials] = useState(TESTIMONIAL_DATA);
+  const [testimonials, setTestimonials] = useState(memories);
 
   const handleMove = (position) => {
     const copy = [...testimonials];
@@ -95,7 +96,7 @@ export const Memories = () => {
 
           return (
             <TestimonialCard
-              key={t.tempId}
+              key={t.name}
               testimonial={t}
               handleMove={handleMove}
               position={position}
@@ -198,7 +199,7 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
               isActive && isExpanded ? "line-clamp-none" : ""
             }`}
           >
-            &ldquo;{testimonial.testimonial}&rdquo;
+            &ldquo;{testimonial.memory}&rdquo; - {testimonial.name}
           </h3>
         </div>
         {isActive && isTextTruncated && !isExpanded && (
@@ -220,87 +221,3 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
     </motion.div>
   );
 };
-
-const TESTIMONIAL_DATA = [
-  {
-    tempId: 0,
-    testimonial:
-      "My favorite solution in the market. We work 5x faster with COMPANYMy favorite solution in the market. We work 5x faster with COMPANYMy favorite solution in the market. We work 5x faster with COMPANYMy favorite solution in the market. We work 5x faster with COMPANYMy favorite solution in the market. We work 5x faster with COMPANYMy favorite solution in the market. We work 5x faster with COMPANYMy favorite solution in the market. We work 5x faster with COMPANY.",
-    by: "Alex, CEO at COMPANY",
-    imgSrc: "/imgs/head-shots/1.jpg",
-  },
-  {
-    tempId: 1,
-    testimonial:
-      "I'm confident my data is safe with COMPANY. I can't say that about other providers.",
-    by: "Dan, CEO at COMPANY",
-    imgSrc: "/imgs/head-shots/2.jpg",
-  },
-  {
-    tempId: 2,
-    testimonial:
-      "I know it's cliche, but we were lost before we found COMPANY. Can't thank you guys enough!",
-    by: "Stephanie, CEO at COMPANY",
-    imgSrc: "/imgs/head-shots/3.jpg",
-  },
-  {
-    tempId: 3,
-    testimonial:
-      "COMPANY's products make planning for the future seamless. Can't recommend them enough!",
-    by: "Marie, CEO at COMPANY",
-    imgSrc: "/imgs/head-shots/4.jpg",
-  },
-  {
-    tempId: 4,
-    testimonial: "If I could give 11 stars, I'd give 12.",
-    by: "Andre, CEO at COMPANY",
-    imgSrc: "/imgs/head-shots/5.jpg",
-  },
-  {
-    tempId: 5,
-    testimonial:
-      "SO SO SO HAPPY WE FOUND YOU GUYS!!!! I'd bet you've saved me 100 hours so far.",
-    by: "Jeremy, CEO at COMPANY",
-    imgSrc: "/imgs/head-shots/6.jpg",
-  },
-  {
-    tempId: 6,
-    testimonial:
-      "Took some convincing, but now that we're on COMPANY, we're never going back.",
-    by: "Pam, CEO at COMPANY",
-    imgSrc: "/imgs/head-shots/7.jpg",
-  },
-  {
-    tempId: 7,
-    testimonial:
-      "I would be lost without COMPANY's in depth analytics. The ROI is EASILY 100X for us.",
-    by: "Daniel, CEO at COMPANY",
-    imgSrc: "/imgs/head-shots/8.jpg",
-  },
-  {
-    tempId: 8,
-    testimonial: "It's just the best. Period.",
-    by: "Fernando, CEO at COMPANY",
-    imgSrc: "/imgs/head-shots/9.jpg",
-  },
-  {
-    tempId: 9,
-    testimonial: "I switched 5 years ago and never looked back.",
-    by: "Andy, CEO at COMPANY",
-    imgSrc: "/imgs/head-shots/10.jpg",
-  },
-  {
-    tempId: 10,
-    testimonial:
-      "I've been searching for a solution like COMPANY for YEARS. So glad I finally found one!",
-    by: "Pete, CEO at COMPANY",
-    imgSrc: "/imgs/head-shots/11.jpg",
-  },
-  {
-    tempId: 11,
-    testimonial:
-      "It's so simple and intuitive, we got the team up to speed in 10 minutes.",
-    by: "Marina, CEO at COMPANY",
-    imgSrc: "/imgs/head-shots/12.jpg",
-  },
-];

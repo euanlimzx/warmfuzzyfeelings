@@ -10,4 +10,11 @@ export interface WordWithSource {
 
 export interface BirthdayCardResponse {
   summary: WordWithSource[];
+  memories: Memory[];
+}
+
+export interface Memory {
+  name: string;
+  imageUrl: string;
+  memory: string;
 }
