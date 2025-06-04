@@ -1,21 +1,47 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
+import { Wishes } from "@/types/birthday-card";
 
 export const MessageModalWrapper = ({
   children,
+  wish,
+  id,
+  handleBubbleClick,
 }: {
   children: React.ReactNode;
+  wish: Wishes;
+  id: number;
+  handleBubbleClick: (id: number) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div onClick={() => setIsOpen(true)}>
       {children}
-      <MessageModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      <MessageModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        wish={wish}
+        handleBubbleClick={handleBubbleClick}
+        id={id}
+      />
     </div>
   );
 };
 
-const MessageModal = ({ isOpen, setIsOpen }) => {
+const MessageModal = ({
+  isOpen,
+  setIsOpen,
+  wish,
+  handleBubbleClick,
+  id,
+}: {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  wish: Wishes;
+  handleBubbleClick: (id: number) => void;
+  id: number;
+}) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,6 +51,7 @@ const MessageModal = ({ isOpen, setIsOpen }) => {
         !modalRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
+        handleBubbleClick(id);
       }
     };
 
@@ -64,33 +91,9 @@ const MessageModal = ({ isOpen, setIsOpen }) => {
               </div>
             </div>
             <div className="text-black text-sm tracking-wide mt-10 h-9/12 overflow-y-scroll">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nobis
-              nesciunt quaerat nostrum? Pariatur tempore facere, fugit tenetur
-              magni sed consequatur! Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Quisquam, quos. Lorem, ipsum dolor sit amet
-              consectetur adipisicing elit. Nobis nesciunt quaerat nostrum?
-              Pariatur tempore facere, fugit tenetur magni sed consequatur!
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-              quos. Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-              Nobis nesciunt quaerat nostrum? Pariatur tempore facere, fugit
-              tenetur magni sed consequatur! Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Quisquam, quos. Lorem, ipsum dolor
-              sit amet consectetur adipisicing elit. Nobis nesciunt quaerat
-              nostrum? Pariatur tempore facere, fugit tenetur magni sed
-              consequatur! Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Quisquam, quos. Lorem, ipsum dolor sit amet consectetur
-              adipisicing elit. Nobis nesciunt quaerat nostrum? Pariatur tempore
-              facere, fugit tenetur magni sed consequatur! Lorem ipsum dolor sit
-              amet consectetur adipisicing elit. Quisquam, quos. Lorem, ipsum
-              dolor sit amet consectetur adipisicing elit. Nobis nesciunt
-              quaerat nostrum? Pariatur tempore facere, fugit tenetur magni sed
-              consequatur! Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Quisquam, quos. Lorem, ipsum dolor sit amet consectetur
-              adipisicing elit. Nobis nesciunt quaerat nostrum? Pariatur tempore
-              facere, fugit tenetur magni sed consequatur! Lorem ipsum dolor sit
-              amet consectetur adipisicing elit. Quisquam, quos.
+              {wish.message}
+              <br />- {wish.name}
             </div>
-
             {/* Decorative lines */}
             <div className="absolute bottom-0 left-0 right-0 h-4 bg-pink-100/50"></div>
             <div className="absolute bottom-6 left-0 right-0 h-4 bg-pink-100/30"></div>

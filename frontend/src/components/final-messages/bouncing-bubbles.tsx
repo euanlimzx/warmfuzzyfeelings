@@ -12,7 +12,7 @@ interface Bubble {
   vy: number;
 }
 
-export default function BouncingBubbles() {
+export default function BouncingBubbles({ wishes }: { wishes: Wishes[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const bubblesRef = useRef<Bubble[]>([]);
   const animationRef = useRef<number>();
@@ -95,16 +95,20 @@ export default function BouncingBubbles() {
         style={{ width: 500, height: 500 }}
       >
         <InteractiveGridPattern squaresClassName="hover:fill-blue-500" />
-        {Array.from({ length: 10 }, (_, i) => {
+        {wishes.map((wish, i) => {
           const id = i + 1;
           return activeBubbles.includes(id) ? (
-            <MessageModalWrapper key={id}>
+            <MessageModalWrapper
+              key={id}
+              wish={wish}
+              id={id}
+              handleBubbleClick={handleBubbleClick}
+            >
               <div
                 key={id}
                 data-id={id}
                 className="absolute flex items-center justify-center rounded-full overflow-hidden bg-white border-2 border-black cursor-pointer"
                 style={{ width: 60, height: 60 }}
-                // onClick={() => handleBubbleClick(id)}
               >
                 <img
                   src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${id}&shapeColor=ffffff&backgroundType=solid`}

@@ -13,8 +13,14 @@ export interface BirthdayCardResponse {
   memories: Memory[];
 }
 
+export interface Wishes {
+  name: string;
+  message: string;
+}
+
 export interface Memory {
   name: string;
   imageUrl: string;
   memory: string;
+  wishes: Wishes[];
 }
