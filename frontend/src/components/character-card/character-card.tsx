@@ -130,7 +130,7 @@ const FlyoutLink = ({ children, FlyoutContent }: FlyoutLinkProps) => {
             className="absolute left-1/2 top-12 bg-white text-black z-50"
           >
             <div className="absolute -top-6 left-0 right-0 h-6 bg-transparent" />
-            <div className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l-2 border-t-2 border-black bg-white z-10" />
+            <div className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l-2 border-t-2 border-black bg-white z-60" />
             <FlyoutContent />
           </motion.div>
         )}
