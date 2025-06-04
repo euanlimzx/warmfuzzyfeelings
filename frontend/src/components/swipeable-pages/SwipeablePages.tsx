@@ -6,6 +6,7 @@ import { IoMdArrowDown, IoMdArrowUp } from "react-icons/io";
 
 interface SwipeableWrapperProps {
   children: ReactElement[];
+  showButtons: boolean;
 }
 
 interface AnimatedChildProps {
