@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { InteractiveGridPattern } from "../magicui/interactive-grid-pattern";
 import { MessageModalWrapper } from "./message-modal";
+import { Wishes } from "@/types/wishes";
 
 interface Bubble {
   id: number;
@@ -17,7 +18,7 @@ export default function BouncingBubbles({ wishes }: { wishes: Wishes[] }) {
   const bubblesRef = useRef<Bubble[]>([]);
   const animationRef = useRef<number>();
   const [activeBubbles, setActiveBubbles] = useState<number[]>(
-    Array.from({ length: 10 }, (_, i) => i + 1)
+    Array.from({ length: wishes.length }, (_, i) => i + 1)
   );
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function BouncingBubbles({ wishes }: { wishes: Wishes[] }) {
     const bubbleSize = 40;
 
     // Initialize bubbles with random positions and velocities
-    bubblesRef.current = Array.from({ length: 10 }, (_, i) => ({
+    bubblesRef.current = Array.from({ length: wishes.length }, (_, i) => ({
       id: i + 1,
       x: Math.random() * (containerWidth - bubbleSize),
       y: Math.random() * (containerHeight - bubbleSize),
