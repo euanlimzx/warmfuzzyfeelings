@@ -56,7 +56,7 @@ export default function Card() {
       <Head>
         <title>HAPPY BIRTHDAY!</title>
       </Head>
-      {!birthdayCardResponse && <div>Contact euan something went wrong...</div>}
+      {!birthdayCardResponse && <div>Fetching birthday card...</div>}
       {birthdayCardResponse && (
         <SwipeablePages showButtons={showButtons}>
           <Countdown setShowButtons={setShowButtons} />
