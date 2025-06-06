@@ -49,7 +49,7 @@ const determineCharacterTraits = async (comments: string) => {
         content: `
           You are an expert on understanding and celebrating people. 
           Based on the charcter testimonials given, create a fun-themed character summary that would put a smile on the face of the reader.
-          Exclude the person's name, craft the message as if you were speaking to them in person.
+          Exclude the person's name, craft the message as if you were speaking to them in person. Use as many personDescriptionResponse fields as possible. Try and avoid repeating responderNames
           Make your summary no longer than 80 words.
 
           <Examples>

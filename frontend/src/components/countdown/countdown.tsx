@@ -11,7 +11,7 @@ export const Countdown = ({
 }: {
   setShowButtons: (show: boolean) => void;
 }) => {
-  const date = new Date();
+  const date = new Date(new Date().getFullYear(), 5, 6); // Month is 0-based, so 5 = June
   const [showBottomText, setShowBottomText] = useState(false);
 
   const showText = () => {
