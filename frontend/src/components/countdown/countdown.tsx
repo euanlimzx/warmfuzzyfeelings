@@ -2,16 +2,20 @@ import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { subDays, addDays, format } from "date-fns";
 import confetti from "canvas-confetti";
-import { Notifications } from "./notifications";
 import { BiSolidChevronUp } from "react-icons/bi";
 
 const BIRTHDAY_OFFSET = 4;
 export const Countdown = ({
   setShowButtons,
+  birthdayDateString,
 }: {
   setShowButtons: (show: boolean) => void;
+  birthdayDateString: string;
 }) => {
-  const date = new Date(new Date().getFullYear(), 5, 6); // Month is 0-based, so 5 = June
+  // cannot do a direct conversion as it creates a UTC time, which would later be adjusted to the local time
+  const [year, month, day] = birthdayDateString.split("-").map(Number);
+  const localDate = new Date(year, month - 1, day);
+
   const [showBottomText, setShowBottomText] = useState(false);
 
   const showText = () => {
@@ -23,7 +27,7 @@ export const Countdown = ({
     <div className="grid place-content-center h-screen bg-pink-200">
       <div className="relative flex flex-col items-center">
         <FlipCalendar
-          birthdayWithOffset={subDays(date, BIRTHDAY_OFFSET)}
+          birthdayWithOffset={subDays(localDate, BIRTHDAY_OFFSET)}
           onComplete={showText}
         />
         <AnimatePresence>

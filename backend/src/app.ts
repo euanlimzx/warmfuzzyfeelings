@@ -247,6 +247,8 @@ app.get("/retrieve-birthday-card", async (req, res) => {
       textSummary: card.card?.text_summary,
       singleWordTraits: card.card?.single_word_traits,
       summary: card.card?.sourced_summary,
+      characterName: card.card?.birthday_person,
+      birthdayDate: card.card?.birthday_date,
     };
 
     const cardResponses = await getAllCardResponsesForUUID({ cardUUID });

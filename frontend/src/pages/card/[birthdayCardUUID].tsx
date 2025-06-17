@@ -59,7 +59,10 @@ export default function Card() {
       {!birthdayCardResponse && <div>Fetching birthday card...</div>}
       {birthdayCardResponse && (
         <SwipeablePages showButtons={showButtons}>
-          <Countdown setShowButtons={setShowButtons} />
+          <Countdown
+            setShowButtons={setShowButtons}
+            birthdayDateString={birthdayCardResponse?.birthdayDate}
+          />
           <CharacterCard
             characterSummary={birthdayCardResponse?.summary}
             characterName={birthdayCardResponse?.characterName}

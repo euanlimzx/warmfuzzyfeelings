@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       Card: {
         Row: {
+          birthday_date: string
           birthday_person: string
           descriptive_title: string | null
           id: string
@@ -20,6 +21,7 @@ export type Database = {
           text_summary: string | null
         }
         Insert: {
+          birthday_date?: string
           birthday_person: string
           descriptive_title?: string | null
           id?: string
@@ -29,6 +31,7 @@ export type Database = {
           text_summary?: string | null
         }
         Update: {
+          birthday_date?: string
           birthday_person?: string
           descriptive_title?: string | null
           id?: string
@@ -50,6 +53,7 @@ export type Database = {
       Card_Form_Response: {
         Row: {
           card_id: string | null
+          created_at: string
           description_response: string | null
           final_message_response: string | null
           id: string
@@ -59,6 +63,7 @@ export type Database = {
         }
         Insert: {
           card_id?: string | null
+          created_at?: string
           description_response?: string | null
           final_message_response?: string | null
           id: string
@@ -68,6 +73,7 @@ export type Database = {
         }
         Update: {
           card_id?: string | null
+          created_at?: string
           description_response?: string | null
           final_message_response?: string | null
           id?: string
