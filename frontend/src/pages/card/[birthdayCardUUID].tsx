@@ -60,7 +60,10 @@ export default function Card() {
       {birthdayCardResponse && (
         <SwipeablePages showButtons={showButtons}>
           <Countdown setShowButtons={setShowButtons} />
-          <CharacterCard characterSummary={birthdayCardResponse?.summary} />
+          <CharacterCard
+            characterSummary={birthdayCardResponse?.summary}
+            characterName={birthdayCardResponse?.characterName}
+          />
           <Memories memories={memories} />
           <FinalMessages wishes={birthdayCardResponse?.wishes} />
         </SwipeablePages>

@@ -7,11 +7,13 @@ export const MessageModalWrapper = ({
   wish,
   id,
   handleBubbleClick,
+  characterName,
 }: {
   children: React.ReactNode;
   wish: Wishes;
   id: number;
   handleBubbleClick: (id: number) => void;
+  characterName: string;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -24,6 +26,7 @@ export const MessageModalWrapper = ({
         wish={wish}
         handleBubbleClick={handleBubbleClick}
         id={id}
+        characterName={characterName}
       />
     </div>
   );
@@ -35,12 +38,14 @@ const MessageModal = ({
   wish,
   handleBubbleClick,
   id,
+  characterName,
 }: {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   wish: Wishes;
   handleBubbleClick: (id: number) => void;
   id: number;
+  characterName: string;
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -94,7 +99,7 @@ const MessageModal = ({
               {/* {wish.message} */}
               [this message originally from {wish.name} has been redacted for
               privacy reasons] <br />
-              <br /> rest assured, denise saw them all!
+              <br /> rest assured, {characterName} saw them all!
             </div>
             {/* Decorative lines */}
             <div className="absolute bottom-0 left-0 right-0 h-4 bg-pink-100/50"></div>

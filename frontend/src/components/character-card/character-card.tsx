@@ -5,13 +5,18 @@ import { WordWithSource } from "@/types/birthday-card";
 
 export function CharacterCard({
   characterSummary,
+  characterName,
 }: {
   characterSummary: WordWithSource[];
+  characterName: string;
 }) {
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-blue-300">
       <div className="z-10 whitespace-pre-wrap text-center text-5xl font-medium tracking-tighter text-white">
-        <DictionaryCard characterSummary={characterSummary} />
+        <DictionaryCard
+          characterSummary={characterSummary}
+          characterName={characterName}
+        />
       </div>
       <Ripple />
     </div>
@@ -20,8 +25,10 @@ export function CharacterCard({
 
 export default function DictionaryCard({
   characterSummary,
+  characterName,
 }: {
   characterSummary: WordWithSource[];
+  characterName: string;
 }) {
   return (
     <div className="flex justify-center p-6 text-black">
@@ -34,7 +41,9 @@ export default function DictionaryCard({
         <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
           {/* Word and pronunciation */}
           <div className="mb-4 border-b-4 border-black pb-2">
-            <h1 className="font-mono text-4xl font-black lowercase">denise</h1>
+            <h1 className="font-mono text-4xl font-black lowercase">
+              {characterName}
+            </h1>
           </div>
 
           {/* Definition */}

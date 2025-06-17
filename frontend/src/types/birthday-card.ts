@@ -11,6 +11,8 @@ export interface WordWithSource {
 export interface BirthdayCardResponse {
   summary: WordWithSource[];
   memories: Memory[];
+  characterName: string;
+  birthdayDate: string;
 }
 
 export interface Wishes {
