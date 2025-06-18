@@ -22,10 +22,7 @@ const BirthdayWishForm = ({
   const [memoryResponse, setMemoryResponse] = useState("");
   const [descriptionResponse, setDescriptionResponse] = useState("");
   const [finalMessageResponse, setFinalMessageResponse] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<
-    null | string | Blob
-  >(null);
+  const [imageFiles, setImageFiles] = useState<Array<File | null>>([]);
   const [isServerError, setIsServerError] = useState(false);
 
   // check input validity
@@ -52,55 +49,56 @@ const BirthdayWishForm = ({
   const descriptionQuestion = ``;
   const finalMessageQuestion = ``;
 
-  const uploadImageToS3 = async (uuid: UUIDTypes) => {
-    if (!imageFile) {
-      console.error("No image file selected");
-      return;
-    }
+  // @Shawn: fix this uploading logic
+  // const uploadImageToS3 = async (uuid: UUIDTypes) => {
+  //   if (!imageFile) {
+  //     console.error("No image file selected");
+  //     return;
+  //   }
 
-    try {
-      // First, get the presigned URL from our backend
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/upload-image`,
-        {
-          fileName: uuid,
-          fileType: imageFile.type,
-          fileSize: imageFile.size,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  //   try {
+  //     // First, get the presigned URL from our backend
+  //     const response = await axios.post(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/upload-image`,
+  //       {
+  //         fileName: uuid,
+  //         fileType: imageFile.type,
+  //         fileSize: imageFile.size,
+  //       },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
 
-      if (!response.data.ok) {
-        return {
-          ok: false,
-          message: "There were some errors getting the signed URL",
-        };
-      }
+  //     if (!response.data.ok) {
+  //       return {
+  //         ok: false,
+  //         message: "There were some errors getting the signed URL",
+  //       };
+  //     }
 
-      const { url } = response.data;
+  //     const { url } = response.data;
 
-      // Upload the file directly to S3 using the presigned URL
-      await axios.put(url, imageFile, {
-        headers: {
-          "Content-Type": imageFile.type,
-        },
-      });
+  //     // Upload the file directly to S3 using the presigned URL
+  //     await axios.put(url, imageFile, {
+  //       headers: {
+  //         "Content-Type": imageFile.type,
+  //       },
+  //     });
 
-      return { ok: true };
-    } catch (error) {
-      console.error(error);
-      setImageSizeAndTypeValid(false);
-      setShowImageSizeAndTypeError(true);
-      return {
-        ok: false,
-        imageValidityIssue: true,
-      };
-    }
-  };
+  //     return { ok: true };
+  //   } catch (error) {
+  //     console.error(error);
+  //     setImageSizeAndTypeValid(false);
+  //     setShowImageSizeAndTypeError(true);
+  //     return {
+  //       ok: false,
+  //       imageValidityIssue: true,
+  //     };
+  //   }
+  // };
 
   const submitForm = async () => {
     setIsLoading(true);
@@ -108,7 +106,7 @@ const BirthdayWishForm = ({
     // check that all fields, including the image, have been filled up
     const isMemoryValid = !!memoryResponse;
     const isDescriptionValid = !!descriptionResponse;
-    const isImageValid = !!imageFile;
+    const isImageValid = !!imageFiles.length;
     const isFinalMessageValid = !!finalMessageResponse;
     const isNameValid = !!name;
     setMemoryResponseValid(isMemoryValid);
@@ -119,7 +117,7 @@ const BirthdayWishForm = ({
     if (
       !memoryResponse ||
       !descriptionResponse ||
-      !imageFile ||
+      !imageFiles.length ||
       !finalMessageResponse ||
       !name
     ) {
@@ -133,14 +131,15 @@ const BirthdayWishForm = ({
     const submitReceipt = `${cardUUID}__${responseUUID}`;
 
     // add image to bucket, name of the image will be the uuid of the of the card + uuid of the response
-    const imageUploadResponse = await uploadImageToS3(submitReceipt);
 
-    if (!imageUploadResponse?.ok) {
-      console.log("Error uploading image");
-      setIsLoading(false);
+    // const imageUploadResponse = await uploadImageToS3(submitReceipt);
 
-      return;
-    }
+    // if (!imageUploadResponse?.ok) {
+    //   console.log("Error uploading image");
+    //   setIsLoading(false);
+
+    //   return;
+    // }
 
     // create a DB entry for the form contents
 
@@ -171,8 +170,7 @@ const BirthdayWishForm = ({
     setMemoryResponse("");
     setDescriptionResponse("");
     setFinalMessageResponse("");
-    setImageFile(null);
-    setUploadedImageUrl(null);
+    setImageFiles([]);
     setIsLoading(false);
     setMemoryResponseValid(true);
     setDescriptionResponseValid(true);
@@ -264,9 +262,8 @@ const BirthdayWishForm = ({
       {/* images that you can upload */}
       <div className="w-full">
         <ImageUploader
-          setImageFile={setImageFile}
-          uploadedImageUrl={uploadedImageUrl}
-          setUploadedImageUrl={setUploadedImageUrl}
+          imageFiles={imageFiles}
+          setImageFiles={setImageFiles}
           isValid={imageValid && imageSizeAndTypeValid}
           label={`Upload an image of your favorite memory with ${birthdayPerson}!`}
         />

@@ -1,21 +1,19 @@
 "use client";
 
 import { useEffect, Dispatch, SetStateAction } from "react";
-import { FaTrashCan } from "react-icons/fa6";
 import { IoImagesSharp } from "react-icons/io5";
+import UploadImagePreviewCarousel from "./UploadImagePreviewCarousel";
 
 interface ImageUploaderProps {
-  setImageFile: Dispatch<SetStateAction<File | null>>;
-  uploadedImageUrl: null | string | Blob;
-  setUploadedImageUrl: Dispatch<SetStateAction<null | string | Blob>>;
+  imageFiles: Array<File | null>;
+  setImageFiles: Dispatch<SetStateAction<Array<File | null>>>;
   isValid?: boolean;
   label?: string;
 }
 
 export default function ImageUploader({
-  setImageFile,
-  uploadedImageUrl,
-  setUploadedImageUrl,
+  imageFiles,
+  setImageFiles,
   isValid = true,
   label,
 }: ImageUploaderProps) {
@@ -50,6 +48,7 @@ export default function ImageUploader({
     e.stopPropagation();
   };
 
+  // TODO: Fix this later as well
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -70,14 +69,17 @@ export default function ImageUploader({
 
   const handleFileClickUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      displayUploadedImage(e.target.files[0]);
+    if (e.target.files && e.target.files.length != 0) {
+      const fileArray = Array.from(e.target.files);
+      console.log(fileArray, Boolean(fileArray?.length));
+      console.log("About to set files:", fileArray);
+      setImageFiles([...fileArray]);
+      console.log("Called setImageFiles"); // This should log immediately
     }
   };
 
   const clearUpload = () => {
-    setUploadedImageUrl(null);
-    setImageFile(null);
+    setImageFiles([]);
     // Reset the file input value so the same file can be selected again
     const fileUploadElement = document.getElementById(
       "main-image-upload"
@@ -87,55 +89,21 @@ export default function ImageUploader({
     }
   };
 
-  // TODO @Shawn: check the device type. if it is a mac, use command + v. if it is windows use ctrl + v
-  useEffect(() => {});
-
   useEffect(() => {
-    console.log(uploadedImageUrl);
-  }, [uploadedImageUrl]);
+    console.log("imageFiles changed:", imageFiles);
+  }, [imageFiles]);
 
   return (
     <>
       {label && <label className="text-md font-medium">{label}</label>}
-      <p
-        className={`text-sm font-medium text-gray-500 ${
-          uploadedImageUrl ? "" : "hidden"
-        }`}
-      >
-        Here&apos;s a preview of how your image will appear on the card itself -
-        do crop before uploading if it looks funny! (SORRY)
-      </p>
-      <div className="p-1"></div>
 
-      <div className={`${uploadedImageUrl ? "" : "hidden"}`}>
-        <div className="flex flex-col items-center justify-center">
-          <div>
-            <div className="relative h-60 w-60 sm:h-75 sm:w-75 my-2">
-              <img
-                alt="uploadedMainImage"
-                id="uploaded-main-image-preview"
-                className="w-full h-full object-cover border-2 border-black"
-                src={uploadedImageUrl || undefined}
-              />
-            </div>
-            <div className="flex w-full justify-end py-2">
-              <button
-                className="cursor-pointer border-2 border-black bg-red-500 p-2 hover:bg-red-600 shadow-l transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
-                onClick={clearUpload}
-              >
-                <div className="flex flex-row gap-2 items-center text-white font-medium">
-                  <FaTrashCan color="#ffffff" strokeWidth={1.25} />
-                  Delete
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
+      <div className={`${imageFiles?.length ? "" : "hidden"}`}>
+        <UploadImagePreviewCarousel uploadedFiles={imageFiles!} />
       </div>
 
       <div
         className={`${
-          uploadedImageUrl ? "hidden" : ""
+          imageFiles?.length ? "hidden" : ""
         } hover:cursor-pointer bg-yellow-200 flex flex-col items-center justify-center border-2 border-black h-[200px] px-10 w-full ${
           !isValid ? "ring-2 ring-red-500" : ""
         }`}
@@ -147,7 +115,7 @@ export default function ImageUploader({
       >
         <div className="flex flex-col items-center justify-center gap-4">
           <IoImagesSharp size={46} color="black" />
-          {!uploadedImageUrl && (
+          {!imageFiles?.length && (
             <div className="text-center font-medium">
               Click to select from your files or drag and drop an image here!
             </div>
@@ -160,6 +128,7 @@ export default function ImageUploader({
             id="main-image-upload"
             className="hidden"
             onChange={handleFileClickUpload}
+            multiple
           />
         </div>
       </div>
