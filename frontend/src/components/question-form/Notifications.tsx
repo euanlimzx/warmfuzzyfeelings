@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import { motion } from "framer-motion";
 
-const NOTIFICATION_TTL = 3000;
+const NOTIFICATION_TTL = 5000;
 
 interface NotificationProps extends React.PropsWithChildren {
   removeNotif: () => void;
@@ -49,7 +49,7 @@ export const FormSubmissionErrorNotification = ({
   removeNotif,
 }: ErrorNotificationProps) => {
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center z-100">
       <Notification removeNotif={removeNotif}>
         {/* TODO: Can add an icon here? */}
         <span className="text-white font-bold text-lg text-center">

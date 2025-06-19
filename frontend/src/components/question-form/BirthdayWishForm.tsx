@@ -3,10 +3,11 @@ import InputField from "./InputField";
 import TextAreaField from "./TextAreaField";
 import ImageUploader from "./ImageUpload";
 import SubmitFormButton from "./SubmitFormButton";
-import { UUIDTypes, v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { FormSubmissionErrorNotification } from "./Notifications";
 import FormCompleteModal from "./FormCompleteModal";
+import _ from "lodash";
 
 interface BirthdayWishFormProps {
   cardUUID: string;
@@ -22,10 +23,7 @@ const BirthdayWishForm = ({
   const [memoryResponse, setMemoryResponse] = useState("");
   const [descriptionResponse, setDescriptionResponse] = useState("");
   const [finalMessageResponse, setFinalMessageResponse] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<
-    null | string | Blob
-  >(null);
+  const [imageFiles, setImageFiles] = useState<Array<File | null>>([]);
   const [isServerError, setIsServerError] = useState(false);
 
   // check input validity
@@ -52,54 +50,48 @@ const BirthdayWishForm = ({
   const descriptionQuestion = ``;
   const finalMessageQuestion = ``;
 
-  const uploadImageToS3 = async (uuid: UUIDTypes) => {
+  // @Shawn: fix this uploading logic
+  const uploadImageToS3 = async (
+    imageFile: File,
+    uploadedImageIdentifier: string
+  ) => {
     if (!imageFile) {
       console.error("No image file selected");
       return;
     }
 
-    try {
-      // First, get the presigned URL from our backend
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/upload-image`,
-        {
-          fileName: uuid,
-          fileType: imageFile.type,
-          fileSize: imageFile.size,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.data.ok) {
-        return {
-          ok: false,
-          message: "There were some errors getting the signed URL",
-        };
-      }
-
-      const { url } = response.data;
-
-      // Upload the file directly to S3 using the presigned URL
-      await axios.put(url, imageFile, {
+    // First, get the presigned URL from our backend
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/upload-image`,
+      {
+        fileName: uploadedImageIdentifier,
+        fileType: imageFile.type,
+        fileSize: imageFile.size,
+      },
+      {
         headers: {
-          "Content-Type": imageFile.type,
+          "Content-Type": "application/json",
         },
-      });
+      }
+    );
 
-      return { ok: true };
-    } catch (error) {
-      console.error(error);
-      setImageSizeAndTypeValid(false);
-      setShowImageSizeAndTypeError(true);
+    if (!response.data.ok) {
       return {
         ok: false,
-        imageValidityIssue: true,
+        message: "There were some errors getting the signed URL",
       };
     }
+
+    const { url } = response.data;
+
+    // Upload the file directly to S3 using the presigned URL
+    await axios.put(url, imageFile, {
+      headers: {
+        "Content-Type": imageFile.type,
+      },
+    });
+
+    return uploadedImageIdentifier;
   };
 
   const submitForm = async () => {
@@ -108,7 +100,7 @@ const BirthdayWishForm = ({
     // check that all fields, including the image, have been filled up
     const isMemoryValid = !!memoryResponse;
     const isDescriptionValid = !!descriptionResponse;
-    const isImageValid = !!imageFile;
+    const isImageValid = !!imageFiles.length;
     const isFinalMessageValid = !!finalMessageResponse;
     const isNameValid = !!name;
     setMemoryResponseValid(isMemoryValid);
@@ -119,7 +111,7 @@ const BirthdayWishForm = ({
     if (
       !memoryResponse ||
       !descriptionResponse ||
-      !imageFile ||
+      !imageFiles.length ||
       !finalMessageResponse ||
       !name
     ) {
@@ -130,15 +122,28 @@ const BirthdayWishForm = ({
 
     // if so, first create a random key that we will put as a cookie to mark that this user has already submitted something before
     const responseUUID = uuidv4();
-    const submitReceipt = `${cardUUID}__${responseUUID}`;
+    // const submitReceipt = `${cardUUID}__${responseUUID}`;
+    const submitReceipt = "testing";
 
     // add image to bucket, name of the image will be the uuid of the of the card + uuid of the response
-    const imageUploadResponse = await uploadImageToS3(submitReceipt);
+    const imageUploadRequests = imageFiles.map((imageFile, index) => {
+      if (!imageFile) {
+        return;
+      }
 
-    if (!imageUploadResponse?.ok) {
-      console.log("Error uploading image");
+      const imageSequenceReceipt = `${submitReceipt}_${index}`;
+      return uploadImageToS3(imageFile, imageSequenceReceipt);
+    });
+
+    // try to upload the images all at once
+    let results;
+    try {
+      results = await Promise.all(imageUploadRequests);
+    } catch (error) {
+      console.error(error);
+      setImageSizeAndTypeValid(false);
+      setShowImageSizeAndTypeError(true);
       setIsLoading(false);
-
       return;
     }
 
@@ -149,6 +154,7 @@ const BirthdayWishForm = ({
       cardUUID,
       responseUUID,
       imageUrl: `${submitReceipt}`,
+      imageUrls: results,
       memoryResponse,
       finalMessageResponse,
       descriptionResponse,
@@ -171,8 +177,7 @@ const BirthdayWishForm = ({
     setMemoryResponse("");
     setDescriptionResponse("");
     setFinalMessageResponse("");
-    setImageFile(null);
-    setUploadedImageUrl(null);
+    setImageFiles([]);
     setIsLoading(false);
     setMemoryResponseValid(true);
     setDescriptionResponseValid(true);
@@ -180,6 +185,13 @@ const BirthdayWishForm = ({
     setImageValid(true);
     setImageSizeAndTypeValid(true);
     setShowFormCompleteModal(true);
+  };
+
+  const removeImageFromUploadList = (file: File) => {
+    const newSet = imageFiles.filter((imageFile) => {
+      return !_.isEqual(file, imageFile);
+    });
+    setImageFiles(newSet);
   };
 
   return (
@@ -264,11 +276,11 @@ const BirthdayWishForm = ({
       {/* images that you can upload */}
       <div className="w-full">
         <ImageUploader
-          setImageFile={setImageFile}
-          uploadedImageUrl={uploadedImageUrl}
-          setUploadedImageUrl={setUploadedImageUrl}
+          imageFiles={imageFiles}
+          setImageFiles={setImageFiles}
           isValid={imageValid && imageSizeAndTypeValid}
           label={`Upload an image of your favorite memory with ${birthdayPerson}!`}
+          removeImageFromUploadList={removeImageFromUploadList}
         />
       </div>
 

@@ -4,6 +4,7 @@ export const CardFormResponseSchema = z.object({
   cardUUID: z.string().uuid(),
   responseUUID: z.string().uuid(),
   imageUrl: z.string(),
+  imageUrls: z.array(z.string()),
   memoryResponse: z.string().min(1),
   descriptionResponse: z.string().min(1),
   finalMessageResponse: z.string().min(1),
