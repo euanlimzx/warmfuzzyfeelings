@@ -122,8 +122,7 @@ const BirthdayWishForm = ({
 
     // if so, first create a random key that we will put as a cookie to mark that this user has already submitted something before
     const responseUUID = uuidv4();
-    // const submitReceipt = `${cardUUID}__${responseUUID}`;
-    const submitReceipt = "testing";
+    const submitReceipt = `${cardUUID}__${responseUUID}`;
 
     // add image to bucket, name of the image will be the uuid of the of the card + uuid of the response
     const imageUploadRequests = imageFiles.map((imageFile, index) => {
