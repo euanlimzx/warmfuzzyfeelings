@@ -132,19 +132,22 @@ export default function ImageCarousel({
             }
             const imageLocalUrl = URL.createObjectURL(uploadedFile);
             return (
-              <div key={index} className="w-full flex-shrink-0 relative group">
+              <div
+                key={index}
+                className="w-full flex-shrink-0 relative group max-sm:pt-7"
+              >
                 <UploadImagePreview uploadedImageUrl={imageLocalUrl} />
 
                 {/* Neo-Brutalist Delete Button */}
                 <button
                   onClick={(e) => handleDelete(index, e, uploadedFile)}
-                  className="absolute top-4 right-4 w-12 h-12 bg-red-500 border-3 border-black shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-150 flex items-center justify-center opacity-100 font-bold"
+                  className="absolute top-4 right-4 max-sm:top-1 max-sm:right-1.5 w-12 h-12 max-sm:w-7 max-sm:h-7 bg-red-500 border-3 max-sm:border-2 border-black shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-150 flex items-center justify-center opacity-100 font-bold"
                   onMouseDown={(e) => e.stopPropagation()}
                   onTouchStart={(e) => e.stopPropagation()}
                   aria-label={`Delete image ${index + 1}`}
                 >
                   <svg
-                    className="w-6 h-6 text-white stroke-[3]"
+                    className="w-6 h-6 max-sm:w-4 max-sm:h-4 text-white stroke-[3] max-sm:stroke-[1]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -169,7 +172,7 @@ export default function ImageCarousel({
               onClick={() =>
                 currentIndex > 0 && setCurrentIndex(currentIndex - 1)
               }
-              className={`absolute left-4 top-1/2 -translate-y-1/8 bg-yellow-400 border-3 border-black shadow-[1px_1px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-150 p-3 font-bold ${
+              className={`absolute left-4 max-sm:left-2 top-1/2 -translate-y-1/8 bg-yellow-400 border-3 border-black shadow-[1px_1px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-150 p-3 max-sm:p-1 font-bold ${
                 currentIndex === 0 ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={currentIndex === 0}
@@ -193,7 +196,7 @@ export default function ImageCarousel({
                 currentIndex < uploadedFiles?.length - 1 &&
                 setCurrentIndex(currentIndex + 1)
               }
-              className={`absolute right-4 top-1/2 -translate-y-1/8 bg-yellow-400 border-3 border-black shadow-[1px_1px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-150 p-3 font-bold ${
+              className={`absolute right-4 max-sm:right-2 top-1/2 -translate-y-1/8 bg-yellow-400 border-3 border-black shadow-[1px_1px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-150 p-3 max-sm:p-1 font-bold ${
                 currentIndex === uploadedFiles?.length - 1
                   ? "opacity-50 cursor-not-allowed"
                   : ""
