@@ -58,6 +58,7 @@ export type Database = {
           final_message_response: string | null
           id: string
           image_url: string | null
+          image_urls: string[]
           memory_response: string | null
           responder_name: string | null
         }
@@ -68,6 +69,7 @@ export type Database = {
           final_message_response?: string | null
           id: string
           image_url?: string | null
+          image_urls?: string[]
           memory_response?: string | null
           responder_name?: string | null
         }
@@ -78,6 +80,7 @@ export type Database = {
           final_message_response?: string | null
           id?: string
           image_url?: string | null
+          image_urls?: string[]
           memory_response?: string | null
           responder_name?: string | null
         }
