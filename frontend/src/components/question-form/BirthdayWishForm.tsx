@@ -7,6 +7,7 @@ import { UUIDTypes, v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { FormSubmissionErrorNotification } from "./Notifications";
 import FormCompleteModal from "./FormCompleteModal";
+import _ from "lodash";
 
 interface BirthdayWishFormProps {
   cardUUID: string;
@@ -180,6 +181,13 @@ const BirthdayWishForm = ({
     setShowFormCompleteModal(true);
   };
 
+  const removeImageFromUploadList = (file: File) => {
+    const newSet = imageFiles.filter((imageFile) => {
+      return !_.isEqual(file, imageFile);
+    });
+    setImageFiles(newSet);
+  };
+
   return (
     <div
       className={`flex flex-col gap-${formGap} relative bg-white p-4 sm:p-10 border-2 max-h-[85vh] overflow-y-auto border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] w-full`}
@@ -266,6 +274,7 @@ const BirthdayWishForm = ({
           setImageFiles={setImageFiles}
           isValid={imageValid && imageSizeAndTypeValid}
           label={`Upload an image of your favorite memory with ${birthdayPerson}!`}
+          removeImageFromUploadList={removeImageFromUploadList}
         />
       </div>
 

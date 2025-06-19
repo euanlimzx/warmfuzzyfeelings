@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { IoImagesSharp } from "react-icons/io5";
 import UploadImagePreviewCarousel from "./UploadImagePreviewCarousel";
 
@@ -9,6 +9,7 @@ interface ImageUploaderProps {
   setImageFiles: Dispatch<SetStateAction<Array<File | null>>>;
   isValid?: boolean;
   label?: string;
+  removeImageFromUploadList: (file: File) => void;
 }
 
 export default function ImageUploader({
@@ -16,33 +17,8 @@ export default function ImageUploader({
   setImageFiles,
   isValid = true,
   label,
+  removeImageFromUploadList,
 }: ImageUploaderProps) {
-  // food for thought: how should the pasting interaction look like?
-  // should it be that any paste would upload an image, or should it be that you
-  // have to be focussed on the field first, and copy and pasting after that would
-  // upload the copied image
-
-  const displayUploadedImage = (image: File) => {
-    const imageDisplayField = document.getElementById(
-      "uploaded-main-image-preview"
-    );
-
-    if (!imageDisplayField) {
-      return;
-    }
-
-    if (!image.type.startsWith("image/")) {
-      console.log("Invalid image type");
-      return;
-    }
-
-    if (imageDisplayField instanceof HTMLImageElement) {
-      setUploadedImageUrl(URL.createObjectURL(image));
-      setImageFile(image);
-      console.log(URL.createObjectURL(image));
-    }
-  };
-
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -53,9 +29,9 @@ export default function ImageUploader({
     e.preventDefault();
     e.stopPropagation();
 
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      console.log(e.dataTransfer.files);
-      displayUploadedImage(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length) {
+      const fileArray = Array.from(e.dataTransfer.files);
+      setImageFiles(fileArray);
     }
   };
 
@@ -69,36 +45,21 @@ export default function ImageUploader({
 
   const handleFileClickUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (e.target.files && e.target.files.length != 0) {
+    if (e.target.files && e.target.files.length) {
       const fileArray = Array.from(e.target.files);
-      console.log(fileArray, Boolean(fileArray?.length));
-      console.log("About to set files:", fileArray);
-      setImageFiles([...fileArray]);
-      console.log("Called setImageFiles"); // This should log immediately
+      setImageFiles(fileArray);
     }
   };
-
-  const clearUpload = () => {
-    setImageFiles([]);
-    // Reset the file input value so the same file can be selected again
-    const fileUploadElement = document.getElementById(
-      "main-image-upload"
-    ) as HTMLInputElement;
-    if (fileUploadElement) {
-      fileUploadElement.value = "";
-    }
-  };
-
-  useEffect(() => {
-    console.log("imageFiles changed:", imageFiles);
-  }, [imageFiles]);
 
   return (
     <>
       {label && <label className="text-md font-medium">{label}</label>}
 
       <div className={`${imageFiles?.length ? "" : "hidden"}`}>
-        <UploadImagePreviewCarousel uploadedFiles={imageFiles!} />
+        <UploadImagePreviewCarousel
+          uploadedFiles={imageFiles!}
+          removeImageFromUploadList={removeImageFromUploadList}
+        />
       </div>
 
       <div

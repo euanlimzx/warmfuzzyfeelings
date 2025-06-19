@@ -2,12 +2,12 @@ import { FaTrashCan } from "react-icons/fa6";
 
 interface UploadImagePreviewProps {
   uploadedImageUrl: string | Blob | null;
-  clearUpload: () => void;
+  removeImage: () => void;
 }
 
 export default function UploadImagePreview({
   uploadedImageUrl,
-  clearUpload,
+  removeImage,
 }: UploadImagePreviewProps) {
   return (
     <div className="flex flex-col items-center justify-center">
@@ -23,7 +23,7 @@ export default function UploadImagePreview({
         <div className="flex w-full justify-end py-2">
           <button
             className="cursor-pointer border-2 border-black bg-red-500 p-2 hover:bg-red-600 shadow-l transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
-            onClick={clearUpload}
+            onClick={removeImage}
           >
             <div className="flex flex-row gap-2 items-center text-white font-medium">
               <FaTrashCan color="#ffffff" strokeWidth={1.25} />
