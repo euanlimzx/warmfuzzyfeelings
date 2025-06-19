@@ -34,6 +34,7 @@ export const joinWaitlist = async (email: string) => {
 export const createCardFormResponse = async ({
   responseUUID,
   imageUrl,
+  imageUrls,
   memoryResponse,
   descriptionResponse,
   finalMessageResponse,
@@ -48,6 +49,7 @@ export const createCardFormResponse = async ({
       .insert({
         card_id: cardUUID,
         id: responseUUID,
+        image_urls: imageUrls,
         image_url: imageUrl,
         final_message_response: finalMessageResponse,
         description_response: descriptionResponse,

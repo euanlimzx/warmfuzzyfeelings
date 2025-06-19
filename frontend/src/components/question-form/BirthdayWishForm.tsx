@@ -3,7 +3,7 @@ import InputField from "./InputField";
 import TextAreaField from "./TextAreaField";
 import ImageUploader from "./ImageUpload";
 import SubmitFormButton from "./SubmitFormButton";
-import { UUIDTypes, v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { FormSubmissionErrorNotification } from "./Notifications";
 import FormCompleteModal from "./FormCompleteModal";
@@ -51,55 +51,48 @@ const BirthdayWishForm = ({
   const finalMessageQuestion = ``;
 
   // @Shawn: fix this uploading logic
-  // const uploadImageToS3 = async (uuid: UUIDTypes) => {
-  //   if (!imageFile) {
-  //     console.error("No image file selected");
-  //     return;
-  //   }
+  const uploadImageToS3 = async (
+    imageFile: File,
+    uploadedImageIdentifier: string
+  ) => {
+    if (!imageFile) {
+      console.error("No image file selected");
+      return;
+    }
 
-  //   try {
-  //     // First, get the presigned URL from our backend
-  //     const response = await axios.post(
-  //       `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/upload-image`,
-  //       {
-  //         fileName: uuid,
-  //         fileType: imageFile.type,
-  //         fileSize: imageFile.size,
-  //       },
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
+    // First, get the presigned URL from our backend
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN}/make-a-wish/upload-image`,
+      {
+        fileName: uploadedImageIdentifier,
+        fileType: imageFile.type,
+        fileSize: imageFile.size,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-  //     if (!response.data.ok) {
-  //       return {
-  //         ok: false,
-  //         message: "There were some errors getting the signed URL",
-  //       };
-  //     }
+    if (!response.data.ok) {
+      return {
+        ok: false,
+        message: "There were some errors getting the signed URL",
+      };
+    }
 
-  //     const { url } = response.data;
+    const { url } = response.data;
 
-  //     // Upload the file directly to S3 using the presigned URL
-  //     await axios.put(url, imageFile, {
-  //       headers: {
-  //         "Content-Type": imageFile.type,
-  //       },
-  //     });
+    // Upload the file directly to S3 using the presigned URL
+    await axios.put(url, imageFile, {
+      headers: {
+        "Content-Type": imageFile.type,
+      },
+    });
 
-  //     return { ok: true };
-  //   } catch (error) {
-  //     console.error(error);
-  //     setImageSizeAndTypeValid(false);
-  //     setShowImageSizeAndTypeError(true);
-  //     return {
-  //       ok: false,
-  //       imageValidityIssue: true,
-  //     };
-  //   }
-  // };
+    return uploadedImageIdentifier;
+  };
 
   const submitForm = async () => {
     setIsLoading(true);
@@ -129,18 +122,32 @@ const BirthdayWishForm = ({
 
     // if so, first create a random key that we will put as a cookie to mark that this user has already submitted something before
     const responseUUID = uuidv4();
-    const submitReceipt = `${cardUUID}__${responseUUID}`;
+    // const submitReceipt = `${cardUUID}__${responseUUID}`;
+    const submitReceipt = "testing";
 
     // add image to bucket, name of the image will be the uuid of the of the card + uuid of the response
+    const imageUploadRequests = imageFiles.map((imageFile, index) => {
+      if (!imageFile) {
+        return;
+      }
 
-    // const imageUploadResponse = await uploadImageToS3(submitReceipt);
+      const imageSequenceReceipt = `${submitReceipt}_${index}`;
+      return uploadImageToS3(imageFile, imageSequenceReceipt);
+    });
 
-    // if (!imageUploadResponse?.ok) {
-    //   console.log("Error uploading image");
-    //   setIsLoading(false);
-
-    //   return;
-    // }
+    // try to upload the images all at once
+    let results;
+    try {
+      results = await Promise.all(imageUploadRequests);
+    } catch (error) {
+      console.error(error);
+      setImageSizeAndTypeValid(false);
+      setShowImageSizeAndTypeError(true);
+      return {
+        ok: false,
+        imageValidityIssue: true,
+      };
+    }
 
     // create a DB entry for the form contents
 
@@ -149,6 +156,7 @@ const BirthdayWishForm = ({
       cardUUID,
       responseUUID,
       imageUrl: `${submitReceipt}`,
+      imageUrls: results,
       memoryResponse,
       finalMessageResponse,
       descriptionResponse,
