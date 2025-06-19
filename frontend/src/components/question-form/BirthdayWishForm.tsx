@@ -143,10 +143,8 @@ const BirthdayWishForm = ({
       console.error(error);
       setImageSizeAndTypeValid(false);
       setShowImageSizeAndTypeError(true);
-      return {
-        ok: false,
-        imageValidityIssue: true,
-      };
+      setIsLoading(false);
+      return;
     }
 
     // create a DB entry for the form contents
