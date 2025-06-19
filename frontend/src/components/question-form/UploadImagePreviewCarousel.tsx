@@ -1,4 +1,4 @@
-import UploadImagePreview from "./UploadImagePreview";
+import ImageCarousel from "./Carousell";
 
 interface UploadImagePreviewCarousellProps {
   uploadedFiles: Array<File | null>;
@@ -20,21 +20,11 @@ export default function UploadImagePreviewCarousel({
         do crop before uploading if it looks funny! (SORRY)
       </p>
       <div className="p-1"></div>
-      <div className="flex flex-row overflow-x-scroll">
-        {uploadedFiles.map((uploadedFile) => {
-          if (!uploadedFile) {
-            return;
-          }
-          const imageLocalUrl = URL.createObjectURL(uploadedFile);
-
-          return (
-            <UploadImagePreview
-              uploadedImageUrl={imageLocalUrl}
-              key={imageLocalUrl}
-              removeImage={() => removeImageFromUploadList(uploadedFile)}
-            />
-          );
-        })}
+      <div className="flex justify-center">
+        <ImageCarousel
+          uploadedFiles={uploadedFiles}
+          removeImageFromUploadList={removeImageFromUploadList}
+        />
       </div>
     </>
   );
