@@ -14,7 +14,7 @@ export const Countdown = ({
 }) => {
   // cannot do a direct conversion as it creates a UTC time, which would later be adjusted to the local time
   const [year, month, day] = birthdayDateString.split("-").map(Number);
-  const localDate = new Date(year, month - 1, day);
+  const localDate = new Date(new Date().getFullYear(), month - 1, day);
 
   const [showBottomText, setShowBottomText] = useState(false);
 
