@@ -152,7 +152,7 @@ const BirthdayWishForm = ({
     const formResponseDetails = {
       cardUUID,
       responseUUID,
-      imageUrl: `${submitReceipt}`,
+      imageUrl: `${submitReceipt}_0`,
       imageUrls: results,
       memoryResponse,
       finalMessageResponse,
