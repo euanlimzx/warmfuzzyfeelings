@@ -7,7 +7,6 @@ import { FunctionErrorResponse } from "../routerTypes";
 interface birthdayPersonComments {
   responderName: string;
   personDescriptionResponse: string;
-  favouriteMemoryWithPersonResponse: string;
 }
 
 const openai = new OpenAI();
