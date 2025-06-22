@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import InputField from "../question-form/InputField";
+import { format } from "date-fns";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 
 const CreateCardForm = ({
   setIsOpen,
@@ -136,6 +138,13 @@ const Step = ({ num, isActive }: { num: number; isActive: boolean }) => {
 const StepOne = () => {
   const bgColor = "bg-yellow-100";
   const [name, setName] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [calendarVisible, setCalendarVisible] = useState(false);
+
+  const handleSelectDate = (selectedDate: { date: Date }) => {
+    setDate(selectedDate.date);
+    setCalendarVisible(false);
+  };
 
   return (
     <div className="space-y-4">
@@ -148,7 +157,30 @@ const StepOne = () => {
         setInputValue={setName}
         bgColor={bgColor}
         label="What's the birthday person's name?"
+        placeholderText="Enter their name"
       />
+
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-gray-700">
+          When is their birthday?
+        </label>
+        <div className="relative">
+          <button
+            onClick={() => setCalendarVisible(!calendarVisible)}
+            className="w-full p-3 text-left border border-gray-300 rounded-lg bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            {format(date, "MMMM do, yyyy")}
+          </button>
+          <AnimatePresence>
+            {calendarVisible && (
+              <SimpleDatePicker
+                selected={date}
+                onDateSelected={handleSelectDate}
+              />
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 };
@@ -182,5 +214,137 @@ const StepThree = () => {
     </div>
   );
 };
+
+interface DatePickerProps {
+  selected: Date;
+  onDateSelected: (selectedDate: { date: Date }) => void;
+}
+
+const SimpleDatePicker = ({ selected, onDateSelected }: DatePickerProps) => {
+  const [currentDate, setCurrentDate] = useState(selected);
+
+  const getDaysInMonth = (date: Date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (date: Date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
+
+  const handleDateSelect = (day: number) => {
+    const newDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      day
+    );
+    onDateSelected({ date: newDate });
+  };
+
+  const goToPreviousMonth = () => {
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
+    );
+  };
+
+  const goToNextMonth = () => {
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
+    );
+  };
+
+  const daysInMonth = getDaysInMonth(currentDate);
+  const firstDayOfMonth = getFirstDayOfMonth(currentDate);
+  const days = [];
+
+  // Add empty cells for days before the first day of the month
+  for (let i = 0; i < firstDayOfMonth; i++) {
+    days.push(null);
+  }
+
+  // Add days of the month
+  for (let day = 1; day <= daysInMonth; day++) {
+    days.push(day);
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      className="absolute bottom-full left-0 mb-2 w-fit rounded-lg border border-gray-300 bg-white p-3 shadow-lg z-20"
+    >
+      <div className="mb-2 flex items-center justify-between">
+        <button
+          onClick={goToPreviousMonth}
+          className="p-1 hover:bg-gray-100 rounded"
+        >
+          <FiArrowLeft />
+        </button>
+        <span className="font-medium">
+          {MONTH_NAMES[currentDate.getMonth()]} {currentDate.getFullYear()}
+        </span>
+        <button
+          onClick={goToNextMonth}
+          className="p-1 hover:bg-gray-100 rounded"
+        >
+          <FiArrowRight />
+        </button>
+      </div>
+      <div className="w-52">
+        <div className="mb-2 flex">
+          {WEEKDAY_NAMES.map((weekday) => (
+            <div
+              key={weekday}
+              className="block w-[calc(100%_/_7)] text-center text-xs font-medium text-gray-500"
+            >
+              {weekday}
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-7 gap-1">
+          {days.map((day, index) => {
+            if (day === null) {
+              return <div key={index} className="h-8" />;
+            }
+            const isSelected =
+              selected.getDate() === day &&
+              selected.getMonth() === currentDate.getMonth() &&
+              selected.getFullYear() === currentDate.getFullYear();
+            return (
+              <button
+                key={index}
+                onClick={() => handleDateSelect(day)}
+                className={`h-8 w-8 rounded text-sm transition-colors ${
+                  isSelected
+                    ? "bg-indigo-500 text-white"
+                    : "bg-transparent hover:bg-gray-100"
+                }`}
+              >
+                {day}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const MONTH_NAMES = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default CreateCardForm;

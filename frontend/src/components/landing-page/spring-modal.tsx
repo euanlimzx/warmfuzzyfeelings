@@ -43,7 +43,7 @@ const SpringModal = ({ isOpen, setIsOpen }: SpringModalProps) => {
             initial={{ scale: 0, rotate: "12.5deg" }}
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
-            className="w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
+            className="w-full max-w-lg shadow-xl cursor-default relative"
           >
             <CreateCardForm setIsOpen={setIsOpen} />
           </motion.div>
