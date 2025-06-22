@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import InputField from "../question-form/InputField";
 
 const CreateCardForm = ({
   setIsOpen,
@@ -133,17 +134,21 @@ const Step = ({ num, isActive }: { num: number; isActive: boolean }) => {
 };
 
 const StepOne = () => {
+  const bgColor = "bg-yellow-100";
+  const [name, setName] = useState("");
+
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-semibold text-gray-900">
-        Step 1: Basic Information
+        Tell us who the birthday star is, and when to deliver their surprise.
       </h3>
-      <p className="text-gray-600">
-        This is the first step of your card creation process.
-      </p>
-      <div className="p-4 bg-blue-50 rounded-lg">
-        <p className="text-blue-800">Step 1 content goes here</p>
-      </div>
+
+      <InputField
+        inputValue={name}
+        setInputValue={setName}
+        bgColor={bgColor}
+        label="What's the birthday person's name?"
+      />
     </div>
   );
 };
