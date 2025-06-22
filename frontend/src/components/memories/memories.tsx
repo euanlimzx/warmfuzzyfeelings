@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { GoArrowLeft, GoArrowRight, GoChevronDown } from "react-icons/go";
 import Image from "next/image";
 import { Memory } from "@/types/birthday-card";
-import DecorativeFiller from "./DecorativeFiller";
 
 const CARD_SIZE_LG = 300;
 const CARD_SIZE_SM = 250;
@@ -147,9 +146,6 @@ const TestimonialCard = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTextTruncated, setIsTextTruncated] = useState(false);
   const textRef = useRef(null);
-  const decorativeFillerRef = useRef<React.JSX.Element>(
-    !SHOW_TEXT ? <DecorativeFiller /> : <div className="hidden"></div>
-  );
 
   useEffect(() => {
     if (textRef.current) {
@@ -191,7 +187,11 @@ const TestimonialCard = ({
         damping: 50,
       }}
     >
-      <div className="flex flex-col items-center h-full w-full relative">
+      <div
+        className={`flex flex-col items-center ${
+          isActive ? "h-60 w-60 sm:h-75 sm:w-75" : "h-50 w-50 sm:h-65 sm:w-65"
+        } ${SHOW_TEXT ? "" : "m-auto"} relative`}
+      >
         <div
           className={`relative transition-all ${
             isActive ? "h-60 w-60 sm:h-75 sm:w-75" : "h-50 w-50 sm:h-65 sm:w-65"
@@ -244,7 +244,7 @@ const TestimonialCard = ({
             )}{" "}
           </>
         ) : (
-          decorativeFillerRef.current
+          ""
         )}
       </div>
     </motion.div>
