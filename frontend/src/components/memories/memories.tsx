@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { GoArrowLeft, GoArrowRight, GoChevronDown } from "react-icons/go";
 import Image from "next/image";
 import { Memory } from "@/types/birthday-card";
+import DecorativeFiller from "./DecorativeFiller";
 
 const CARD_SIZE_LG = 300;
 const CARD_SIZE_SM = 250;
@@ -18,6 +19,9 @@ const STAGGER = 15;
 const CENTER_STAGGER = -55;
 
 const SECTION_HEIGHT = "100vh";
+
+// REMOVE LATER, TEMP FLAG TO DISPLAY TEXT OR NOT
+const SHOW_TEXT = false;
 
 export const Memories = ({ memories }: { memories: Memory[] }) => {
   const [cardSize, setCardSize] = useState(CARD_SIZE_LG);
@@ -143,6 +147,9 @@ const TestimonialCard = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTextTruncated, setIsTextTruncated] = useState(false);
   const textRef = useRef(null);
+  const decorativeFillerRef = useRef<React.JSX.Element>(
+    !SHOW_TEXT ? <DecorativeFiller /> : <div className="hidden"></div>
+  );
 
   useEffect(() => {
     if (textRef.current) {
@@ -202,36 +209,42 @@ const TestimonialCard = ({
             }}
           />
         </div>
-        <div
-          className={`w-full ${
-            isActive && isExpanded
-              ? "h-[200px] overflow-y-auto"
-              : "overflow-hidden"
-          }`}
-        >
-          <h3
-            ref={textRef}
-            className={`text-base sm:text-xl text-black text-center line-clamp-2 ${
-              isActive && isExpanded ? "line-clamp-none" : ""
-            }`}
-          >
-            &ldquo;{testimonial.memory}&rdquo; - {testimonial.name}
-          </h3>
-        </div>
-        {isActive && isTextTruncated && !isExpanded && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsExpanded(!isExpanded);
-            }}
-            className="absolute -bottom-1 left-1/2 -translate-x-1/2 p-1 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <GoChevronDown
-              className={`w-6 h-6 transition-transform ${
-                isExpanded ? "rotate-180" : ""
+        {SHOW_TEXT ? (
+          <>
+            <div
+              className={`w-full ${
+                isActive && isExpanded
+                  ? "h-[200px] overflow-y-auto"
+                  : "overflow-hidden"
               }`}
-            />
-          </button>
+            >
+              <h3
+                ref={textRef}
+                className={`text-base sm:text-xl text-black text-center line-clamp-2 ${
+                  isActive && isExpanded ? "line-clamp-none" : ""
+                }`}
+              >
+                &ldquo;{testimonial.memory}&rdquo; - {testimonial.name}
+              </h3>
+            </div>
+            {isActive && isTextTruncated && !isExpanded && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsExpanded(!isExpanded);
+                }}
+                className="absolute -bottom-1 left-1/2 -translate-x-1/2 p-1 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <GoChevronDown
+                  className={`w-6 h-6 transition-transform ${
+                    isExpanded ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+            )}{" "}
+          </>
+        ) : (
+          decorativeFillerRef.current
         )}
       </div>
     </motion.div>
