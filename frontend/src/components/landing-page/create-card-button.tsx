@@ -14,7 +14,7 @@ const SPRING_OPTIONS = {
   damping: 100,
 };
 
-const WaitlistButton = () => {
+const CreateCardButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
@@ -62,7 +62,7 @@ const WaitlistButton = () => {
         onMouseDown={handleReset}
         className="group flex h-full w-full items-center justify-between border-2 border-black text-white bg-red-600 px-8 text-xl font-semibold"
       >
-        <Copy>JOIN THE WAITLIST</Copy>
+        <Copy>CREATE A CARD</Copy>
         <Arrow />
       </motion.button>
       <SpringModal isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -90,4 +90,4 @@ const Arrow = () => (
   </div>
 );
 
-export default WaitlistButton;
+export default CreateCardButton;

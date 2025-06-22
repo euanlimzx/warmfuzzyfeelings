@@ -1,7 +1,7 @@
 import React from "react";
 import { FiArrowUpRight } from "react-icons/fi";
 import { motion } from "framer-motion";
-import WaitlistButton from "./waitlist-button";
+import CreateCardButton from "./create-card-button";
 
 export const LandingPage = () => {
   return (
@@ -42,7 +42,18 @@ const Copy = () => {
         Easily create fun, collaborative birthday cards in seconds - just share
         a link and watch the messages roll in.
       </p>
-      <WaitlistButton />
+      <div className="flex gap-4 items-center flex-col">
+        <CreateCardButton />
+        {/* todo @euan: add a link to the sample card */}
+        <p
+          className="text-lg underline font-semibold hover:cursor-pointer"
+          onClick={() => {
+            window.open("/card/a8167b77-fee1-4bf6-956e-08e7ff7fcc52", "_blank");
+          }}
+        >
+          or, see a sample
+        </p>
+      </div>
     </>
   );
 };
