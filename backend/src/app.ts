@@ -7,6 +7,7 @@ import {
   CardFormResponseSchema,
   FunctionErrorResponse,
   RegisterMakeAWishEmailSchema,
+  CreateCardSchema,
 } from "./routerTypes";
 import {
   createCardFormResponse,
@@ -15,6 +16,7 @@ import {
   getAllCardResponsesForUUID,
   insertCharacterSummary,
   joinWaitlist,
+  createCard,
 } from "./db/db";
 import { developmentLogger } from "./middleware/inputLoggerMiddleware";
 import toCamelCase from "./utils/toCamelCase";
@@ -81,7 +83,6 @@ app.get("/", async (req, res) => {
 
   res.status(200).send("hi");
 });
-
 app.post("/make-a-wish/upload-image", async (req, res) => {
   const { fileName, fileSize, fileType } = req.body;
 
@@ -146,6 +147,22 @@ app.post("/join-waitlist", async (req, res) => {
   const waitlistResponse = await joinWaitlist(email);
   res.status(200).send(waitlistResponse);
 });
+
+app.post(
+  "/create-card",
+  validateInputData(CreateCardSchema),
+  async (req, res) => {
+    const createCardResponse = await createCard(req.body);
+
+    if (createCardResponse.ok) {
+      res.status(201).send(createCardResponse);
+      return;
+    } else {
+      res.status(500).send(createCardResponse);
+      return;
+    }
+  },
+);
 
 app.get("/get-card-from-uuid", async (req, res) => {
   const cardUUID = req.query.cardUUID;

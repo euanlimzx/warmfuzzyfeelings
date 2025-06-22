@@ -12,6 +12,12 @@ export const CardFormResponseSchema = z.object({
 });
 export type CardFormResponse = z.infer<typeof CardFormResponseSchema>;
 
+export const CreateCardSchema = z.object({
+  birthdayPerson: z.string().min(1),
+  birthdayDate: z.string().min(1),
+});
+export type CreateCard = z.infer<typeof CreateCardSchema>;
+
 export interface FunctionResponse {
   ok: boolean;
 }

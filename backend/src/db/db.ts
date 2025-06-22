@@ -182,3 +182,57 @@ export const insertCharacterSummary = async ({
     };
   }
 };
+
+interface CreateCardDetails {
+  birthdayPerson: string;
+  birthdayDate: string;
+}
+
+type CardRow = Tables<"Card">;
+interface CreateCardFunctionResponse extends FunctionResponse {
+  ok: true;
+  cardId: string;
+}
+
+export const createCard = async ({
+  birthdayPerson,
+  birthdayDate,
+}: CreateCardDetails): Promise<
+  CreateCardFunctionResponse | FunctionErrorResponse
+> => {
+  try {
+    // First, create a Good_Friend entry
+    const { data: goodFriendData, error: goodFriendError } =
+      await supabaseClient
+        .from("Good_Friend")
+        .insert({
+          name: "Default Friend", // Default name since no input is provided
+        })
+        .select("id")
+        .single();
+
+    if (goodFriendError || !goodFriendData) {
+      return { ok: false, message: "Failed to create Good_Friend entry" };
+    }
+
+    // Then, create the Card entry using the Good_Friend ID
+    const { data, error } = await supabaseClient
+      .from("Card")
+      .insert({
+        birthday_person: birthdayPerson,
+        birthday_date: birthdayDate,
+        one_good_friend_id: goodFriendData.id,
+      })
+      .select("id")
+      .single();
+
+    if (error || !data) {
+      return { ok: false, message: "No data returned from insert" };
+    }
+
+    return { ok: true, cardId: data.id };
+  } catch (err) {
+    console.error(err);
+    return { ok: false, message: "There was an error creating the card" };
+  }
+};
