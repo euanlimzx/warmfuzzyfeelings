@@ -96,10 +96,10 @@ const MessageModal = ({
               </div>
             </div>
             <div className="text-black text-sm tracking-wide mt-10 h-9/12 overflow-y-scroll">
-              {/* {wish.message} */}
-              [this message originally from {wish.name} has been redacted for
+              {wish.message}
+              {/* [this message originally from {wish.name} has been redacted for
               privacy reasons] <br />
-              <br /> rest assured, {characterName} saw them all!
+              <br /> rest assured, {characterName} saw them all! */}
             </div>
             {/* Decorative lines */}
             <div className="absolute bottom-0 left-0 right-0 h-4 bg-pink-100/50"></div>

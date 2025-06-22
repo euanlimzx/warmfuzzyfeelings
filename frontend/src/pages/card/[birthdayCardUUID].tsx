@@ -68,8 +68,7 @@ export default function Card() {
             characterName={birthdayCardResponse?.characterName}
           />
           <Memories memories={memories} />
-          {/* @Shawn: removed this final page for RG */}
-          {/* <FinalMessages wishes={birthdayCardResponse?.wishes} /> */}
+          <FinalMessages wishes={birthdayCardResponse?.wishes} />
         </SwipeablePages>
       )}
     </>
