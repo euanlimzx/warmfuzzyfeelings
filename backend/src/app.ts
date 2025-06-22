@@ -259,6 +259,7 @@ app.get("/retrieve-birthday-card", async (req, res) => {
         name: cardResponse.responder_name,
         imageUrl: cardResponse.image_url,
         memory: cardResponse.memory_response,
+        imageUrls: cardResponse.image_urls,
       };
     });
 

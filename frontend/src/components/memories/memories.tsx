@@ -22,30 +22,39 @@ const SECTION_HEIGHT = "100vh";
 export const Memories = ({ memories }: { memories: Memory[] }) => {
   const [cardSize, setCardSize] = useState(CARD_SIZE_LG);
 
-  const [testimonials, setTestimonials] = useState(memories);
+  const createFlattenedTestimonials = (memories: Memory[]) => {
+    return memories.flatMap((memory, memoryIdx) =>
+      memory.imageUrls.map((imageUrl, imageIdx) => ({
+        ...memory,
+        imageUrl,
+        uniqueId: `${memoryIdx}-${imageIdx}`, // Unique identifier
+        tempId: Math.random(), // For animation key
+      }))
+    );
+  };
 
-  const handleMove = (position) => {
-    const copy = [...testimonials];
+  const [flattenedTestimonials, setFlattenedTestimonials] = useState(() =>
+    createFlattenedTestimonials(memories)
+  );
+
+  const handleMove = (position: number) => {
+    const copy = [...flattenedTestimonials];
 
     if (position > 0) {
       for (let i = position; i > 0; i--) {
         const firstEl = copy.shift();
-
         if (!firstEl) return;
-
         copy.push({ ...firstEl, tempId: Math.random() });
       }
     } else {
       for (let i = position; i < 0; i++) {
         const lastEl = copy.pop();
-
         if (!lastEl) return;
-
         copy.unshift({ ...lastEl, tempId: Math.random() });
       }
     }
 
-    setTestimonials(copy);
+    setFlattenedTestimonials(copy);
   };
 
   useEffect(() => {
@@ -85,22 +94,22 @@ export const Memories = ({ memories }: { memories: Memory[] }) => {
         ones we&apos;ll remember forever
       </h2>
       <div className="relative h-[80%] w-full">
-        {testimonials.map((t, idx) => {
+        {flattenedTestimonials.map((item, currentIdx) => {
           let position = 0;
-
-          if (testimonials.length % 2) {
-            position = idx - (testimonials.length + 1) / 2;
+          if (flattenedTestimonials.length % 2) {
+            position = currentIdx - (flattenedTestimonials.length + 1) / 2;
           } else {
-            position = idx - testimonials.length / 2;
+            position = currentIdx - flattenedTestimonials.length / 2;
           }
 
           return (
             <TestimonialCard
-              key={t.tempId}
-              testimonial={t}
+              key={item.tempId}
+              testimonial={item}
               handleMove={handleMove}
               position={position}
               cardSize={cardSize}
+              imageUrl={item.imageUrl}
             />
           );
         })}
@@ -123,7 +132,13 @@ export const Memories = ({ memories }: { memories: Memory[] }) => {
   );
 };
 
-const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
+const TestimonialCard = ({
+  position,
+  testimonial,
+  handleMove,
+  cardSize,
+  imageUrl,
+}) => {
   const isActive = position === 0;
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTextTruncated, setIsTextTruncated] = useState(false);
@@ -176,7 +191,7 @@ const TestimonialCard = ({ position, testimonial, handleMove, cardSize }) => {
           } mb-2`}
         >
           <Image
-            src={`${process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN}/${testimonial.imageUrl}`}
+            src={`${process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN}/${imageUrl}`}
             alt={`Testimonial image for ${testimonial.by}`}
             fill
             priority={true}

@@ -23,6 +23,8 @@ export interface Wishes {
 export interface Memory {
   name: string;
   imageUrl: string;
+  imageUrls: string[];
   memory: string;
   wishes: Wishes[];
+  tempId: number;
 }
