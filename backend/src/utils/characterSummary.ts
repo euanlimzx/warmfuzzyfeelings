@@ -76,7 +76,7 @@ export const createStructuredCharacterSummary = async (
     rawTextResponses += comment.personDescriptionResponse;
   });
 
-  const languageBasedPrompt = getLanguageBasedPrompt(rawTextResponses);
+  const languageBasedPrompt = await getLanguageBasedPrompt(rawTextResponses);
 
   const generatedSummary = await determineCharacterTraits(
     stringifiedCharacterSummary,

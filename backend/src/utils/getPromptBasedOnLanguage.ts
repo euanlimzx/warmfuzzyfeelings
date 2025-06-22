@@ -1,4 +1,4 @@
-import { franc } from "franc";
+// import { franc } from "franc";
 
 type LanguageBasedPrompt = {
   characterTraits: string;
@@ -103,8 +103,13 @@ const languageBasedPrompts = {
 
 // frunc works best on large chunks of text, so the idea would be to concatenate all responses to create language detection
 // for now, this rests on the assumption that the inputs are of only one language
-const getLanguageBasedPrompt = (comments: string): LanguageBasedPrompt => {
+const getLanguageBasedPrompt = async (
+  comments: string,
+): Promise<LanguageBasedPrompt> => {
   console.log(comments);
+
+  // Use dynamic import for franc
+  const { franc } = await import("franc");
 
   // then check the predominant language of the DB records
   const identifiedLanguage = franc(comments);
