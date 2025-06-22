@@ -28,7 +28,11 @@ const CreateCardForm = ({
   return (
     <div className="p-8 bg-white rounded-md w-full max-w-2xl mx-auto">
       <Steps numSteps={numSteps} stepsComplete={stepsComplete} />
-      <div className="p-2 my-6 h-48 bg-gray-100 border-2 border-dashed border-gray-200 rounded-lg"></div>
+      <div className="mt-8">
+        {stepsComplete === 0 && <StepOne />}
+        {stepsComplete === 1 && <StepTwo />}
+        {stepsComplete === 2 && <StepThree />}
+      </div>
       <div className="flex items-center justify-end gap-2">
         <button
           className="px-4 py-1 rounded hover:bg-gray-100 text-black"
@@ -124,6 +128,52 @@ const Step = ({ num, isActive }: { num: number; isActive: boolean }) => {
       {isActive && (
         <div className="absolute z-0 -inset-1.5 bg-indigo-100 rounded-full animate-pulse" />
       )}
+    </div>
+  );
+};
+
+const StepOne = () => {
+  return (
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold text-gray-900">
+        Step 1: Basic Information
+      </h3>
+      <p className="text-gray-600">
+        This is the first step of your card creation process.
+      </p>
+      <div className="p-4 bg-blue-50 rounded-lg">
+        <p className="text-blue-800">Step 1 content goes here</p>
+      </div>
+    </div>
+  );
+};
+
+const StepTwo = () => {
+  return (
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold text-gray-900">Step 2: Details</h3>
+      <p className="text-gray-600">
+        This is the second step of your card creation process.
+      </p>
+      <div className="p-4 bg-green-50 rounded-lg">
+        <p className="text-green-800">Step 2 content goes here</p>
+      </div>
+    </div>
+  );
+};
+
+const StepThree = () => {
+  return (
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold text-gray-900">
+        Step 3: Final Review
+      </h3>
+      <p className="text-gray-600">
+        This is the final step of your card creation process.
+      </p>
+      <div className="p-4 bg-purple-50 rounded-lg">
+        <p className="text-purple-800">Step 3 content goes here</p>
+      </div>
     </div>
   );
 };
