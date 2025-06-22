@@ -186,14 +186,53 @@ const StepOne = () => {
 };
 
 const StepTwo = () => {
+  const [keepData, setKeepData] = useState<boolean>(true);
+
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-gray-900">Step 2: Details</h3>
+      <h3 className="text-xl font-semibold text-gray-900">
+        Would you like us to store the data after their birthday has passed?{" "}
+      </h3>
       <p className="text-gray-600">
-        This is the second step of your card creation process.
+        By default, we delete all user data after their birthday passes for
+        privacy reasons. However, this also means that you will no longer see
+        the card again after your birthday.
       </p>
-      <div className="p-4 bg-green-50 rounded-lg">
-        <p className="text-green-800">Step 2 content goes here</p>
+
+      <div className="space-y-3">
+        <label className="flex items-center space-x-3 cursor-pointer">
+          <input
+            type="radio"
+            name="dataRetention"
+            value="keep"
+            checked={keepData === true}
+            onChange={() => setKeepData(true)}
+            className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+          />
+          <span className="text-gray-900 font-medium">Keep the data</span>
+        </label>
+
+        <label className="flex items-center space-x-3 cursor-pointer">
+          <input
+            type="radio"
+            name="dataRetention"
+            value="delete"
+            checked={keepData === false}
+            onChange={() => setKeepData(false)}
+            className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+          />
+          <span className="text-gray-900 font-medium">Delete the data</span>
+        </label>
+      </div>
+
+      <div
+        className={`p-4 rounded-lg ${keepData ? "bg-green-50" : "bg-red-50"}`}
+      >
+        <p className={`${keepData ? "text-green-800" : "text-red-800"}`}>
+          {keepData
+            ? "Your card will be preserved and accessible even after the birthday passes."
+            : "Your card and all associated data will be permanently deleted after the birthday passes."}
+        </p>
       </div>
     </div>
   );
