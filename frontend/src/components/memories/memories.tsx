@@ -161,7 +161,7 @@ const TestimonialCard = ({
       onClick={() => handleMove(position)}
       className={`      absolute left-1/2 top-1/2 cursor-pointer border-black bg-white p-4 text-black transition-colors duration-500 flex flex-col items-center ${
         isActive ? "z-10" : "z-0"
-      }
+      } ${SHOW_TEXT ? "" : "pt-16"} 
       `}
       style={{
         borderWidth: BORDER_SIZE,
@@ -190,12 +190,12 @@ const TestimonialCard = ({
       <div
         className={`flex flex-col items-center ${
           isActive ? "h-60 w-60 sm:h-75 sm:w-75" : "h-50 w-50 sm:h-65 sm:w-65"
-        } ${SHOW_TEXT ? "" : "m-auto"} relative`}
+        } relative`}
       >
         <div
           className={`relative transition-all ${
             isActive ? "h-60 w-60 sm:h-75 sm:w-75" : "h-50 w-50 sm:h-65 sm:w-65"
-          } mb-2`}
+          }`}
         >
           <Image
             src={`${process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN}/${imageUrl}`}
