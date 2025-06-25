@@ -95,9 +95,9 @@ const MessageModal = ({
                 <div className="absolute top-1 right-1 w-16 h-16 border-2 border-black/20 rounded-sm flex items-center justify-center bg-pink-50/50 rotate-6"></div>
               </div>
             </div>
-            <h3>{wish.name} 说：</h3>
             <div className="text-black text-sm tracking-wide mt-10 h-9/12 overflow-y-scroll">
               {wish.message}
+              <br />- {wish.name}
               {/* [this message originally from {wish.name} has been redacted for
               privacy reasons] <br />
               <br /> rest assured, {characterName} saw them all! */}
