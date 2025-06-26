@@ -278,7 +278,7 @@ const BirthdayWishForm = ({
           imageFiles={imageFiles}
           setImageFiles={setImageFiles}
           isValid={imageValid && imageSizeAndTypeValid}
-          label={`Upload an image of your favorite memory with ${birthdayPerson}!`}
+          label={`Select a few of your favorite images with ${birthdayPerson}!`}
           removeImageFromUploadList={removeImageFromUploadList}
         />
       </div>
