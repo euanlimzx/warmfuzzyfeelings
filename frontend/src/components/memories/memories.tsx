@@ -161,8 +161,7 @@ const TestimonialCard = ({
       onClick={() => handleMove(position)}
       className={`      absolute left-1/2 top-1/2 cursor-pointer border-black bg-white p-4 text-black transition-colors duration-500 flex flex-col items-center ${
         isActive ? "z-10" : "z-0"
-      } ${SHOW_TEXT ? "" : "pt-16"} 
-      `}
+      } ${SHOW_TEXT ? "" : "pt-16"}`}
       style={{
         borderWidth: BORDER_SIZE,
       }}
@@ -186,6 +185,7 @@ const TestimonialCard = ({
         stiffness: 400,
         damping: 50,
       }}
+      id={`${position === 1 ? "first-paged-memory-card" : ""}`}
     >
       <div
         className={`flex flex-col items-center ${

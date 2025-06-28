@@ -30,6 +30,7 @@ export default function DictionaryCard({
   characterSummary: WordWithSource[];
   characterName: string;
 }) {
+  let flyoutLinkCount = 0;
   return (
     <div className="flex justify-center p-6 text-black">
       <div className="relative w-full max-w-md">
@@ -38,7 +39,10 @@ export default function DictionaryCard({
         <div className="absolute -bottom-3 -left-3 w-8 h-8 bg-black"></div>
 
         {/* Main card */}
-        <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+        <div
+          className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+          id="character-description"
+        >
           {/* Word and pronunciation */}
           <div className="mb-4 border-b-4 border-black pb-2">
             <h1 className="font-mono text-4xl font-black lowercase">
@@ -48,7 +52,7 @@ export default function DictionaryCard({
 
           {/* Definition */}
           <div className="font-mono text-base leading-relaxed tracking-wide">
-            {characterSummary.map((word) => {
+            {characterSummary.map((word, index) => {
               if (word.sources.length > 0) {
                 const FlyoutContent = () => {
                   return (
@@ -62,7 +66,11 @@ export default function DictionaryCard({
                   );
                 };
                 return (
-                  <FlyoutLink key={word.word} FlyoutContent={FlyoutContent}>
+                  <FlyoutLink
+                    key={word.word}
+                    FlyoutContent={FlyoutContent}
+                    isFirstFlyout={flyoutLinkCount++ === 0}
+                  >
                     {word.word + " "}
                   </FlyoutLink>
                 );
@@ -85,9 +93,14 @@ export default function DictionaryCard({
 interface FlyoutLinkProps {
   children: ReactNode;
   FlyoutContent: React.FC;
+  isFirstFlyout: boolean;
 }
 
-const FlyoutLink = ({ children, FlyoutContent }: FlyoutLinkProps) => {
+const FlyoutLink = ({
+  children,
+  FlyoutContent,
+  isFirstFlyout = false,
+}: FlyoutLinkProps) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -118,6 +131,7 @@ const FlyoutLink = ({ children, FlyoutContent }: FlyoutLinkProps) => {
       onMouseLeave={() => setOpen(false)}
       onClick={handleClick}
       className="relative inline-block cursor-pointer"
+      id={`${isFirstFlyout ? "first-character-definition" : ""}`}
     >
       <span className="relative inline-flex items-center underline underline-offset-2 decoration-2">
         {children}
