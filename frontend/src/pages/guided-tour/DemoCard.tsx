@@ -4,7 +4,7 @@ import { Countdown } from "@/components/countdown/countdown";
 import { Memories } from "./DemoMemories";
 import { CharacterCard } from "./DemoCharacterCard";
 import SwipeablePages from "./DemoSwipablePages";
-import { FinalMessages } from "@/components/final-messages/final-messages";
+import { FinalMessages } from "@/components/final-messages/final-messages-demo";
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -224,24 +224,9 @@ export default function DemoCard({
             popover: {
               description:
                 "Your friends have also left some final messages for you! Click on the bouncing bubbles to see what they've said!",
-              onPrevClick: (
-                element: Element | undefined,
-                step: DriveStep,
-                { driver }: { config: Config; state: State; driver: Driver }
-              ) => {
+              onPrevClick: () => {
                 handlePopoverPrevClick();
                 handlePopoverPrevClick();
-                driver.setConfig({
-                  ...driver.getConfig(),
-                  overlayOpacity: 0.5,
-                });
-              },
-              onPopoverRender: (popover, { driver, state }) => {
-                setPopOverStyles(popover, { driver, state });
-                driver.setConfig({
-                  ...driver.getConfig(),
-                  stagePadding: 80,
-                });
               },
             },
           },
@@ -289,7 +274,10 @@ export default function DemoCard({
             characterName={birthdayCardResponse?.characterName}
           />
           <Memories memories={memories} driverRef={driverRef} />
-          <FinalMessages wishes={birthdayCardResponse?.wishes} />
+          <FinalMessages
+            wishes={birthdayCardResponse?.wishes}
+            driverRef={driverRef}
+          />
         </SwipeablePages>
       )}
     </>
