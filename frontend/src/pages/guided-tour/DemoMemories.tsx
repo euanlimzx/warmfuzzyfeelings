@@ -1,11 +1,9 @@
-// todo @ euan:
-// - figure out how many words max
-// - prevent text from squeezing images
 import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { GoArrowLeft, GoArrowRight, GoChevronDown } from "react-icons/go";
 import Image from "next/image";
-import { Memory } from "@/types/birthday-card";
+import { DemoMemory, Memory } from "@/types/birthday-card";
+import { driver, Driver } from "driver.js";
 
 const CARD_SIZE_LG = 300;
 const CARD_SIZE_SM = 250;
@@ -22,7 +20,13 @@ const SECTION_HEIGHT = "100vh";
 // REMOVE LATER, TEMP FLAG TO DISPLAY TEXT OR NOT
 const SHOW_TEXT = false;
 
-export const Memories = ({ memories }: { memories: Memory[] }) => {
+export const Memories = ({
+  memories,
+  driverRef,
+}: {
+  memories: DemoMemory[];
+  driverRef: React.RefObject<null | Driver>;
+}) => {
   const [cardSize, setCardSize] = useState(CARD_SIZE_LG);
 
   const createFlattenedTestimonials = (memories: Memory[]) => {
@@ -38,17 +42,18 @@ export const Memories = ({ memories }: { memories: Memory[] }) => {
 
   const tempFlatTestimonials = createFlattenedTestimonials(memories);
 
-  let desiredPosition = 1;
+  let desiredPositionOffset;
   if (tempFlatTestimonials.length % 2) {
-    desiredPosition += (tempFlatTestimonials.length + 1) / 2;
+    desiredPositionOffset = (tempFlatTestimonials.length + 1) / 2;
   } else {
-    desiredPosition += tempFlatTestimonials.length / 2;
+    desiredPositionOffset = tempFlatTestimonials.length / 2;
   }
 
   const [flattenedTestimonials, setFlattenedTestimonials] = useState(() =>
     tempFlatTestimonials.map((memory, idx) => ({
       ...memory,
-      isDemoImage: idx === desiredPosition,
+      isFirstDemoImage: idx === 1 + desiredPositionOffset,
+      isSecondDemoImage: idx === 0 + desiredPositionOffset,
     }))
   );
 
@@ -125,7 +130,13 @@ export const Memories = ({ memories }: { memories: Memory[] }) => {
               position={position}
               cardSize={cardSize}
               imageUrl={item.imageUrl}
-              isDemoImage={item.isDemoImage}
+              isFirstDemoImage={item.isFirstDemoImage}
+              isSecondDemoImage={item.isSecondDemoImage}
+              driverRef={
+                item.isFirstDemoImage || item.isSecondDemoImage
+                  ? driverRef
+                  : null
+              }
             />
           );
         })}
@@ -154,7 +165,18 @@ const TestimonialCard = ({
   handleMove,
   cardSize,
   imageUrl,
-  isDemoImage,
+  isFirstDemoImage,
+  isSecondDemoImage,
+  driverRef,
+}: {
+  position: number;
+  testimonial: string;
+  handleMove: (position: number) => void;
+  cardSize: number;
+  imageUrl: string;
+  isFirstDemoImage: boolean;
+  isSecondDemoImage: boolean;
+  driverRef: React.RefObject<null | Driver>;
 }) => {
   const isActive = position === 0;
   const [isExpanded, setIsExpanded] = useState(false);
@@ -172,10 +194,34 @@ const TestimonialCard = ({
   return (
     <motion.div
       initial={false}
-      onClick={() => handleMove(position)}
+      onClick={() => {
+        handleMove(position);
+
+        if (driverRef?.current) {
+          console.log("HIII");
+
+          if (isFirstDemoImage) {
+            const currentEl = document.querySelector(
+              "#second-paged-memory-card"
+            );
+            if (currentEl instanceof HTMLElement) {
+              currentEl.style.pointerEvents = "auto";
+              currentEl.addEventListener("click", () => {
+                const nextButton = document.querySelector(
+                  ".neo-brutalist-next-btn"
+                );
+                if (nextButton instanceof HTMLButtonElement) {
+                  nextButton.click();
+                }
+              });
+              driverRef.current.moveNext();
+            }
+          }
+        }
+      }}
       className={`      absolute left-1/2 top-1/2 cursor-pointer border-black bg-white p-4 text-black transition-colors duration-500 flex flex-col items-center ${
         isActive ? "z-10" : "z-0"
-      } ${SHOW_TEXT ? "" : "pt-16"}`}
+      } ${SHOW_TEXT ? "" : "pt-16"} ${isSecondDemoImage ? "z-5" : ""}`}
       style={{
         borderWidth: BORDER_SIZE,
       }}
@@ -199,7 +245,13 @@ const TestimonialCard = ({
         stiffness: 400,
         damping: 50,
       }}
-      id={`${isDemoImage ? "first-paged-memory-card" : ""}`}
+      id={`${
+        isFirstDemoImage
+          ? "first-paged-memory-card"
+          : isSecondDemoImage
+          ? "second-paged-memory-card"
+          : ""
+      }`}
     >
       <div
         className={`flex flex-col items-center ${

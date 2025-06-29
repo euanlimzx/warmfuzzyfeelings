@@ -4,7 +4,7 @@ import { subDays, addDays, format } from "date-fns";
 import confetti from "canvas-confetti";
 import { BiSolidChevronUp } from "react-icons/bi";
 
-const BIRTHDAY_OFFSET = 4;
+const BIRTHDAY_OFFSET = 0;
 export const Countdown = ({
   setShowButtons,
   birthdayDateString,

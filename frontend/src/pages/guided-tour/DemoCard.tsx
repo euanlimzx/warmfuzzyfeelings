@@ -1,7 +1,7 @@
 "use client";
 
 import { Countdown } from "@/components/countdown/countdown";
-import { Memories } from "@/components/memories/memories";
+import { Memories } from "./DemoMemories";
 import { CharacterCard } from "@/components/character-card/character-card";
 import SwipeablePages from "./DemoSwipablePages";
 import { FinalMessages } from "@/components/final-messages/final-messages";
@@ -9,9 +9,8 @@ import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { BirthdayCardResponse } from "@/types/birthday-card";
-import { driver } from "driver.js";
+import { Driver, driver } from "driver.js";
 import "driver.js/dist/driver.css";
-import { ChevronLeft, ChevronRight } from "lucide";
 import React from "react";
 
 export default function DemoCard({
@@ -24,6 +23,7 @@ export default function DemoCard({
     useState<BirthdayCardResponse | null>(null);
   const swipeUpFunctionRef = useRef<null | (() => void)>(null);
   const swipeDownFunctionRef = useRef<null | (() => void)>(null);
+  const driverRef = useRef<null | Driver>(null);
 
   useEffect(() => {
     if (!birthdayCardUUID) {
@@ -59,14 +59,30 @@ export default function DemoCard({
 
     const initializeDriver = () => {
       // Check if the function is available before initializing driver
-      if (!swipeDownFunctionRef.current) {
-        console.log("Waiting for swipeDownFunctionRef...");
-        setTimeout(initializeDriver, 500);
+      if (!swipeDownFunctionRef.current || !swipeUpFunctionRef.current) {
         return;
       }
 
+      const handlePopoverNextClick = () => {
+        console.log("HIIIIII");
+        if (swipeUpFunctionRef.current) {
+          swipeUpFunctionRef.current();
+        }
+        setTimeout(() => driverObj.moveNext(), 100);
+      };
+
+      const handlePopoverPrevClick = () => {
+        if (swipeDownFunctionRef.current) {
+          swipeDownFunctionRef.current();
+        }
+
+        setTimeout(() => driverObj.movePrevious(), 10);
+      };
+
       const driverObj = driver({
         onPopoverRender: (popover, { driver, state }) => {
+          console.log(state);
+
           const {
             nextButton,
             previousButton,
@@ -104,35 +120,30 @@ export default function DemoCard({
           wrapper.classList.add("neo-brutalist-popover-modal");
           closeButton.classList.add("neo-brutalist-close-button");
         },
+        smoothScroll: true,
         steps: [
           {
             element: "#card-pagination-buttons",
             popover: {
               title: "This is a test",
               description: "Hehe haha",
-              onNextClick: () => {
-                if (swipeUpFunctionRef.current) {
-                  swipeUpFunctionRef.current();
-                }
-                setTimeout(() => driverObj.moveNext(), 1);
-              },
+              onNextClick: handlePopoverNextClick,
             },
           },
           {
             element: "#character-description",
-            popover: { title: "hehe", description: "haha" },
+            popover: {
+              title: "hehe",
+              description: "haha",
+              onPrevClick: handlePopoverPrevClick,
+            },
           },
           {
             element: "#first-character-definition",
             popover: {
               title: "hoho",
               description: "haha",
-              onNextClick: () => {
-                if (swipeUpFunctionRef.current) {
-                  swipeUpFunctionRef.current();
-                }
-                setTimeout(() => driverObj.moveNext(), 1);
-              },
+              onNextClick: handlePopoverNextClick,
             },
           },
 
@@ -142,28 +153,39 @@ export default function DemoCard({
               title: "hoho",
               description: "haha",
               onNextClick: () => {
-                if (swipeUpFunctionRef.current) {
-                  swipeUpFunctionRef.current();
-                }
-                setTimeout(() => driverObj.moveNext(), 1);
+                driverObj.moveNext();
+              },
+              onPrevClick: handlePopoverPrevClick,
+            },
+          },
+          {
+            element: "#second-paged-memory-card",
+            popover: {
+              title: "hoho",
+              description: "haha",
+              onNextClick: handlePopoverNextClick,
+              onPrevClick: () => {
+                driverObj.movePrevious();
               },
             },
           },
           {
             element: "#final-message-box",
             popover: {
-              title: "hoho",
+              title: "hoeo",
               description: "haha",
+              onPrevClick: handlePopoverPrevClick,
             },
           },
         ],
       });
 
+      driverRef.current = driverObj;
       driverObj.drive();
     };
 
-    setTimeout(initializeDriver, 1000);
-  }, [showButtons]);
+    setTimeout(initializeDriver, 300);
+  }, [showButtons, swipeDownFunctionRef, swipeUpFunctionRef]);
 
   const memories = birthdayCardResponse?.memories.map((memory, index) => ({
     ...memory,
@@ -196,7 +218,7 @@ export default function DemoCard({
             characterSummary={birthdayCardResponse?.summary}
             characterName={birthdayCardResponse?.characterName}
           />
-          <Memories memories={memories} />
+          <Memories memories={memories} driverRef={driverRef} />
           <FinalMessages wishes={birthdayCardResponse?.wishes} />
         </SwipeablePages>
       )}

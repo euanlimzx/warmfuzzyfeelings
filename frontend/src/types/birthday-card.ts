@@ -28,3 +28,8 @@ export interface Memory {
   wishes: Wishes[];
   tempId: number;
 }
+
+export interface DemoMemory extends Memory {
+  isFirstDemoImage?: boolean;
+  isSecondDemoImage?: boolean;
+}
