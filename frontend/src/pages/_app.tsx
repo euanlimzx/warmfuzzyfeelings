@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "@/styles/popover-styles.css";
 import type { AppProps } from "next/app";
 import { Poppins } from "next/font/google";
 import Head from "next/head";

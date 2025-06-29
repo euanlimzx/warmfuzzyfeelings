@@ -11,6 +11,8 @@ import axios from "axios";
 import { BirthdayCardResponse } from "@/types/birthday-card";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+import { ChevronLeft, ChevronRight } from "lucide";
+import React from "react";
 
 export default function DemoCard({
   birthdayCardUUID,
@@ -64,6 +66,44 @@ export default function DemoCard({
       }
 
       const driverObj = driver({
+        onPopoverRender: (popover, { driver, state }) => {
+          const {
+            nextButton,
+            previousButton,
+            title,
+            description,
+            wrapper,
+            closeButton,
+          } = popover;
+
+          nextButton.innerText = "";
+          nextButton.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          `;
+
+          previousButton.innerText = "";
+          previousButton.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m15 18-6-6 6-6"/>
+            </svg>
+          `;
+
+          closeButton.innerText = "";
+          closeButton.innerHTML = `
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18"/>
+            <path d="m6 6 12 12"/>
+          </svg>`;
+
+          nextButton.classList.add("neo-brutalist-next-btn");
+          previousButton.classList.add("neo-brutalist-prev-btn");
+          title.classList.add("neo-brutalist-popover-title");
+          description.classList.add("neo-brutalist-popover-text");
+          wrapper.classList.add("neo-brutalist-popover-modal");
+          closeButton.classList.add("neo-brutalist-close-button");
+        },
         steps: [
           {
             element: "#card-pagination-buttons",
