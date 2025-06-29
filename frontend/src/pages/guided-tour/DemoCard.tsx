@@ -9,7 +9,14 @@ import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { BirthdayCardResponse } from "@/types/birthday-card";
-import { Driver, driver } from "driver.js";
+import {
+  Driver,
+  driver,
+  DriveStep,
+  PopoverDOM,
+  State,
+  Config,
+} from "driver.js";
 import "driver.js/dist/driver.css";
 import React from "react";
 
@@ -64,11 +71,10 @@ export default function DemoCard({
       }
 
       const handlePopoverNextClick = () => {
-        console.log("HIIIIII");
         if (swipeUpFunctionRef.current) {
           swipeUpFunctionRef.current();
         }
-        setTimeout(() => driverObj.moveNext(), 100);
+        setTimeout(() => driverObj.moveNext(), 10);
       };
 
       const handlePopoverPrevClick = () => {
@@ -79,48 +85,52 @@ export default function DemoCard({
         setTimeout(() => driverObj.movePrevious(), 10);
       };
 
-      const driverObj = driver({
-        onPopoverRender: (popover, { driver, state }) => {
-          console.log(state);
+      const setPopOverStyles = (
+        popover: PopoverDOM,
+        { driver, state }: { driver: Driver; state: State }
+      ) => {
+        console.log(state);
 
-          const {
-            nextButton,
-            previousButton,
-            title,
-            description,
-            wrapper,
-            closeButton,
-          } = popover;
+        const {
+          nextButton,
+          previousButton,
+          title,
+          description,
+          wrapper,
+          closeButton,
+        } = popover;
 
-          nextButton.innerText = "";
-          nextButton.innerHTML = `
+        nextButton.innerText = "";
+        nextButton.innerHTML = `
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
               <path d="m9 18 6-6-6-6"/>
             </svg>
           `;
 
-          previousButton.innerText = "";
-          previousButton.innerHTML = `
+        previousButton.innerText = "";
+        previousButton.innerHTML = `
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
               <path d="m15 18-6-6 6-6"/>
             </svg>
           `;
 
-          closeButton.innerText = "";
-          closeButton.innerHTML = `
+        closeButton.innerText = "";
+        closeButton.innerHTML = `
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 6 6 18"/>
             <path d="m6 6 12 12"/>
           </svg>`;
 
-          nextButton.classList.add("neo-brutalist-next-btn");
-          previousButton.classList.add("neo-brutalist-prev-btn");
-          title.classList.add("neo-brutalist-popover-title");
-          description.classList.add("neo-brutalist-popover-text");
-          wrapper.classList.add("neo-brutalist-popover-modal");
-          closeButton.classList.add("neo-brutalist-close-button");
-        },
-        smoothScroll: true,
+        nextButton.classList.add("neo-brutalist-next-btn");
+        previousButton.classList.add("neo-brutalist-prev-btn");
+        title.classList.add("neo-brutalist-popover-title");
+        description.classList.add("neo-brutalist-popover-text");
+        wrapper.classList.add("neo-brutalist-popover-modal");
+        closeButton.classList.add("neo-brutalist-close-button");
+      };
+
+      const driverObj = driver({
+        onPopoverRender: setPopOverStyles,
         steps: [
           {
             element: "#card-pagination-buttons",
@@ -143,7 +153,48 @@ export default function DemoCard({
             popover: {
               title: "hoho",
               description: "haha",
-              onNextClick: handlePopoverNextClick,
+            },
+          },
+          {
+            element: "#character-description",
+            popover: {
+              title: "hehe",
+              description: "haha",
+              onPopoverRender: (popover, { driver, state }) => {
+                setPopOverStyles(popover, { driver, state });
+                driver.setConfig({
+                  ...driver.getConfig(),
+                  stagePadding: 30,
+                });
+                const bindingBox = document.querySelector(
+                  "#step-5-binding-div"
+                );
+                if (bindingBox instanceof HTMLElement) {
+                  bindingBox.style.setProperty(
+                    "overflow",
+                    "visible",
+                    "important"
+                  );
+                }
+              },
+              onNextClick: (
+                element: Element | undefined,
+                step: DriveStep,
+                {
+                  config,
+                  state,
+                  driver,
+                }: { config: Config; state: State; driver: Driver }
+              ) => {
+                if (driver) {
+                  driver.setConfig({
+                    ...driver.getConfig(),
+                    stagePadding: 10,
+                  });
+                }
+                handlePopoverNextClick();
+              },
+              onPrevClick: handlePopoverPrevClick,
             },
           },
 
@@ -163,7 +214,9 @@ export default function DemoCard({
             popover: {
               title: "hoho",
               description: "haha",
-              onNextClick: handlePopoverNextClick,
+              onNextClick: () => {
+                setTimeout(() => handlePopoverNextClick(), 300);
+              },
               onPrevClick: () => {
                 driverObj.movePrevious();
               },
@@ -178,13 +231,14 @@ export default function DemoCard({
             },
           },
         ],
+        overlayClickBehavior: undefined,
       });
 
       driverRef.current = driverObj;
       driverObj.drive();
     };
 
-    setTimeout(initializeDriver, 300);
+    setTimeout(initializeDriver, 100);
   }, [showButtons, swipeDownFunctionRef, swipeUpFunctionRef]);
 
   const memories = birthdayCardResponse?.memories.map((memory, index) => ({

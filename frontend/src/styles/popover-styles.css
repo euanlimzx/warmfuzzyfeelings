@@ -17,7 +17,9 @@
   transition-duration: 300ms !important;
   width: 50% !important;
   margin-left: 0.25rem !important;
+  height: 2rem !important;
 }
+
 .neo-brutalist-next-btn:hover {
   background-color: #10b981 !important;
   transform: translate(0.25rem, 0.25rem) !important;
@@ -43,6 +45,7 @@
   transition-duration: 300ms !important;
   width: 50% !important;
   margin-right: 0.25rem !important;
+  height: 2rem !important;
 }
 
 .neo-brutalist-prev-btn:hover {

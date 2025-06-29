@@ -33,7 +33,7 @@ export default function DictionaryCard({
   let flyoutLinkCount = 0;
   return (
     <div className="flex justify-center p-6 text-black">
-      <div className="relative w-full max-w-md">
+      <div className="relative w-full max-w-md" id="step-5-binding-div">
         {/* Neo-brutalist decorative elements */}
         <div className="absolute -top-4 -right-4 w-12 h-12 bg-purple-300 rotate-12 border-2 border-black"></div>
         <div className="absolute -bottom-3 -left-3 w-8 h-8 bg-black"></div>

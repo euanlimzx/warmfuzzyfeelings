@@ -198,8 +198,6 @@ const TestimonialCard = ({
         handleMove(position);
 
         if (driverRef?.current) {
-          console.log("HIII");
-
           if (isFirstDemoImage) {
             const currentEl = document.querySelector(
               "#second-paged-memory-card"
@@ -212,6 +210,10 @@ const TestimonialCard = ({
                 );
                 if (nextButton instanceof HTMLButtonElement) {
                   nextButton.click();
+                  driverRef?.current?.moveTo(
+                    driverRef?.current?.getActiveIndex() as number
+                  );
+                  driverRef.current?.refresh();
                 }
               });
               driverRef.current.moveNext();
