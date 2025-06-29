@@ -10,12 +10,14 @@ import {
 import { motion, AnimatePresence, type PanInfo } from "framer-motion";
 import { IoMdArrowDown, IoMdArrowUp } from "react-icons/io";
 import { RefObject } from "react";
+import { Driver } from "driver.js";
 
 interface SwipeableWrapperProps {
   children: ReactElement[];
   showButtons: boolean;
   swipeUpFunctionRef?: RefObject<(() => void) | null>;
   swipeDownFunctionRef?: RefObject<(() => void) | null>;
+  driverRef: RefObject<null | Driver>;
 }
 
 interface AnimatedChildProps {
@@ -79,6 +81,7 @@ export default function SwipeablePages({
   showButtons,
   swipeDownFunctionRef,
   swipeUpFunctionRef,
+  driverRef,
 }: SwipeableWrapperProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
@@ -90,8 +93,20 @@ export default function SwipeablePages({
     if (currentIndex < totalPages - 1) {
       setDirection("forward");
       setCurrentIndex(currentIndex + 1);
+
+      if (driverRef.current && driverRef.current.getActiveIndex() === 0) {
+        const nextButton = document.querySelector(".neo-brutalist-next-btn");
+        if (nextButton instanceof HTMLButtonElement) {
+          nextButton.click();
+          driverRef?.current?.moveTo(
+            driverRef?.current?.getActiveIndex() as number
+          );
+        }
+      } else {
+        console.log("NAH");
+      }
     }
-  }, [currentIndex, totalPages]);
+  }, [currentIndex, totalPages, driverRef]);
 
   const handleSwipeDown = useCallback(() => {
     if (currentIndex > 0) {

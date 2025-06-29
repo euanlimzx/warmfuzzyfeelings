@@ -2,7 +2,7 @@
 
 import { Countdown } from "@/components/countdown/countdown";
 import { Memories } from "./DemoMemories";
-import { CharacterCard } from "@/components/character-card/character-card";
+import { CharacterCard } from "./DemoCharacterCard";
 import SwipeablePages from "./DemoSwipablePages";
 import { FinalMessages } from "@/components/final-messages/final-messages";
 import Head from "next/head";
@@ -135,31 +135,22 @@ export default function DemoCard({
           {
             element: "#card-pagination-buttons",
             popover: {
-              title: "This is a test",
-              description: "Hehe haha",
+              description:
+                "Use these buttons to move around on your card! Click the 'down' button to check out your card",
               onNextClick: handlePopoverNextClick,
+              onPopoverRender: (popover, { state, driver }) => {
+                setPopOverStyles(popover, { state, driver });
+                popover.footerButtons.style.position = "absolute";
+                popover.footerButtons.style.visibility = "hidden";
+              },
             },
           },
+
           {
             element: "#character-description",
             popover: {
-              title: "hehe",
-              description: "haha",
-              onPrevClick: handlePopoverPrevClick,
-            },
-          },
-          {
-            element: "#first-character-definition",
-            popover: {
-              title: "hoho",
-              description: "haha",
-            },
-          },
-          {
-            element: "#character-description",
-            popover: {
-              title: "hehe",
-              description: "haha",
+              description:
+                "Click on the underlined words to see who said these lovely things about you!",
               onPopoverRender: (popover, { driver, state }) => {
                 setPopOverStyles(popover, { driver, state });
                 driver.setConfig({
@@ -180,11 +171,7 @@ export default function DemoCard({
               onNextClick: (
                 element: Element | undefined,
                 step: DriveStep,
-                {
-                  config,
-                  state,
-                  driver,
-                }: { config: Config; state: State; driver: Driver }
+                { driver }: { config: Config; state: State; driver: Driver }
               ) => {
                 if (driver) {
                   driver.setConfig({
@@ -201,33 +188,61 @@ export default function DemoCard({
           {
             element: "#first-paged-memory-card",
             popover: {
-              title: "hoho",
-              description: "haha",
+              description:
+                "You're now at the memory card! Tap on this image to bring it into focus",
               onNextClick: () => {
                 driverObj.moveNext();
               },
               onPrevClick: handlePopoverPrevClick,
+              onPopoverRender: (popover, { state, driver }) => {
+                setPopOverStyles(popover, { state, driver });
+                popover.footerButtons.style.position = "absolute";
+                popover.footerButtons.style.visibility = "hidden";
+              },
             },
           },
           {
             element: "#second-paged-memory-card",
             popover: {
-              title: "hoho",
-              description: "haha",
+              description:
+                "then tap here to bring the previous image into focus",
               onNextClick: () => {
-                setTimeout(() => handlePopoverNextClick(), 300);
+                setTimeout(() => handlePopoverNextClick(), 350);
               },
               onPrevClick: () => {
                 driverObj.movePrevious();
+              },
+              onPopoverRender: (popover, { state, driver }) => {
+                setPopOverStyles(popover, { state, driver });
+                popover.footerButtons.style.position = "absolute";
+                popover.footerButtons.style.visibility = "hidden";
               },
             },
           },
           {
             element: "#final-message-box",
             popover: {
-              title: "hoeo",
-              description: "haha",
-              onPrevClick: handlePopoverPrevClick,
+              description:
+                "Your friends have also left some final messages for you! Click on the bouncing bubbles to see what they've said!",
+              onPrevClick: (
+                element: Element | undefined,
+                step: DriveStep,
+                { driver }: { config: Config; state: State; driver: Driver }
+              ) => {
+                handlePopoverPrevClick();
+                handlePopoverPrevClick();
+                driver.setConfig({
+                  ...driver.getConfig(),
+                  overlayOpacity: 0.5,
+                });
+              },
+              onPopoverRender: (popover, { driver, state }) => {
+                setPopOverStyles(popover, { driver, state });
+                driver.setConfig({
+                  ...driver.getConfig(),
+                  stagePadding: 80,
+                });
+              },
             },
           },
         ],
@@ -263,6 +278,7 @@ export default function DemoCard({
           showButtons={showButtons}
           swipeDownFunctionRef={swipeDownFunctionRef}
           swipeUpFunctionRef={swipeUpFunctionRef}
+          driverRef={driverRef}
         >
           <Countdown
             setShowButtons={setShowButtons}

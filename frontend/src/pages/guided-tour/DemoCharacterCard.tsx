@@ -2,16 +2,13 @@ import { Ripple } from "@/components/magicui/ripple";
 import React, { useState, ReactNode, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { WordWithSource } from "@/types/birthday-card";
-import { Driver } from "driver.js";
 
 export function CharacterCard({
   characterSummary,
   characterName,
-  driverRef,
 }: {
   characterSummary: WordWithSource[];
   characterName: string;
-  driverRef: React.RefObject<null | Driver>;
 }) {
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-blue-300">
@@ -19,7 +16,6 @@ export function CharacterCard({
         <DictionaryCard
           characterSummary={characterSummary}
           characterName={characterName}
-          driverRef={driverRef}
         />
       </div>
       <Ripple />
@@ -30,11 +26,9 @@ export function CharacterCard({
 export default function DictionaryCard({
   characterSummary,
   characterName,
-  driverRef,
 }: {
   characterSummary: WordWithSource[];
   characterName: string;
-  driverRef: React.RefObject<null | Driver>;
 }) {
   let flyoutLinkCount = 0;
   return (
@@ -76,7 +70,6 @@ export default function DictionaryCard({
                     key={word.word}
                     FlyoutContent={FlyoutContent}
                     isFirstFlyout={flyoutLinkCount++ === 0}
-                    driverRef={driverRef}
                   >
                     {word.word + " "}
                   </FlyoutLink>
@@ -101,13 +94,11 @@ interface FlyoutLinkProps {
   children: ReactNode;
   FlyoutContent: React.FC;
   isFirstFlyout: boolean;
-  driverRef: React.RefObject<null | Driver>;
 }
 
 const FlyoutLink = ({
   children,
   FlyoutContent,
-  driverRef,
   isFirstFlyout = false,
 }: FlyoutLinkProps) => {
   const [open, setOpen] = useState(false);
@@ -130,14 +121,6 @@ const FlyoutLink = ({
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setOpen(!open);
-    const nextButton = document.querySelector(".neo-brutalist-next-btn");
-    if (nextButton instanceof HTMLButtonElement) {
-      nextButton.click();
-      driverRef?.current?.moveTo(
-        driverRef?.current?.getActiveIndex() as number
-      );
-      driverRef.current?.refresh();
-    }
   };
 
   const showFlyout = open;
