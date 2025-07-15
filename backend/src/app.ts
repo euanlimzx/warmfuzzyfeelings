@@ -294,4 +294,71 @@ app.get("/retrieve-birthday-card", async (req, res) => {
   res.status(400).send({ ok: false, message: "invalid input for card UUID" });
 });
 
+app.get("/retrieve-wedding-card-nj", async (req, res) => {
+  console.log("HEY");
+  const { password } = req.query;
+
+  if (password !== process.env.NJ_ROUTE_PASSWORD) {
+    res.status(403).send("Not today sir");
+    return;
+  }
+
+  // get the information for nat
+  const nCard = await getCardFromUUID({ cardUUID: process.env.N_UUID! });
+  const nCardResponses = await getAllCardResponsesForUUID({
+    cardUUID: process.env.N_UUID!,
+  });
+
+  if (!nCard.ok || !nCardResponses.ok) {
+    res.status(500).send("There was an issue getting nCard responses");
+    return;
+  }
+
+  const jCard = await getCardFromUUID({ cardUUID: process.env.J_UUID! });
+  const jCardResponses = await getAllCardResponsesForUUID({
+    cardUUID: process.env.J_UUID!,
+  });
+
+  if (!jCard.ok || !jCardResponses.ok) {
+    res.status(500).send("There was an issue getting jCard responses");
+    return;
+  }
+
+  const returnValue = {
+    imageUrls: [
+      ...nCardResponses.cards?.map((cardResponse) => cardResponse.image_urls)!,
+      ...jCardResponses.cards?.map((cardResponse) => cardResponse.image_urls)!,
+    ].flat(),
+    memories: [
+      ...nCardResponses.cards?.map((cardResponse) => ({
+        name: cardResponse.responder_name,
+        message: cardResponse.final_message_response,
+      }))!,
+      ...jCardResponses.cards?.map((cardResponse) => ({
+        name: cardResponse.responder_name,
+        message: cardResponse.final_message_response,
+      }))!,
+    ].flat(),
+    nat: {
+      characterDescription: nCard.card?.descriptive_title,
+      textSummary: nCard.card?.text_summary,
+      singleWordTraits: nCard.card?.single_word_traits,
+      summary: nCard.card?.sourced_summary,
+      characterName: nCard.card?.birthday_person,
+      birthdayDate: nCard.card?.birthday_date,
+    },
+    josh: {
+      characterDescription: jCard.card?.descriptive_title,
+      textSummary: jCard.card?.text_summary,
+      singleWordTraits: jCard.card?.single_word_traits,
+      summary: jCard.card?.sourced_summary,
+      characterName: jCard.card?.birthday_person,
+      birthdayDate: jCard.card?.birthday_date,
+    },
+  };
+
+  res.status(200).send({ ...returnValue, ok: true });
+  return;
+});
+
 export default app;
