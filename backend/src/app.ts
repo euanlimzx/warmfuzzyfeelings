@@ -329,7 +329,7 @@ app.get("/retrieve-wedding-card-nj", async (req, res) => {
       ...nCardResponses.cards?.map((cardResponse) => cardResponse.image_urls)!,
       ...jCardResponses.cards?.map((cardResponse) => cardResponse.image_urls)!,
     ].flat(),
-    memories: [
+    finalMessage: [
       ...nCardResponses.cards?.map((cardResponse) => ({
         name: cardResponse.responder_name,
         message: cardResponse.final_message_response,
@@ -346,6 +346,8 @@ app.get("/retrieve-wedding-card-nj", async (req, res) => {
       summary: nCard.card?.sourced_summary,
       characterName: nCard.card?.birthday_person,
       birthdayDate: nCard.card?.birthday_date,
+      traits: nCardResponses.cards?.map((card) => card.description_response),
+      memories: nCardResponses.cards?.map((card) => card.memory_response),
     },
     josh: {
       characterDescription: jCard.card?.descriptive_title,
@@ -354,6 +356,8 @@ app.get("/retrieve-wedding-card-nj", async (req, res) => {
       summary: jCard.card?.sourced_summary,
       characterName: jCard.card?.birthday_person,
       birthdayDate: jCard.card?.birthday_date,
+      traits: jCardResponses.cards?.map((card) => card.description_response),
+      memories: jCardResponses.cards?.map((card) => card.memory_response),
     },
   };
 
