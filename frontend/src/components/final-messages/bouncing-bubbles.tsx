@@ -34,8 +34,8 @@ export default function BouncingBubbles({ wishes }: { wishes: Wishes[] }) {
       id: i + 1,
       x: Math.random() * (containerWidth - bubbleSize),
       y: Math.random() * (containerHeight - bubbleSize),
-      vx: (Math.random() - 0.5) * 4,
-      vy: (Math.random() - 0.5) * 4,
+      vx: (Math.random() - 0.5) ,
+      vy: (Math.random() - 0.5) ,
     }));
 
     const animate = () => {
