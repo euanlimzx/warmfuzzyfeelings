@@ -75,7 +75,7 @@ export default function Card() {
             characterName={birthdayCardResponse?.characterName}
           />
           <Memories memories={memories} />
-          <MarqueeMemories  />
+          <MarqueeMemories memories={memories} />
           <FinalMessages wishes={birthdayCardResponse?.wishes} />
         </SwipeablePages>
       )}
