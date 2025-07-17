@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import React, { ComponentPropsWithoutRef, useRef, useEffect, useState } from "react";
+import { ComponentPropsWithoutRef } from "react";
 
 interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
   /**
@@ -25,6 +25,11 @@ interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
    * @default false
    */
   vertical?: boolean;
+  /**
+   * Number of times to repeat the content
+   * @default 4
+   */
+  repeat?: number;
 }
 
 export function Marquee({
@@ -33,50 +38,12 @@ export function Marquee({
   pauseOnHover = false,
   children,
   vertical = false,
+  repeat = 4,
   ...props
 }: MarqueeProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [repeatCount, setRepeatCount] = useState(2);
-
-  useEffect(() => {
-    if (!containerRef.current || !contentRef.current) return;
-    const containerSize = vertical
-      ? containerRef.current.offsetHeight
-      : containerRef.current.offsetWidth;
-    const contentSize = vertical
-      ? contentRef.current.scrollHeight
-      : contentRef.current.scrollWidth;
-    if (contentSize === 0) return;
-    // Ensure at least 2 copies, but enough to fill twice the container
-    const minRepeats = Math.ceil((containerSize * 2) / contentSize);
-    setRepeatCount(Math.max(2, minRepeats));
-  }, [children, vertical]);
-
-  // Prepare repeated children
-  const repeatedChildren = Array.from({ length: repeatCount }, (_, i) => (
-    <div
-      key={i}
-      ref={i === 0 ? contentRef : undefined}
-      className={cn("flex shrink-0 justify-around [gap:var(--gap)]", {
-        "animate-marquee flex-row": !vertical,
-        "animate-marquee-vertical flex-col": vertical,
-        "group-hover:[animation-play-state:paused]": pauseOnHover,
-        "animate-marquee-reverse": reverse,
-      })}
-      style={{
-        // Only animate the first copy, others are static
-        animationPlayState: pauseOnHover ? undefined : undefined,
-      }}
-    >
-      {children}
-    </div>
-  ));
-
   return (
     <div
       {...props}
-      ref={containerRef}
       className={cn(
         "group flex overflow-hidden p-2 [--duration:40s] [--gap:1rem] [gap:var(--gap)]",
         {
@@ -86,7 +53,21 @@ export function Marquee({
         className,
       )}
     >
-      {repeatedChildren}
+      {Array(repeat)
+        .fill(0)
+        .map((_, i) => (
+          <div
+            key={i}
+            className={cn("flex shrink-0 justify-around [gap:var(--gap)]", {
+              "animate-marquee flex-row": !vertical,
+              "animate-marquee-vertical flex-col": vertical,
+              "group-hover:[animation-play-state:paused]": pauseOnHover,
+              "animate-marquee-reverse": reverse,
+            })}
+          >
+            {children}
+          </div>
+        ))}
     </div>
   );
 }
