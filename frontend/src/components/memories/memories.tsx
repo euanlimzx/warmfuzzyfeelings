@@ -93,8 +93,7 @@ export const Memories = ({ memories }: { memories: Memory[] }) => {
     >
       {/* todo: outline the text in the h2 component */}
       <h2 className="text-center font-medium text-2xl text-black py-10 mt-10 mx-auto">
-        You&apos;ve shared countless of memories with everyone, but here are the
-        ones we&apos;ll remember forever
+      Some of our favorite photos—each one a memory, each one a celebration of you.
       </h2>
       <div className="relative h-[80%] w-full">
         {flattenedTestimonials.map((item, currentIdx) => {
@@ -161,7 +160,7 @@ const TestimonialCard = ({
       onClick={() => handleMove(position)}
       className={`      absolute left-1/2 top-1/2 cursor-pointer border-black bg-white p-4 text-black transition-colors duration-500 flex flex-col items-center ${
         isActive ? "z-10" : "z-0"
-      } ${SHOW_TEXT ? "" : "pt-16"} 
+      } ${SHOW_TEXT ? "" : "pt-5"} 
       `}
       style={{
         borderWidth: BORDER_SIZE,
@@ -170,9 +169,9 @@ const TestimonialCard = ({
         width: isActive ? cardSize * 1.1 : cardSize,
         height: isActive
           ? isExpanded
-            ? cardSize * 2
-            : cardSize * 1.6
-          : cardSize * 1.6,
+            ? cardSize * 1.9
+            : cardSize * 1.4
+          : cardSize * 1.4,
         x: `calc(-50% + ${position * (cardSize / 1.1)}px)`,
         y: `calc(-50% + ${
           isActive ? CENTER_STAGGER : position % 2 ? STAGGER : -STAGGER
