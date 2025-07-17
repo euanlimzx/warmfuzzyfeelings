@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { BirthdayCardResponse } from "@/types/birthday-card";
+import { MarqueeMemories } from "@/components/marquee/MarqueeMemories";
 
 export default function Card() {
   const [showButtons, setShowButtons] = useState(false);
@@ -74,6 +75,7 @@ export default function Card() {
             characterName={birthdayCardResponse?.characterName}
           />
           <Memories memories={memories} />
+          <MarqueeMemories  />
           <FinalMessages wishes={birthdayCardResponse?.wishes} />
         </SwipeablePages>
       )}

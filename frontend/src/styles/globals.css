@@ -54,3 +54,26 @@ body {
     transform: translate(-50%, -50%) scale(0.9);
   }
 }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+@keyframes marquee-vertical {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
+}
+.animate-marquee {
+  animation: marquee var(--duration, 20s) linear infinite;
+}
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration, 20s) linear infinite;
+}
+/* Utility for reverse direction */
+[animation-direction="reverse"], .animate-marquee-reverse {
+  animation-direction: reverse;
+}
+/* Utility for pausing on hover (when parent has group-hover) */
+.group:hover .group-hover\:animation-paused {
+  animation-play-state: paused;
+}
