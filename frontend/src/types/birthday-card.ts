@@ -28,3 +28,8 @@ export interface Memory {
   wishes: Wishes[];
   tempId: number;
 }
+
+export interface MarqueeMemory {
+  name: string;
+  memory: string;
+}
