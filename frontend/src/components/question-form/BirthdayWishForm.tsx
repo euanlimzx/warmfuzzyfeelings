@@ -34,7 +34,6 @@ const BirthdayWishForm = ({
     useState(true);
   const [finalMessageResponseValid, setFinalMessageResponseValid] =
     useState(true);
-  const [imageValid, setImageValid] = useState(true);
   const [imageSizeAndTypeValid, setImageSizeAndTypeValid] = useState(true);
   const [showImageSizeAndTypeError, setShowImageSizeAndTypeError] =
     useState(false);
@@ -100,18 +99,15 @@ const BirthdayWishForm = ({
     // check that all fields, including the image, have been filled up
     const isMemoryValid = !!memoryResponse;
     const isDescriptionValid = !!descriptionResponse;
-    const isImageValid = !!imageFiles.length;
     const isFinalMessageValid = !!finalMessageResponse;
     const isNameValid = !!name;
     setMemoryResponseValid(isMemoryValid);
     setDescriptionResponseValid(isDescriptionValid);
     setFinalMessageResponseValid(isFinalMessageValid);
-    setImageValid(isImageValid);
     setNameValid(isNameValid);
     if (
       !memoryResponse ||
       !descriptionResponse ||
-      !imageFiles.length ||
       !finalMessageResponse ||
       !name
     ) {
@@ -181,7 +177,6 @@ const BirthdayWishForm = ({
     setMemoryResponseValid(true);
     setDescriptionResponseValid(true);
     setFinalMessageResponseValid(true);
-    setImageValid(true);
     setImageSizeAndTypeValid(true);
     setShowFormCompleteModal(true);
   };
@@ -277,8 +272,8 @@ const BirthdayWishForm = ({
         <ImageUploader
           imageFiles={imageFiles}
           setImageFiles={setImageFiles}
-          isValid={imageValid && imageSizeAndTypeValid}
-          label={`Upload an image of your favorite memory with ${birthdayPerson}!`}
+          isValid={imageSizeAndTypeValid}
+          label={`Upload images of your favorite memories with ${birthdayPerson}! (optional only if you have none 😠)`}
           removeImageFromUploadList={removeImageFromUploadList}
         />
       </div>
