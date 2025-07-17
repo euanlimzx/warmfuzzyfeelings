@@ -10,8 +10,35 @@ export function CharacterCard({
   characterSummary: WordWithSource[];
   characterName: string;
 }) {
+  // Popup state
+  const [showPopup, setShowPopup] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowPopup(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-blue-300">
+      {/* Blurred background overlay */}
+      <div
+        className={`fixed inset-0 z-40 transition-opacity duration-700 pointer-events-none ${
+          showPopup ? "opacity-100 backdrop-blur-sm" : "opacity-0 backdrop-blur-none"
+        }`}
+      />
+      {/* Temporary popup */}
+      <div
+        className={`fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-700 pointer-events-none ${
+          showPopup ? "opacity-100" : "opacity-0"
+        }`}
+        style={{ minWidth: 320 }}
+      >
+        <div className="bg-white text-black border-2 border-black px-8 py-4 shadow-xl text-center text-2xl font-semibold max-w-lg">
+          You&apos;re a star! Click on the underlined words to see what people have been saying about you
+        </div>
+      </div>
+      {/* End popup */}
+      {/* Main content */}
       <div className="z-10 whitespace-pre-wrap text-center text-5xl font-medium tracking-tighter text-white">
         <DictionaryCard
           characterSummary={characterSummary}
