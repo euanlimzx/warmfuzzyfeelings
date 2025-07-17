@@ -43,8 +43,8 @@ export const Countdown = ({
                   <BiSolidChevronUp className="w-12 h-12 " />
                 </div>
                 <p className="text-center max-w-1/2">
-                  HAPPY BIRTHDAY!! <br /> Scroll up to see the next page! (or
-                  use the arrows at the bottom)
+                  HAPPY BIRTHDAY!! <br /> Use the arrows at the bottom right to
+                  move between the pages
                 </p>
               </div>
             </motion.div>
