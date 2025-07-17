@@ -80,8 +80,8 @@ const ReviewCard = ({
 
 export const MarqueeMemories = () => {
   return (
-    // <div className="w-full h-full bg-purple-300 flex flex-col items-center justify-center">
-    //     <text className="max-w-3/4 text-white text-center text-2xl md:text-4xl font-semibold">Speaking of memories, here are our favorite ones of you</text>
+    <div className="w-full h-full bg-purple-300 flex flex-col items-center justify-center">
+        <text className="max-w-3/4 text-white text-center text-2xl md:text-4xl font-semibold">Speaking of memories, here are our favorite ones of you</text>
       
     <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
       <Marquee pauseOnHover className="[--duration:20s]">
@@ -97,6 +97,6 @@ export const MarqueeMemories = () => {
       <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-background"></div>
       <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-background"></div>
     </div>
-  )
+  </div>
+  );
 };
-``
