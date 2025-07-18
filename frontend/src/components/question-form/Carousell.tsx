@@ -112,7 +112,7 @@ export default function ImageCarousel({
           style={{
             transform: `translateX(${
               -currentIndex * 100 +
-              (isDragging
+              (isDragging && uploadedFiles.length > 1
                 ? (translateX / (carouselRef.current?.offsetWidth || 1)) * 100
                 : 0)
             }%)`,
