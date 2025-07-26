@@ -91,10 +91,11 @@ export default function NatAndJosh() {
 return(
     <div className="flex flex-col w-screen h-screen items-center justify-center gap-16 bg-red-500">
       <div className="max-w-md h-1/2 w-full flex flex-col items-center justify-center">
-      <text className="text-white text-2xl font-bold text-center w-full">Who do you know?</text>
-      <NeuFollowButton onClick={() => router.push('/make-a-wish/natandjosh?person=nat&person=josh')} buttonText="I know both Nat & Josh" />
-        <NeuFollowButton onClick={() => router.push('/make-a-wish/natandjosh?person=nat')} buttonText="I only know Nat" />
-        <NeuFollowButton onClick={() => router.push('/make-a-wish/natandjosh?person=josh')} buttonText="I only know Josh" />
+      <text className="text-white text-2xl font-bold text-center w-full">Who would you like to write a card for?</text>
+        <NeuFollowButton onClick={() => router.push('/make-a-wish/natandjosh?person=nat')} buttonText="For Nat ❤️" />
+        <NeuFollowButton onClick={() => router.push('/make-a-wish/natandjosh?person=josh')} buttonText="For Josh 💪🏼" />
+      <NeuFollowButton onClick={() => router.push('/make-a-wish/natandjosh?person=nat&person=josh')} buttonText="For both! 🌿" />
+
       </div>
 
 
