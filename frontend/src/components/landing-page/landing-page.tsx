@@ -48,7 +48,7 @@ const Copy = () => {
         <p
           className="text-lg underline font-semibold hover:cursor-pointer"
           onClick={() => {
-            window.open("/card/a8167b77-fee1-4bf6-956e-08e7ff7fcc52", "_blank");
+            window.open("/card/6a365d8f-d0ce-449e-8bba-15c5f5ea867b", "_blank");
           }}
         >
           or, see a sample
