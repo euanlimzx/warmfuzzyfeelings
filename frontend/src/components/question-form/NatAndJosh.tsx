@@ -135,12 +135,17 @@ const NatAndJoshForm = ({
       isDescriptionValid2 = !!descriptionResponse2;
       setMemoryResponseValid2(isMemoryValid2);
       setDescriptionResponseValid2(isDescriptionValid2);
-
     }
 
     // Check if form is incomplete
-    const isFirstPersonIncomplete = !memoryResponse || !descriptionResponse || !imageFiles.length || !finalMessageResponse || !name;
-    const isSecondPersonIncomplete = hasSecondPerson && (!memoryResponse2 || !descriptionResponse2);
+    const isFirstPersonIncomplete =
+      !memoryResponse ||
+      !descriptionResponse ||
+      !imageFiles.length ||
+      !finalMessageResponse ||
+      !name;
+    const isSecondPersonIncomplete =
+      hasSecondPerson && (!memoryResponse2 || !descriptionResponse2);
 
     if (isFirstPersonIncomplete || isSecondPersonIncomplete) {
       setIsFormIncomplete(true);
@@ -206,6 +211,10 @@ const NatAndJoshForm = ({
         responseUUID: responseUUID2,
         memoryResponse: memoryResponse2,
         descriptionResponse: descriptionResponse2,
+        finalMessageResponse: "",
+        imageUrls: [],
+        imageUrl: "",
+        name: "",
       };
 
       const formSubmissionResponse2 = await axios.post(
@@ -221,19 +230,19 @@ const NatAndJoshForm = ({
     }
 
     localStorage.setItem("submitReceipt", submitReceipt);
-    
+
     // Reset all form fields
     setMemoryResponse("");
     setDescriptionResponse("");
     setFinalMessageResponse("");
     setImageFiles([]);
     setName("");
-    
+
     if (hasSecondPerson) {
       setMemoryResponse2("");
       setDescriptionResponse2("");
     }
-    
+
     setIsLoading(false);
     setMemoryResponseValid(true);
     setDescriptionResponseValid(true);
@@ -241,12 +250,12 @@ const NatAndJoshForm = ({
     setImageValid(true);
     setImageSizeAndTypeValid(true);
     setNameValid(true);
-    
+
     if (hasSecondPerson) {
       setMemoryResponseValid2(true);
       setDescriptionResponseValid2(true);
     }
-    
+
     setShowFormCompleteModal(true);
   };
 
@@ -365,7 +374,7 @@ const NatAndJoshForm = ({
         </form>
       )}
 
-    <div className="border-t-2 border-black my-4"></div>
+      <div className="border-t-2 border-black my-4"></div>
 
       {/* images that you can upload */}
       <div className="w-full">
@@ -373,7 +382,11 @@ const NatAndJoshForm = ({
           imageFiles={imageFiles}
           setImageFiles={setImageFiles}
           isValid={imageValid && imageSizeAndTypeValid}
-          label={`Upload some images of your favorite memories with ${hasSecondPerson ? `either ${birthdayPerson} or ${birthdayPerson2}` : birthdayPerson}!`}
+          label={`Upload some images of your favorite memories with ${
+            hasSecondPerson
+              ? `either ${birthdayPerson} or ${birthdayPerson2}`
+              : birthdayPerson
+          }!`}
           removeImageFromUploadList={removeImageFromUploadList}
         />
       </div>

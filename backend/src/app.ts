@@ -326,18 +326,34 @@ app.get("/retrieve-wedding-card-nj", async (req, res) => {
 
   const returnValue = {
     imageUrls: [
-      ...nCardResponses.cards?.map((cardResponse) => cardResponse.image_urls)!,
-      ...jCardResponses.cards?.map((cardResponse) => cardResponse.image_urls)!,
+      ...nCardResponses.cards?.map((cardResponse) => {
+        if (cardResponse.image_urls.length) {
+          return cardResponse.image_urls;
+        }
+      })!,
+      ...jCardResponses.cards?.map((cardResponse) => {
+        if (cardResponse.image_urls.length) {
+          return cardResponse.image_urls;
+        }
+      })!,
     ].flat(),
     finalMessage: [
-      ...nCardResponses.cards?.map((cardResponse) => ({
-        name: cardResponse.responder_name,
-        message: cardResponse.final_message_response,
-      }))!,
-      ...jCardResponses.cards?.map((cardResponse) => ({
-        name: cardResponse.responder_name,
-        message: cardResponse.final_message_response,
-      }))!,
+      ...nCardResponses.cards?.map((cardResponse) => {
+        if (cardResponse.final_message_response) {
+          return {
+            name: cardResponse.responder_name,
+            message: cardResponse.final_message_response,
+          };
+        }
+      })!,
+      ...jCardResponses.cards?.map((cardResponse) => {
+        if (cardResponse.final_message_response) {
+          return {
+            name: cardResponse.responder_name,
+            message: cardResponse.final_message_response,
+          };
+        }
+      })!,
     ].flat(),
     nat: {
       characterDescription: nCard.card?.descriptive_title,
