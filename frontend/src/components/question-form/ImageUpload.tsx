@@ -3,6 +3,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { IoImagesSharp } from "react-icons/io5";
 import UploadImagePreviewCarousel from "./UploadImagePreviewCarousel";
+import { convertImagesWebP } from "@/lib/utils";
 
 interface ImageUploaderProps {
   imageFiles: Array<File | null>;
@@ -43,11 +44,15 @@ export default function ImageUploader({
     fileUploadElement.click();
   };
 
-  const handleFileClickUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileClickUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     e.preventDefault();
     if (e.target.files && e.target.files.length) {
       const fileArray = Array.from(e.target.files);
-      setImageFiles(fileArray);
+      // convert all the files to a webp format, to make them smaller
+      const webpImages = await convertImagesWebP(fileArray);
+      setImageFiles(webpImages);
     }
   };
 
@@ -85,7 +90,7 @@ export default function ImageUploader({
           <input
             type="file"
             name="mainImageUpload"
-            accept=".jpg, .jpeg, .png, .webp"
+            accept=".jpg, .jpeg, .png, .webp, .heic"
             id="main-image-upload"
             className="hidden"
             onChange={handleFileClickUpload}
