@@ -13,6 +13,7 @@ const s3ClientConfig: S3ClientConfig = {
     accessKeyId: process.env.AWS_IAM_ACCESS_KEY!,
     secretAccessKey: process.env.AWS_IAM_SECRET_KEY!,
   },
+  useAccelerateEndpoint: true,
 };
 export const s3Client = new S3Client(s3ClientConfig);
 
