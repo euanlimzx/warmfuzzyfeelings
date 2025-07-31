@@ -1,9 +1,10 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { IoImagesSharp } from "react-icons/io5";
 import UploadImagePreviewCarousel from "./UploadImagePreviewCarousel";
 import { convertImagesWebP } from "@/lib/utils";
+import BouncingDots from "../ui/BouncingDots";
 
 interface ImageUploaderProps {
   imageFiles: Array<File | null>;
@@ -20,6 +21,8 @@ export default function ImageUploader({
   label,
   removeImageFromUploadList,
 }: ImageUploaderProps) {
+  const [isImageUploaderLoading, setIsImageUploaderLoading] = useState(false);
+
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -50,8 +53,10 @@ export default function ImageUploader({
     e.preventDefault();
     if (e.target.files && e.target.files.length) {
       const fileArray = Array.from(e.target.files);
+      setIsImageUploaderLoading(true);
       // convert all the files to a webp format, to make them smaller
       const webpImages = await convertImagesWebP(fileArray);
+      setIsImageUploaderLoading(false);
       setImageFiles(webpImages);
     }
   };
@@ -60,7 +65,11 @@ export default function ImageUploader({
     <>
       {label && <label className="text-md font-medium">{label}</label>}
 
-      <div className={`${imageFiles?.length ? "" : "hidden"}`}>
+      <div
+        className={`${
+          imageFiles?.length && !isImageUploaderLoading ? "" : "hidden"
+        }`}
+      >
         <UploadImagePreviewCarousel
           uploadedFiles={imageFiles!}
           removeImageFromUploadList={removeImageFromUploadList}
@@ -80,11 +89,18 @@ export default function ImageUploader({
         onClick={handleUploadButtonClick}
       >
         <div className="flex flex-col items-center justify-center gap-4">
-          <IoImagesSharp size={46} color="black" />
-          {!imageFiles?.length && (
-            <div className="text-center font-medium">
-              Click to select from your files or drag and drop an image here!
-            </div>
+          {isImageUploaderLoading ? (
+            <BouncingDots className="mt-0 space-x-4" />
+          ) : (
+            <>
+              <IoImagesSharp size={46} color="black" />
+              {!imageFiles?.length && (
+                <div className="text-center font-medium">
+                  Click to select from your files or drag and drop an image
+                  here!
+                </div>
+              )}
+            </>
           )}
 
           <input
