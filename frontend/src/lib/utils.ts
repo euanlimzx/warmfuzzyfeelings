@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import convert from "heic-convert";
+import { heicTo, isHeic } from "heic-to";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -73,10 +73,19 @@ const convertToWebP = async (file: File): Promise<File> => {
 export const convertImagesWebP = async (files: File[]): Promise<File[]> => {
   const convertedFiles = await Promise.all(
     files.map(async (file) => {
-      if (file.type === "image/heic") {
+      if (await isHeic(file)) {
         // HEIC was converted to JPG, now convert JPG to WebP
         console.log(`[HEIC CONVERSION] Converting JPG to WebP...`);
-        const jpgFile = await convertHeicToFile(file);
+        const jpgBlob = await heicTo({
+          blob: file,
+          type: "image/jpeg",
+          quality: 0.8,
+        });
+        const originalName = file.name.replace(/\.heic$/i, "");
+        const jpgFile = new File([jpgBlob], `${originalName}.jpg`, {
+          type: jpgBlob.type,
+          lastModified: new Date().getTime(),
+        });
         return await convertToWebP(jpgFile);
       }
 
@@ -86,38 +95,3 @@ export const convertImagesWebP = async (files: File[]): Promise<File[]> => {
   );
   return convertedFiles as File[];
 };
-
-async function convertHeicToFile(heicFile: File, quality = 1) {
-  try {
-    // Read the HEIC file as ArrayBuffer
-    const arrayBuffer = await heicFile.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    // Convert HEIC to the desired format
-    const outputBuffer = await convert({
-      // @ts-expect-error they give a type error, but this works fine
-      buffer: buffer,
-      format: "JPEG",
-      quality: quality,
-    });
-
-    // Create a Blob from the converted buffer
-    const mimeType = "image/jpeg";
-    const blob = new Blob([outputBuffer], { type: mimeType });
-
-    // Create a File object from the Blob
-    const originalName = heicFile.name.replace(/\.heic$/i, "");
-    const extension = ".jpg";
-    const fileName = `${originalName}${extension}`;
-
-    const convertedFile = new File([blob], fileName, {
-      type: mimeType,
-      lastModified: Date.now(),
-    });
-
-    return convertedFile;
-  } catch (error) {
-    console.error("Error converting HEIC file:", error);
-    throw new Error(`Failed to convert HEIC file: ${JSON.stringify(error)}`);
-  }
-}
