@@ -286,7 +286,7 @@ const NatAndJoshForm = ({
 
       {showImageSizeAndTypeError && (
         <FormSubmissionErrorNotification
-          errorMessage="Whoa there! That image is chonkier than we can handle. Keep it under 10MB, yeah?"
+          errorMessage="Hey, we ran into an error. Either the image is >10MB or you need to look for Euan HAHA?"
           removeNotif={() => setShowImageSizeAndTypeError(false)}
         />
       )}
