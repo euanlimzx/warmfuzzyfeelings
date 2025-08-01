@@ -5,7 +5,7 @@ import { configDotenv } from "dotenv";
 configDotenv();
 
 const maxFileSize = 1024 * 1024 * 10;
-const acceptedTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
+const acceptedTypes = ["image/*"];
 
 const s3ClientConfig: S3ClientConfig = {
   region: process.env.AWS_BUCKET_REGION,
@@ -30,7 +30,7 @@ export const getAWSSignedUrl = async (
     return { ok: false, fileValidationError: true, message: "File too large" };
   }
 
-  if (!acceptedTypes.includes(fileType)) {
+  if (!fileType.startsWith("image/")) {
     return {
       ok: false,
       fileValidationError: true,
