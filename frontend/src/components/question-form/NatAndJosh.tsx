@@ -286,7 +286,7 @@ const NatAndJoshForm = ({
 
       {showImageSizeAndTypeError && (
         <FormSubmissionErrorNotification
-          errorMessage="Hey, we ran into an error. Either the image is >10MB or you need to look for Euan HAHA?"
+          errorMessage="Woops we ran into an error! Please telegram @euanlimzx for support!"
           removeNotif={() => setShowImageSizeAndTypeError(false)}
         />
       )}

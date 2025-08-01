@@ -71,7 +71,9 @@ const convertToWebP = async (file: File): Promise<File> => {
 };
 
 export const convertImagesWebP = async (files: File[]): Promise<File[]> => {
-  const convertedFiles = await Promise.all(
+  console.log('convertImagesWebP: Processing files:', files.map(f => ({ name: f.name, type: f.type })));
+  
+  const processedFiles = await Promise.all(
     files.map(async (file) => {
       if (await isHeic(file)) {
         // HEIC was converted to JPG, now convert JPG to WebP
@@ -93,5 +95,7 @@ export const convertImagesWebP = async (files: File[]): Promise<File[]> => {
       return await convertToWebP(file);
     })
   );
-  return convertedFiles as File[];
+  
+  console.log('convertImagesWebP: Final processed files:', processedFiles.map(f => ({ name: f.name, type: f.type })));
+  return processedFiles;
 };
