@@ -130,13 +130,15 @@ export default function ImageCarousel({
             if (!uploadedFile) {
               return;
             }
+            console.log('Carousel: Processing file:', uploadedFile.name, 'Type:', uploadedFile.type, 'Size:', uploadedFile.size);
             const imageLocalUrl = URL.createObjectURL(uploadedFile);
+            console.log('Carousel: Created imageLocalUrl:', imageLocalUrl);
             return (
               <div
                 key={index}
                 className="w-full flex-shrink-0 relative group max-sm:pt-7"
               >
-                <UploadImagePreview uploadedImageUrl={imageLocalUrl} />
+                <UploadImagePreview uploadedImageUrl={imageLocalUrl} uploadedFile={uploadedFile} />
 
                 {/* Neo-Brutalist Delete Button */}
                 <button

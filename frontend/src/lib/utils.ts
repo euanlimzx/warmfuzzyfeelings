@@ -6,15 +6,26 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const convertImagesWebP = async (files: File[]): Promise<File[]> => {
-  const convertedFiles = await Promise.all(
+  console.log('convertImagesWebP: Processing files:', files.map(f => ({ name: f.name, type: f.type })));
+  
+  const processedFiles = await Promise.all(
     files.map(async (file) => {
-      // Create canvas and load image
+      const extension = file.name.toLowerCase().split('.').pop();
+      console.log('convertImagesWebP: Processing file:', file.name, 'extension:', extension);
+      
+      // If it's a HEIC/HEIF file, return it as-is (no conversion)
+      if (extension === 'heic' || extension === 'heif') {
+        console.log('convertImagesWebP: HEIC/HEIF file detected, keeping as-is:', file.name);
+        return file;
+      }
+
+      // For all other files, convert to WebP
+      console.log('convertImagesWebP: Converting to WebP:', file.name);
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       const img = new Image();
 
-      // Convert to WebP using canvas
-      return new Promise((resolve) => {
+      return new Promise<File>((resolve) => {
         img.onload = () => {
           canvas.width = img.width;
           canvas.height = img.height;
@@ -22,11 +33,11 @@ export const convertImagesWebP = async (files: File[]): Promise<File[]> => {
           canvas.toBlob(
             (blob) => {
               if (blob) {
-                resolve(
-                  new File([blob], file.name.replace(/\.[^/.]+$/, ".webp"), {
-                    type: "image/webp",
-                  })
-                );
+                const webpFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".webp"), {
+                  type: "image/webp",
+                });
+                console.log('convertImagesWebP: Created WebP file:', webpFile.name);
+                resolve(webpFile);
               }
             },
             "image/webp",
@@ -37,5 +48,7 @@ export const convertImagesWebP = async (files: File[]): Promise<File[]> => {
       });
     })
   );
-  return convertedFiles as File[];
+  
+  console.log('convertImagesWebP: Final processed files:', processedFiles.map(f => ({ name: f.name, type: f.type })));
+  return processedFiles;
 };
