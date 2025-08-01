@@ -84,41 +84,6 @@ const FormCompleteModal = ({
                 Thanks! Your submission was so good, we&apos;ll probably frame
                 it.
               </h3>
-              <h3 className="text-lg font-medium text-center mb-2">
-                If you&apos;d like to see how {birthdayPerson} responds to this
-                card, drop your email and we&apos;ll be sure to let you know.
-                You could also use our site to create a card for your other
-                friends 😉
-              </h3>
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-col w-full">
-                  <input
-                    type="email"
-                    placeholder="Enter your email!"
-                    className={`w-full p-2 bg-white border-3 border-black rounded-none focus:outline-none focus:ring-0 focus:border-black text-black caret-black ${
-                      emailError ? "border-red-500" : ""
-                    }`}
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setEmailError("");
-                    }}
-                  />
-                  {emailError && (
-                    <span className="text-red-500 text-sm mt-1">
-                      {emailError}
-                    </span>
-                  )}
-                </div>
-                <div className="flex justify-end">
-                  <button
-                    onClick={handleSubmission}
-                    className="w-full sm:w-fit px-6 py-2 font-medium border-2 border-black bg-white text-black transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
             </div>
           </motion.div>
         </motion.div>
