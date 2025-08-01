@@ -23,14 +23,17 @@ export const getAWSSignedUrl = async (
   fileType: string,
 ) => {
   if (!imageName) {
+    console.log("Image name is bad");
     return { ok: false, message: "Invalid image name provided" };
   }
 
   if (fileSize > maxFileSize) {
+    console.log("File is too large");
     return { ok: false, fileValidationError: true, message: "File too large" };
   }
 
   if (!fileType.startsWith("image/")) {
+    console.log("File is invalid");
     return {
       ok: false,
       fileValidationError: true,

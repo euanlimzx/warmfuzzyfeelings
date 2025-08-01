@@ -95,6 +95,7 @@ app.post("/make-a-wish/upload-image", async (req, res) => {
   }
 
   const signedUrlData = await getAWSSignedUrl(fileName, fileSize, fileType);
+  console.log(JSON.stringify(signedUrlData));
   if (signedUrlData.ok) {
     res.status(200).send(signedUrlData);
     return;
@@ -102,7 +103,6 @@ app.post("/make-a-wish/upload-image", async (req, res) => {
     res.status(403).send(signedUrlData);
   } else {
     res.status(404).send(signedUrlData);
-    return;
     return;
   }
 });
