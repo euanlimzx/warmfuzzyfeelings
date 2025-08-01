@@ -4,7 +4,7 @@ import { configDotenv } from "dotenv";
 
 configDotenv();
 
-const maxFileSize = 1024 * 1024 * 10;
+const maxFileSize = 1024 * 1024 * 30;
 const acceptedTypes = ["image/*"];
 
 const s3ClientConfig: S3ClientConfig = {
