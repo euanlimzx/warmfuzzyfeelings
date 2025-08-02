@@ -305,7 +305,7 @@ const NatAndJoshForm = ({
       </h1>
       <h2>
         Answer a few quick questions and we&apos;ll help collate them into a
-        pretty card ❤️
+        pretty card ❤️<br></br> If you run into any issues, please telegram @euanlimzx !
       </h2>
       <div className="border-t-2 border-black"></div>
 
