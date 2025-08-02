@@ -71,8 +71,11 @@ const convertToWebP = async (file: File): Promise<File> => {
 };
 
 export const convertImagesWebP = async (files: File[]): Promise<File[]> => {
-  console.log('convertImagesWebP: Processing files:', files.map(f => ({ name: f.name, type: f.type })));
-  
+  console.log(
+    "convertImagesWebP: Processing files:",
+    files.map((f) => ({ name: f.name, type: f.type }))
+  );
+
   const processedFiles = await Promise.all(
     files.map(async (file) => {
       if (await isHeic(file)) {
@@ -88,14 +91,19 @@ export const convertImagesWebP = async (files: File[]): Promise<File[]> => {
           type: jpgBlob.type,
           lastModified: new Date().getTime(),
         });
-        return await convertToWebP(jpgFile);
+        // return await convertToWebP(jpgFile);
+        return jpgFile;
       }
 
       // For non-HEIC files, convert directly to WebP
-      return await convertToWebP(file);
+      // return await convertToWebP(file);
+      return file;
     })
   );
-  
-  console.log('convertImagesWebP: Final processed files:', processedFiles.map(f => ({ name: f.name, type: f.type })));
+
+  console.log(
+    "convertImagesWebP: Final processed files:",
+    processedFiles.map((f) => ({ name: f.name, type: f.type }))
+  );
   return processedFiles;
 };
