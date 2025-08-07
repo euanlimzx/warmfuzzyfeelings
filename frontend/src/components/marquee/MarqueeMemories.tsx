@@ -13,19 +13,21 @@ const ReviewCard = ({
   return (
     <figure
       className={cn(
-        "relative h-50 w-fit max-w-70 cursor-pointer overflow-hidden p-4 bg-white text-black border-black border-2"
+        "relative h-50 w-fit max-w-70 cursor-pointer overflow-hidden bg-white text-black border-black border-2"
       )}
     >
-      <div className="flex flex-row items-center gap-2">
-        <img className="rounded-full border border-black" width="32" height="32" alt="" src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${name}&shapeColor=ffffff&backgroundType=solid`} />
-        <div className="flex flex-col">
-          <figcaption className="text-sm font-medium text-black">
-            {name}
-          </figcaption>
-          <p className="text-xs font-medium text-black/40">@ {name}</p>
+      <div className="h-full overflow-y-auto p-4">
+        <div className="flex flex-row items-center gap-2">
+          <img className="rounded-full border border-black" width="32" height="32" alt="" src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${name}&shapeColor=ffffff&backgroundType=solid`} />
+          <div className="flex flex-col">
+            <figcaption className="text-sm font-medium text-black">
+              {name}
+            </figcaption>
+            <p className="text-xs font-medium text-black/40">@ {name}</p>
+          </div>
         </div>
+        <blockquote className="mt-2 text-sm text-black">{memory}</blockquote>
       </div>
-      <blockquote className="mt-2 text-sm text-black">{memory}</blockquote>
     </figure>
   );
 };
