@@ -23,15 +23,29 @@ const SECTION_HEIGHT = "100vh";
 // REMOVE LATER, TEMP FLAG TO DISPLAY TEXT OR NOT
 const SHOW_TEXT = false;
 
-export const Memories = ({ memories, images }: { memories?: Memory[], images?: string[] }) => {
+interface TestimonialItem {
+  imageUrl: string;
+  tempId: number;
+}
+
+interface TestimonialCardProps {
+  position: number;
+  testimonial: TestimonialItem;
+  handleMove: (position: number) => void;
+  cardSize: number;
+  imageUrl: string;
+}
+
+export const Memories = ({ images }: { memories?: Memory[], images?: string[] }) => {
   const [cardSize, setCardSize] = useState(CARD_SIZE_LG);
 
-  const createFlattenedTestimonials = (memories: string[]) => memories.map((imageUrl, imageIdx) => ({
-        imageUrl: imageUrl,
-        tempId: Math.random(), // For animation key
-      }))
+  const createFlattenedTestimonials = (imageUrls: string[] = []): TestimonialItem[] => 
+    imageUrls.map((imageUrl) => ({
+      imageUrl: imageUrl,
+      tempId: Math.random(), // For animation key
+    }));
 
-  const [flattenedTestimonials, setFlattenedTestimonials] = useState(() =>
+  const [flattenedTestimonials, setFlattenedTestimonials] = useState<TestimonialItem[]>(() =>
     createFlattenedTestimonials(images)
   );
 
@@ -135,14 +149,14 @@ const TestimonialCard = ({
   handleMove,
   cardSize,
   imageUrl,
-}) => {
+}: TestimonialCardProps) => {
   const isActive = position === 0;
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTextTruncated, setIsTextTruncated] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [convertedImageUrl, setConvertedImageUrl] = useState<string | null>(null);
-  const textRef = useRef(null);
+  const textRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     if (textRef.current) {
@@ -150,7 +164,7 @@ const TestimonialCard = ({
         textRef.current.scrollHeight > textRef.current.clientHeight;
       setIsTextTruncated(isOverflowing);
     }
-  }, [testimonial.memory]);
+  }, [testimonial]);
 
   // Handle HEIC to WebP conversion
   useEffect(() => {
@@ -162,17 +176,17 @@ const TestimonialCard = ({
       try {
         // Check if the image URL contains HEIC extension
         if (imageUrl.toLowerCase().includes('.heic') || imageUrl.toLowerCase().includes('.heif')) {
-          console.log(`[HEIC CONVERSION] Detected HEIC image, converting: ${imageUrl}`);
+          console.log(`[HEIC DEBUG] Starting conversion for: ${imageUrl}`);
           const convertedUrl = await convertHeicUrlToWebP(fullImageUrl);
+          console.log(`[HEIC DEBUG] Conversion successful, setting URL: ${convertedUrl}`);
           setConvertedImageUrl(convertedUrl);
         } else {
           // Not a HEIC file, use original URL
           setConvertedImageUrl(fullImageUrl);
         }
       } catch (error) {
-        console.error(`[HEIC CONVERSION] Error converting image ${imageUrl}:`, error);
+        console.error(`[HEIC DEBUG] Error in image conversion for ${imageUrl}:`, error);
         // Fallback to original URL if conversion fails
-        setConvertedImageUrl(fullImageUrl);
       }
     };
 
@@ -224,8 +238,9 @@ const TestimonialCard = ({
           {convertedImageUrl && (
             <Image
               src={convertedImageUrl}
-              alt={`Testimonial image for ${testimonial.by}`}
+              alt={`Memory image`}
               fill
+              sizes="(max-width: 640px) 250px, 300px"
               loading="lazy"
               className="object-cover border-[2px] border-black"
               style={{
@@ -235,7 +250,12 @@ const TestimonialCard = ({
                 setImageLoaded(true);
               }}
               onError={(e) => {
-                console.error(`Failed to load image: ${convertedImageUrl}`, e);
+                console.error(`[IMAGE DEBUG] Failed to load image: ${convertedImageUrl}`, e);
+                console.error(`[IMAGE DEBUG] Error details:`, {
+                  src: convertedImageUrl,
+                  isBlobUrl: convertedImageUrl.startsWith('blob:'),
+                  isHeic: imageUrl.toLowerCase().includes('.heic') || imageUrl.toLowerCase().includes('.heif')
+                });
                 setImageError(true);
               }}
             />
