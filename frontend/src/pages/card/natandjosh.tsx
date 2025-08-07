@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { WeddingCardResponse } from "@/types/birthday-card";
 import { Memories } from "@/components/memories/memories";
+import { MarqueeMemories } from "@/components/marquee/MarqueeMemories";
 
 export default function Card() {
   const [showButtons] = useState(false);
@@ -55,6 +56,7 @@ export default function Card() {
             setShowButtons={setShowButtons}
             birthdayDateString={birthdayCardResponse?.birthdayDate}
           /> */}
+          <MarqueeMemories memories={memories} />
           <Memories images={birthdayCardResponse?.imageUrls.filter(image => image !== null)} />
           <FinalMessages wishes={birthdayCardResponse?.finalMessage?.filter(wish => wish !== null) || []} />
         </SwipeablePages>
