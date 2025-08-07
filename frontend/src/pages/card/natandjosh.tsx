@@ -56,7 +56,8 @@ export default function Card() {
             setShowButtons={setShowButtons}
             birthdayDateString={birthdayCardResponse?.birthdayDate}
           /> */}
-          <MarqueeMemories memories={birthdayCardResponse?.nat.memories} />
+          <MarqueeMemories memories={birthdayCardResponse?.josh.memories} title="Our favorite memories with Josh"/>
+          <MarqueeMemories memories={birthdayCardResponse?.nat.memories} title="Our favorite memories with Nat"/>
           <Memories images={birthdayCardResponse?.imageUrls.filter(image => image !== null)} />
           <FinalMessages wishes={birthdayCardResponse?.finalMessage?.filter(wish => wish !== null) || []} />
         </SwipeablePages>

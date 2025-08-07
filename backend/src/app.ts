@@ -21,6 +21,7 @@ import {
 import { developmentLogger } from "./middleware/inputLoggerMiddleware";
 import toCamelCase from "./utils/toCamelCase";
 import { CharacterSummaryResponse } from "./utils/characterSummary";
+import { Tables } from "./db/dbTypes";
 
 const app = express();
 
@@ -324,6 +325,26 @@ app.get("/retrieve-wedding-card-nj", async (req, res) => {
     return;
   }
 
+  // Helper to find closest nat responder_name by created_at
+  function findClosestNatResponderName(
+    targetCreatedAt: string,
+    natCards: Tables<"Card_Form_Response">[]
+  ): string | null {
+    if (!targetCreatedAt || !natCards.length) return null;
+    let minDiff = Infinity;
+    let closestName: string | null = null;
+    const targetTime = new Date(targetCreatedAt).getTime();
+    for (const natCard of natCards) {
+      if (!natCard.created_at) continue;
+      const diff = Math.abs(new Date(natCard.created_at).getTime() - targetTime);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestName = natCard.responder_name || null;
+      }
+    }
+    return closestName;
+  }
+
   const returnValue = {
     imageUrls: [
       ...nCardResponses.cards?.map((cardResponse) => {
@@ -383,14 +404,22 @@ app.get("/retrieve-wedding-card-nj", async (req, res) => {
       characterName: jCard.card?.birthday_person,
       birthdayDate: jCard.card?.birthday_date,
       traits: jCardResponses.cards?.map((card) => {
+        let name = card.responder_name;
+        if (!name) {
+          name = findClosestNatResponderName(card.created_at, nCardResponses.cards || []);
+        }
         return {
-          name: card.responder_name,
+          name,
           description: card.description_response,
         };
       }),
       memories: jCardResponses.cards?.map((card) => {
+        let name = card.responder_name;
+        if (!name) {
+          name = findClosestNatResponderName(card.created_at, nCardResponses.cards || []);
+        }
         return {
-          name: card.responder_name,
+          name,
           memory: card.memory_response,
         };
       }),
