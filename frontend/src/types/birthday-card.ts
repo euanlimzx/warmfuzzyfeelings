@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Source {
   author: string;
   message: string;
@@ -18,6 +19,8 @@ export interface BirthdayCardResponse {
 export interface WeddingCardResponse {
   finalMessage: Wishes[];
   imageUrls: string[];
+  nat: any;
+  josh: any;
 }
 
 export interface Wishes {

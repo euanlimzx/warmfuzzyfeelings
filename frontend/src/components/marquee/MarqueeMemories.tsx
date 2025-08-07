@@ -35,12 +35,12 @@ export const MarqueeMemories = ({ memories }: { memories: MarqueeMemory[] }) => 
     <div className="w-full h-full bg-purple-300 flex flex-col items-center justify-center">
       <text className="max-w-3/4 mb-10 text-white text-center text-2xl md:text-4xl font-semibold">Speaking of memories, here are our favorite ones of you :)</text>
       <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
-        <Marquee pauseOnHover className="[--duration:60s]">
+        <Marquee pauseOnHover className="[--duration:120s]">
           {memories.map((memory) => (
             <ReviewCard key={memory.name} {...memory} />
           ))}
         </Marquee>
-        <Marquee reverse pauseOnHover className="[--duration:60s]">
+        <Marquee reverse pauseOnHover className="[--duration:120s]">
           {memories.map((memory) => (
             <ReviewCard key={memory.name} {...memory} />
           ))}

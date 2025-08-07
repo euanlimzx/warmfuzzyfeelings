@@ -74,6 +74,6 @@ body {
   animation-direction: reverse;
 }
 /* Utility for pausing on hover (when parent has group-hover) */
-.group:hover .group-hover\:animation-paused {
+.group:hover [class*="group-hover:\[animation-play-state:paused\]"] {
   animation-play-state: paused;
 }
