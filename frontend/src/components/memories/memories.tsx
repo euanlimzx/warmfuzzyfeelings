@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { GoArrowLeft, GoArrowRight, GoChevronDown } from "react-icons/go";
 import Image from "next/image";
 import { Memory } from "@/types/birthday-card";
+import { convertHeicUrlToWebP } from "@/lib/utils";
 
 const CARD_SIZE_LG = 300;
 const CARD_SIZE_SM = 250;
@@ -23,9 +24,6 @@ const SECTION_HEIGHT = "100vh";
 const SHOW_TEXT = false;
 
 export const Memories = ({ memories, images }: { memories?: Memory[], images?: string[] }) => {
-  if (images && images.length > 0) {
-   console.log("fuckyea")
-  }
   const [cardSize, setCardSize] = useState(CARD_SIZE_LG);
 
   const createFlattenedTestimonials = (memories: string[]) => memories.map((imageUrl, imageIdx) => ({
@@ -143,6 +141,7 @@ const TestimonialCard = ({
   const [isTextTruncated, setIsTextTruncated] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [convertedImageUrl, setConvertedImageUrl] = useState<string | null>(null);
   const textRef = useRef(null);
 
   useEffect(() => {
@@ -152,6 +151,33 @@ const TestimonialCard = ({
       setIsTextTruncated(isOverflowing);
     }
   }, [testimonial.memory]);
+
+  // Handle HEIC to WebP conversion
+  useEffect(() => {
+    const handleImageConversion = async () => {
+      if (!imageUrl) return;
+      
+      const fullImageUrl = `${process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN}/${imageUrl}`;
+      
+      try {
+        // Check if the image URL contains HEIC extension
+        if (imageUrl.toLowerCase().includes('.heic') || imageUrl.toLowerCase().includes('.heif')) {
+          console.log(`[HEIC CONVERSION] Detected HEIC image, converting: ${imageUrl}`);
+          const convertedUrl = await convertHeicUrlToWebP(fullImageUrl);
+          setConvertedImageUrl(convertedUrl);
+        } else {
+          // Not a HEIC file, use original URL
+          setConvertedImageUrl(fullImageUrl);
+        }
+      } catch (error) {
+        console.error(`[HEIC CONVERSION] Error converting image ${imageUrl}:`, error);
+        // Fallback to original URL if conversion fails
+        setConvertedImageUrl(fullImageUrl);
+      }
+    };
+
+    handleImageConversion();
+  }, [imageUrl]);
 
   return (
     <motion.div
@@ -195,25 +221,25 @@ const TestimonialCard = ({
             isActive ? "h-60 w-60 sm:h-75 sm:w-75" : "h-50 w-50 sm:h-65 sm:w-65"
           }`}
         >
-          <Image
-            src={`${process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN}/${imageUrl}`}
-            alt={`Testimonial image for ${testimonial.by}`}
-            fill
-            loading="lazy"
-            className="object-cover border-[2px] border-black"
-            style={{
-              boxShadow: "2px 2px 0px white",
-            }}
-            onLoad={() => {
-              console.log(`Image loaded successfully: ${imageUrl}`);
-              setImageLoaded(true);
-            }}
-            onError={(e) => {
-              const imageSrc = `${process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN}/${imageUrl}`;
-              console.error(`Failed to load image: ${imageSrc}`, e);
-              setImageError(true);
-            }}
-          />
+          {convertedImageUrl && (
+            <Image
+              src={convertedImageUrl}
+              alt={`Testimonial image for ${testimonial.by}`}
+              fill
+              loading="lazy"
+              className="object-cover border-[2px] border-black"
+              style={{
+                boxShadow: "2px 2px 0px white",
+              }}
+              onLoad={() => {
+                setImageLoaded(true);
+              }}
+              onError={(e) => {
+                console.error(`Failed to load image: ${convertedImageUrl}`, e);
+                setImageError(true);
+              }}
+            />
+          )}
           {!imageLoaded && !imageError && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-100 border-[2px] border-black">
               <span className="text-sm text-gray-600">Loading...</span>

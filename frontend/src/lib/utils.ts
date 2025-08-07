@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // Helper function to convert any image to WebP using canvas
-const convertToWebP = async (file: File): Promise<File> => {
+export const convertToWebP = async (file: File): Promise<File> => {
   console.log(
     `[WEBP CONVERSION] Original file: ${file.name}, Size: ${(
       file.size /
@@ -106,4 +106,70 @@ export const convertImagesWebP = async (files: File[]): Promise<File[]> => {
     processedFiles.map((f) => ({ name: f.name, type: f.type }))
   );
   return processedFiles;
+};
+
+// New function to convert HEIC image URL to WebP blob
+export const convertHeicUrlToWebP = async (imageUrl: string): Promise<string> => {
+  try {
+    console.log(`[HEIC CONVERSION] Converting HEIC URL to WebP: ${imageUrl}`);
+    
+    // Fetch the HEIC image
+    const response = await fetch(imageUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+    }
+    
+    const blob = await response.blob();
+    
+    // Check if it's actually a HEIC file
+    // Create a temporary file from the blob for isHeic check
+    const tempFile = new File([blob], 'temp.heic', { type: 'image/heic' });
+    if (await isHeic(tempFile)) {
+      console.log(`[HEIC CONVERSION] Confirmed HEIC file, converting to WebP...`);
+      
+      // Convert HEIC to JPEG first
+      const jpegBlob = await heicTo({
+        blob: blob,
+        type: "image/jpeg",
+        quality: 0.8,
+      });
+      
+      // Convert JPEG to WebP using canvas
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      
+      return new Promise((resolve, reject) => {
+        img.onload = () => {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx?.drawImage(img, 0, 0);
+          canvas.toBlob(
+            (webpBlob) => {
+              if (webpBlob) {
+                const webpUrl = URL.createObjectURL(webpBlob);
+                console.log(`[HEIC CONVERSION] Successfully converted to WebP: ${webpUrl}`);
+                resolve(webpUrl);
+              } else {
+                reject(new Error("Failed to convert JPEG to WebP"));
+              }
+            },
+            "image/webp",
+            0.8
+          );
+        };
+        img.onerror = () => {
+          reject(new Error("Failed to load JPEG image for WebP conversion"));
+        };
+        img.src = URL.createObjectURL(jpegBlob);
+      });
+    } else {
+      console.log(`[HEIC CONVERSION] Not a HEIC file, returning original URL: ${imageUrl}`);
+      return imageUrl;
+    }
+  } catch (error) {
+    console.error(`[HEIC CONVERSION] Error converting HEIC to WebP:`, error);
+    // Return original URL if conversion fails
+    return imageUrl;
+  }
 };
