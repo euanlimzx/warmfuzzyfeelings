@@ -15,6 +15,11 @@ export interface BirthdayCardResponse {
   birthdayDate: string;
 }
 
+export interface WeddingCardResponse {
+  finalMessage: Wishes[];
+  imageUrls: string[];
+}
+
 export interface Wishes {
   name: string;
   message: string;

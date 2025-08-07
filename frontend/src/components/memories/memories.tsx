@@ -22,22 +22,19 @@ const SECTION_HEIGHT = "100vh";
 // REMOVE LATER, TEMP FLAG TO DISPLAY TEXT OR NOT
 const SHOW_TEXT = false;
 
-export const Memories = ({ memories }: { memories: Memory[] }) => {
+export const Memories = ({ memories, images }: { memories?: Memory[], images?: string[] }) => {
+  if (images && images.length > 0) {
+   console.log("fuckyea")
+  }
   const [cardSize, setCardSize] = useState(CARD_SIZE_LG);
 
-  const createFlattenedTestimonials = (memories: Memory[]) => {
-    return memories.flatMap((memory, memoryIdx) =>
-      memory.imageUrls.map((imageUrl, imageIdx) => ({
-        ...memory,
-        imageUrl,
-        uniqueId: `${memoryIdx}-${imageIdx}`, // Unique identifier
+  const createFlattenedTestimonials = (memories: string[]) => memories.map((imageUrl, imageIdx) => ({
+        imageUrl: imageUrl,
         tempId: Math.random(), // For animation key
       }))
-    );
-  };
 
   const [flattenedTestimonials, setFlattenedTestimonials] = useState(() =>
-    createFlattenedTestimonials(memories)
+    createFlattenedTestimonials(images)
   );
 
   const handleMove = (position: number) => {
@@ -144,6 +141,8 @@ const TestimonialCard = ({
   const isActive = position === 0;
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTextTruncated, setIsTextTruncated] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const textRef = useRef(null);
 
   useEffect(() => {
@@ -200,13 +199,31 @@ const TestimonialCard = ({
             src={`${process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN}/${imageUrl}`}
             alt={`Testimonial image for ${testimonial.by}`}
             fill
-            priority={true}
-            loading="eager"
+            loading="lazy"
             className="object-cover border-[2px] border-black"
             style={{
               boxShadow: "2px 2px 0px white",
             }}
+            onLoad={() => {
+              console.log(`Image loaded successfully: ${imageUrl}`);
+              setImageLoaded(true);
+            }}
+            onError={(e) => {
+              const imageSrc = `${process.env.NEXT_PUBLIC_CLOUDFRONT_DOMAIN}/${imageUrl}`;
+              console.error(`Failed to load image: ${imageSrc}`, e);
+              setImageError(true);
+            }}
           />
+          {!imageLoaded && !imageError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100 border-[2px] border-black">
+              <span className="text-sm text-gray-600">Loading...</span>
+            </div>
+          )}
+          {imageError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-red-100 border-[2px] border-black">
+              <span className="text-sm text-red-600">Failed to load</span>
+            </div>
+          )}
         </div>
         {SHOW_TEXT ? (
           <>
