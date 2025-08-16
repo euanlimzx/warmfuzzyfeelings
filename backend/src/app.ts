@@ -26,7 +26,20 @@ import { Tables } from "./db/dbTypes";
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://warmfuzzyfeelings.org',
+    'http://warmfuzzyfeelings.org',
+    'https://www.warmfuzzyfeelings.org',
+    'http://www.warmfuzzyfeelings.org',
+    // Allow localhost for development
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001'
+  ],
+  credentials: true
+}));
 app.use(developmentLogger);
 
 app.get("/", async (req, res) => {
