@@ -8,9 +8,11 @@ import axios from "axios";
 import { WeddingCardResponse } from "@/types/birthday-card";
 import { Memories } from "@/components/memories/memories";
 import { MarqueeMemories } from "@/components/marquee/MarqueeMemories";
+import { Countdown } from "@/components/countdown/countdown";
+
 
 export default function Card() {
-  const [showButtons] = useState(false);
+  const [showButtons, setShowButtons] = useState(false);
   const [birthdayCardResponse, setBirthdayCardResponse] =
     useState<WeddingCardResponse | null>(null);
 
@@ -52,12 +54,15 @@ export default function Card() {
       )}
       {birthdayCardResponse && (
         <SwipeablePages showButtons={showButtons}>
-          {/* <Countdown
+          <Countdown
             setShowButtons={setShowButtons}
-            birthdayDateString={birthdayCardResponse?.birthdayDate}
-          /> */}
+            birthdayDateString="2025-09-02"
+          />
+          <MarqueeMemories memories={birthdayCardResponse?.josh.traits} title="Our favorite traits of Josh"/>
           <MarqueeMemories memories={birthdayCardResponse?.josh.memories} title="Our favorite memories with Josh"/>
+          <MarqueeMemories memories={birthdayCardResponse?.nat.traits} title="Our favorite traits of Nat"/>
           <MarqueeMemories memories={birthdayCardResponse?.nat.memories} title="Our favorite memories with Nat"/>
+          
           <Memories images={birthdayCardResponse?.imageUrls.filter(image => image !== null)} />
           <FinalMessages wishes={birthdayCardResponse?.finalMessage?.filter(wish => wish !== null) || []} />
         </SwipeablePages>

@@ -386,7 +386,7 @@ app.get("/retrieve-wedding-card-nj", async (req, res) => {
       traits: nCardResponses.cards?.map((card) => {
         return {
           name: card.responder_name,
-          description: card.description_response,
+          memory: card.description_response, //bad practice @euan
         };
       }),
       memories: nCardResponses.cards?.map((card) => {
@@ -410,7 +410,7 @@ app.get("/retrieve-wedding-card-nj", async (req, res) => {
         }
         return {
           name,
-          description: card.description_response,
+          memory: card.description_response, //bad practice @euan
         };
       }),
       memories: jCardResponses.cards?.map((card) => {
